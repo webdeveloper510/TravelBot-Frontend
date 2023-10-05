@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.8cb92713.css",
-    "main.js": "/static/js/main.f1690360.js",
+    "main.js": "/static/js/main.cf9176f8.js",
     "static/media/pattern-tree.svg": "/static/media/pattern-tree.156bb943ac7fd244f10c115d085e085e.svg",
     "static/media/home-decor-3.jpg": "/static/media/home-decor-3.74d13fcbd3c631fc7908.jpg",
     "static/media/home-decor-2.jpg": "/static/media/home-decor-2.b4e5397c9846645ba275.jpg",
@@ -35,6 +35,6 @@
   },
   "entrypoints": [
     "static/css/main.8cb92713.css",
-    "static/js/main.f1690360.js"
+    "static/js/main.cf9176f8.js"
   ]
 }

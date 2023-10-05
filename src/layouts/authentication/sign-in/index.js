@@ -67,7 +67,7 @@ function Basic() {
         } else {
           localStorage.setItem("Token", response.data.token.access);
           navigate("/chat");
-          window.location.reload();
+          // window.location.reload();
         }
       })
       .catch((error) => {

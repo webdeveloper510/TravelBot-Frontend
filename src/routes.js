@@ -86,7 +86,7 @@ const routes = [
     : ({
         name: "Sign In",
         icon: <Icon fontSize="small">login</Icon>,
-        route: "/authentication/sign-in",
+        route: "/",
         component: <SignIn />,
       }),
   {
