@@ -81,12 +81,12 @@ function Projects() {
             </MDTypography> */}
           </MDBox>
         </MDBox>
-        <MDBox color="text" px={2}>
+        {/* <MDBox color="text" px={2}>
           <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={openMenu}>
             more_vert
           </Icon>
         </MDBox>
-        {renderMenu}
+        {renderMenu} */}
       </MDBox>
       <MDBox>
         <DataTable

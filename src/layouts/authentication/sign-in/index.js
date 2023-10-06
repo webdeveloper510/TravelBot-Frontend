@@ -62,12 +62,10 @@ function Basic() {
       .then((response) => {
         if (response.data.is_admin) {
           localStorage.setItem("Admin-Token", response.data.token.access);
-          navigate("/");
-          window.location.reload();
+          navigate("/dashboard");
         } else {
           localStorage.setItem("Token", response.data.token.access);
           navigate("/chat");
-          // window.location.reload();
         }
       })
       .catch((error) => {

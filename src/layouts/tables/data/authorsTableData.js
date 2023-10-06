@@ -24,6 +24,9 @@ import team4 from "assets/images/team-4.jpg";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { API } from "config/Api";
+import Icon from "@mui/material/Icon";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 export default function data() {
   const adminAccessToken = localStorage.getItem("Admin-Token");
@@ -63,6 +66,31 @@ export default function data() {
     </MDBox>
   );
 
+  const [menu, setMenu] = useState(null);
+
+  const openMenu = ({ currentTarget }) => setMenu(currentTarget);
+  const closeMenu = () => setMenu(null);
+
+  const renderMenu = (
+    <Menu
+      id="simple-menu"
+      anchorEl={menu}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "left",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={Boolean(menu)}
+      onClose={closeMenu}
+    >
+      <MenuItem onClick={closeMenu}>In-Active</MenuItem>
+      <MenuItem onClick={closeMenu}>Delete</MenuItem>
+    </Menu>
+  );
+
   return {
     columns: [
       { Header: "Users", accessor: "user", width: "45%", align: "left" },
@@ -84,6 +112,7 @@ export default function data() {
       status: (
         <MDBox ml={-1} key={user.id}>
           <MDBadge badgeContent={user.is_active} color="success" variant="gradient" size="sm" />
+          Active
         </MDBox>
       ),
       created: (
@@ -107,7 +136,16 @@ export default function data() {
           fontWeight="medium"
           key={user.id}
         >
-          Delete
+          <MDBox color="text" px={2}>
+            <Icon
+              sx={{ cursor: "pointer", fontWeight: "bold" }}
+              fontSize="small"
+              onClick={openMenu}
+            >
+              more_vert
+            </Icon>
+          </MDBox>
+          {renderMenu}
         </MDTypography>
       ),
     })),

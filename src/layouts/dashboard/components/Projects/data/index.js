@@ -5,6 +5,7 @@
 * Admin Dashboard,Dashboard Files get page.
 =========================================================
 */
+/*eslint-disable*/
 
 // @mui material components
 import Tooltip from "@mui/material/Tooltip";
@@ -27,11 +28,38 @@ import team4 from "assets/images/team-4.jpg";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { API } from "config/Api";
+import Icon from "@mui/material/Icon";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 export default function data() {
   // States Management
   const adminAccessToken = localStorage.getItem("Admin-Token");
   const [FilesList, SetFilesList] = useState([]);
+  // const { columns, rows } = data();
+  const [menu, setMenu] = useState(null);
 
+  const openMenu = ({ currentTarget }) => setMenu(currentTarget);
+  const closeMenu = () => setMenu(null);
+
+  const renderMenu = (
+    <Menu
+      id="simple-menu"
+      anchorEl={menu}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "left",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={Boolean(menu)}
+      onClose={closeMenu}
+    >
+      <MenuItem onClick={closeMenu}>Download</MenuItem>
+      <MenuItem onClick={closeMenu}>Delete</MenuItem>
+    </Menu>
+  );
   // Function Calling
   useEffect(() => {
     axios
@@ -99,12 +127,17 @@ export default function data() {
       ),
       working: (
         <MDTypography variant="caption" color="text" fontWeight="medium">
-          True
+          Yes
         </MDTypography>
       ),
       action: (
         <MDTypography variant="caption" color="text" fontWeight="medium">
-          Delete
+          <MDBox color="text" px={2}>
+            <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={openMenu}>
+              more_vert
+            </Icon>
+          </MDBox>
+          {renderMenu}
         </MDTypography>
       ),
     })),

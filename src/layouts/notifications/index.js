@@ -11,9 +11,11 @@ Coded by www.creative-tim.com
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
 
-import { useState } from "react";
+*/
+/*eslint-disable*/
+
+import { useEffect , useState } from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -109,6 +111,19 @@ function Notifications() {
       bgWhite
     />
   );
+  const [showAlert, setShowAlert] = useState(true);
+
+  // Use useEffect to automatically close the alert after 1 second
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowAlert(false); // Close the alert after 1 second
+    }, 2000); // 1000 milliseconds = 1 second
+
+    // Clear the timer when the component unmounts or when showAlert becomes false (if the user dismisses it)
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   return (
     <DashboardLayout>
@@ -121,9 +136,9 @@ function Notifications() {
                 <MDTypography variant="h5">Alerts</MDTypography>
               </MDBox>
               <MDBox pt={2} px={2}>
-                <MDAlert color="primary" dismissible>
-                  {alertContent("primary")}
-                </MDAlert>
+                  <MDAlert color="primary" dismissible>
+                    {alertContent("primary")}
+                  </MDAlert>
                 <MDAlert color="secondary" dismissible>
                   {alertContent("secondary")}
                 </MDAlert>

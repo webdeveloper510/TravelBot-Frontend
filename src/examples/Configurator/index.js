@@ -131,7 +131,7 @@ function Configurator() {
   const navigate = useNavigate();
   const handleLogOutAdmin = () => {
     localStorage.removeItem("Admin-Token");
-    navigate("/authentication/sign-in");
+    navigate("/");
     window.location.reload();
   };
   return (

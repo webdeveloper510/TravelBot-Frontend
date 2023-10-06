@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import { useState, useEffect } from "react";
 
 // react-router components
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -52,13 +52,13 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "context";
-
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Setting the navbar type
@@ -85,12 +85,19 @@ function DashboardNavbar({ absolute, light, isMini }) {
     // Remove event listener on cleanup
     return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
-
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
+  const handleNavigate = (event) => {
+    navigate("/profile");
+  };
 
+  const handleLogOutAdmin = () => {
+    localStorage.removeItem("Admin-Token");
+    navigate("/");
+    window.location.reload();
+  };
   // Render the notifications menu
   const renderMenu = () => (
     <Menu
@@ -104,9 +111,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
-      <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
-      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" />
+      <NotificationItem icon={<Icon>person</Icon>} title="Profile" onClick={handleNavigate} />
+      <NotificationItem icon={<Icon>logout</Icon>} title="Log-Out" onClick={handleLogOutAdmin} />
     </Menu>
   );
 
@@ -135,16 +141,16 @@ function DashboardNavbar({ absolute, light, isMini }) {
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
-            <MDBox pr={1}>
+            {/* <MDBox pr={1}>
               <MDInput label="Search here" />
-            </MDBox>
+            </MDBox> */}
             <MDBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in/basic">
+              {/* <Link to="/authentication/sign-in/basic">
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
                   <Icon sx={iconsStyle}>account_circle</Icon>
                 </IconButton>
-              </Link>
-              <IconButton
+              </Link> */}
+              {/* <IconButton
                 size="small"
                 disableRipple
                 color="inherit"
@@ -154,8 +160,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 <Icon sx={iconsStyle} fontSize="medium">
                   {miniSidenav ? "menu_open" : "menu"}
                 </Icon>
-              </IconButton>
-              <IconButton
+              </IconButton> */}
+              {/* <IconButton
                 size="small"
                 disableRipple
                 color="inherit"
@@ -163,7 +169,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 onClick={handleConfiguratorOpen}
               >
                 <Icon sx={iconsStyle}>settings</Icon>
-              </IconButton>
+              </IconButton> */}
               <IconButton
                 size="small"
                 disableRipple
@@ -174,7 +180,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 variant="contained"
                 onClick={handleOpenMenu}
               >
-                <Icon sx={iconsStyle}>notifications</Icon>
+                <Icon sx={iconsStyle}>account_circle</Icon>
               </IconButton>
               {renderMenu()}
             </MDBox>

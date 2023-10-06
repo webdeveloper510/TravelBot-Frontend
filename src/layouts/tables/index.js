@@ -53,7 +53,7 @@ function Tables() {
                 coloredShadow="info"
               >
                 <MDTypography variant="h6" color="white">
-                  Users Table
+                  Users
                 </MDTypography>
               </MDBox>
               <MDBox pt={3}>
@@ -96,7 +96,7 @@ function Tables() {
           </Grid> */}
         </Grid>
       </MDBox>
-      <Footer />
+      {/* <Footer /> */}
     </DashboardLayout>
   );
 }

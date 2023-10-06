@@ -87,16 +87,25 @@ const routes = [
         name: "Sign In",
         icon: <Icon fontSize="small">login</Icon>,
         route: "/",
+        kry: "sign-in",
         component: <SignIn />,
       }),
   {
     type: "collapse",
     name: "User List",
     key: "users",
-    icon: <Icon fontSize="small">notifications</Icon>,
+    icon: <Icon fontSize="small">group</Icon>,
     route: "/users",
     component: <Tables />,
   },
+  // {
+  //   type: "collapse",
+  //   name: "User List",
+  //   key: "userjs",
+  //   icon: <Icon fontSize="small">notifications</Icon>,
+  //   route: "/notice",
+  //   component: <Notifications />,
+  // },
   {
     type: "collapse",
     name: "Profile",
@@ -117,6 +126,7 @@ const routes = [
      {
       name: "User Chat Page",
       icon: <Icon fontSize="small">assignment</Icon>,
+      kry: "chat",
       route: "/chat",
       component: <ChatBot />,
     }

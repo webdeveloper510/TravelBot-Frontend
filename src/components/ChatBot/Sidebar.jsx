@@ -12,7 +12,7 @@ const ChatBotSideBar = () => {
 
   const handleLogOut = () => {
     localStorage.removeItem("Token");
-    navigate("/authentication/sign-in");
+    navigate("/");
     window.location.reload();
     // toast.success("Logged out Successfully!");
   };
