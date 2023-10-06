@@ -426,3 +426,6 @@ button.logout {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
   z-index: 1000; /* Ensure the loader is above the overlay */
 }
+.css-1s01nx2-MuiTypography-root-MuiBreadcrumbs-root{
+  display: none;
+}

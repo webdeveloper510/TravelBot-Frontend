@@ -50,46 +50,21 @@ import ChatBot from "components/ChatBot/ChatBot";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
-
-const token = localStorage.getItem("Admin-Token");
-const token1 = localStorage.getItem("Token");
-// const routes = [
-//      {
-//        path: '/',
-//        children: [
-//          { index: true, element: <Login /> },
-//          { path: 'register', element: <Register /> },
-//         //  { path: 'Landing', element: <Landing /> },
-//          { path: '*', element: <Page404 /> },
-//        ]
-//      },
-//      {
-//        path: '/',
-//        element: <Layout />,
-//        children: [
-//          { index: true, path:'/dashboard', element: <Dashboard /> },
-//          { path: '/extensions', element: <Extensions /> },
-//        ]
-//      }
-//    ]
+const adminToken = localStorage.getItem("Admin-Token");
+const userToken = localStorage.getItem("Token");
 
 const routes = [
-  token
-    ? ({
+  adminToken ? (
+    {
       type: "collapse",
       name: "Dashboard",
       key: "dashboard",
       icon: <Icon fontSize="small">dashboard</Icon>,
       route: "/dashboard",
       component: <Dashboard />,
-    })
-    : ({
-        name: "Sign In",
-        icon: <Icon fontSize="small">login</Icon>,
-        route: "/",
-        kry: "sign-in",
-        component: <SignIn />,
-      }),
+    }
+  ):(<></>),
+  adminToken ? (
   {
     type: "collapse",
     name: "User List",
@@ -97,42 +72,40 @@ const routes = [
     icon: <Icon fontSize="small">group</Icon>,
     route: "/users",
     component: <Tables />,
-  },
-  // {
-  //   type: "collapse",
-  //   name: "User List",
-  //   key: "userjs",
-  //   icon: <Icon fontSize="small">notifications</Icon>,
-  //   route: "/notice",
-  //   component: <Notifications />,
-  // },
-  {
+  }):(<></>),
+  adminToken ? 
+  ({
     type: "collapse",
     name: "Profile",
     key: "profile",
     icon: <Icon fontSize="small">person</Icon>,
     route: "/profile",
     component: <Profile />,
-  },
-  {
+  }):(<></>),
+  adminToken ? 
+  ({
     type: "collapse",
     name: "Add User",
     key: "sign-up",
     icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/sign-up",
+    route: "/add-users",
     component: <SignUp />,
-  },
-  token1 ? (
-     {
-      name: "User Chat Page",
-      icon: <Icon fontSize="small">assignment</Icon>,
-      kry: "chat",
-      route: "/chat",
-      component: <ChatBot />,
-    }
-   
-  ) : ( <></>)
-  
+  }):(<></>),
+  userToken ? 
+  ({
+    name: "User Chat Page",
+    key: "chat",
+    icon: <Icon fontSize="small">assignment</Icon>,
+    route: "/chat",
+    component: <ChatBot />,
+  }):(<></>),
+  adminToken || userToken ?(<></>):
+  ({
+    name: "Sign In",
+    key: "sign-in",
+    route: "/",
+    component: <SignIn />,
+  })
 ];
 
 export default routes;

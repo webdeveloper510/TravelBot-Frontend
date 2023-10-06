@@ -63,9 +63,11 @@ function Basic() {
         if (response.data.is_admin) {
           localStorage.setItem("Admin-Token", response.data.token.access);
           navigate("/dashboard");
+          window.location.reload();
         } else {
           localStorage.setItem("Token", response.data.token.access);
           navigate("/chat");
+          window.location.reload();
         }
       })
       .catch((error) => {
@@ -115,7 +117,7 @@ function Basic() {
             <MDBox mb={2}>
               <MDInput type="password" label="Password" onChange={handlePassword} fullWidth />
             </MDBox>
-            <MDBox display="flex" alignItems="center" ml={-1}>
+            {/* <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
               <MDTypography
                 variant="button"
@@ -126,7 +128,7 @@ function Basic() {
               >
                 &nbsp;&nbsp;Remember me
               </MDTypography>
-            </MDBox>
+            </MDBox> */}
             <MDBox mt={4} mb={1}>
               <MDButton variant="gradient" color="info" fullWidth onClick={handleLogin}>
                 sign in

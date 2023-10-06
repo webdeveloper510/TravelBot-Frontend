@@ -54,6 +54,9 @@ import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
 
 export default function App() {
+  const adminToken = localStorage.getItem("Admin-Token");
+  const userToken = localStorage.getItem("Token");
+
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -110,7 +113,15 @@ export default function App() {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
+  // Define a function to check if a user has the "Admin-Token"
+  const isAdmin = () => {
+    return !!adminToken; // Returns true if "Admin-Token" is present, false otherwise
+  };
 
+  // Define a function to check if a user has the "Token"
+  const isUser = () => {
+    return !!userToken; // Returns true if "Token" is present, false otherwise
+  };
   const getRoutes = (allRoutes) =>
     allRoutes.map((route) => {
       if (route.collapse) {
@@ -159,14 +170,14 @@ export default function App() {
     > 
     {
       pathname !== "/chat"?(
-<Sidenav
-    color={sidenavColor}
-    brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-    brandName="Admin Dashboard "
-    routes={routes}
-    onMouseEnter={handleOnMouseEnter}
-    onMouseLeave={handleOnMouseLeave}
-  />
+        <Sidenav
+            color={sidenavColor}
+            brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+            brandName="Admin Dashboard "
+            routes={routes}
+            onMouseEnter={handleOnMouseEnter}
+            onMouseLeave={handleOnMouseLeave}
+          />
       ):(<></>)
     }
     

@@ -1,3 +1,5 @@
+/*eslint-disable*/
+
 import axios from "axios";
 import React, { useState } from "react";
 import { API } from "config/Api";
@@ -12,6 +14,7 @@ const PreViewPage = () => {
   const handleInputQuestion = (event) => {
     setCurrentQuestion(event.target.value);
   };
+
   const handleQuestionSubmit = () => {
     if (currentQuestion.trim() !== "") {
       setQuestions([...questions, currentQuestion]);
@@ -26,10 +29,10 @@ const PreViewPage = () => {
         },
       })
       .then((response) => {
-        const AnswerGet = response.data.data.Answer;
-        if (AnswerGet.trim() !== "") {
-          setAnswers([...answers, AnswerGet]);
-          setCurrentAnswer(AnswerGet);
+         const  AnswerGet = response.data.data.Answer;
+          if (AnswerGet.trim() !== "") {
+            setAnswers([...answers, AnswerGet]);
+            setCurrentAnswer(AnswerGet);
         }
       })
       .catch((error) => {
