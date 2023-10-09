@@ -91,9 +91,9 @@ function ProfileInfoCard({ title, description, info, shadow }) {
           {title}
         </MDTypography>
         {/* <MDTypography component={Link} to={action.route} variant="body2" color="secondary"> */}
-        {/* <Tooltip title={action.tooltip} placement="top">
-            <Icon>edit</Icon>
-          </Tooltip> */}
+        <Tooltip placement="top">
+          <Icon>edit</Icon>
+        </Tooltip>
         {/* </MDTypography> */}
       </MDBox>
       <MDBox p={2}>

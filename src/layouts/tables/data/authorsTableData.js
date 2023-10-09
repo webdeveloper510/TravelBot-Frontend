@@ -10,6 +10,7 @@ USER DETAILS SHOW
  =========================================================
 
 */
+/*eslint-disable*/
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -27,25 +28,48 @@ import { API } from "config/Api";
 import Icon from "@mui/material/Icon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-
+import ReactSwitch from "react-switch";
+import MDButton from "components/MDButton";
+import { Switch } from "@mui/material";
 export default function data() {
   const adminAccessToken = localStorage.getItem("Admin-Token");
   const [UserList, SetUserList] = useState([]);
+  const [StatusCheck, setStatusCheck] = useState(true);
+
+  const handleChangeCheck = (event, id, status) => {
+    console.log("click", event.target.checked, id , status);
+    // setStatusCheck(status)
+    axios.post(API.BASE_URL+"userstatus/"+id+"/",{is_active:status}).then(response => {console.log("success", response)}).catch((error => {console.log("errro");}))
+  };
+  const [menu, setMenu] = useState(null);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
+  // const openMenu = ({ currentTarget }) => setMenu(currentTarget);
+  const openMenu = (userId) => {
+    setMenu(() => userId);
+    // setMenu(currentTarget);
+    setSelectedUserId(userId);
+  };
+  const closeMenu = () => setMenu(null);
+  const handleDeleteUser = (userid) => {
+    console.log("delete user", userid);
+    axios.delete(API.BASE_URL+"userdelete/"+userid+"/").then((response=>{window.location.reload()}))
+    .catch((err => {console.log(err)}))
+  }
+
+
   useEffect(() => {
-    axios
-      .get(API.BASE_URL + "userlist/", {
+    axios.get(API.BASE_URL + "userlist/", {
         headers: {
           Authorization: `Bearer ${adminAccessToken}`,
         },
-      })
-      .then((res) => {
+      }).then((res) => {
         SetUserList(res.data.data);
-      })
-      .catch((err) => {
+      }).catch((err) => {
         console.log(err);
       });
   }, []);
-  console.log(UserList);
+
   const Author = ({ image, name, email }) => (
     <MDBox display="flex" alignItems="center" lineHeight={1}>
       <MDAvatar src={image} name={name} size="sm" />
@@ -66,31 +90,8 @@ export default function data() {
     </MDBox>
   );
 
-  const [menu, setMenu] = useState(null);
 
-  const openMenu = ({ currentTarget }) => setMenu(currentTarget);
-  const closeMenu = () => setMenu(null);
-
-  const renderMenu = (
-    <Menu
-      id="simple-menu"
-      anchorEl={menu}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "left",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={Boolean(menu)}
-      onClose={closeMenu}
-    >
-      <MenuItem onClick={closeMenu}>In-Active</MenuItem>
-      <MenuItem onClick={closeMenu}>Delete</MenuItem>
-    </Menu>
-  );
-
+  // userdelete
   return {
     columns: [
       { Header: "Users", accessor: "user", width: "45%", align: "left" },
@@ -111,8 +112,11 @@ export default function data() {
       function: <Job title={user.is_admin ? "admin" : "user"} key={user.id} />,
       status: (
         <MDBox ml={-1} key={user.id}>
-          <MDBadge badgeContent={user.is_active} color="success" variant="gradient" size="sm" />
-          Active
+          {/* <ReactSwitch checked={user.is_active} onChange={handleChangeCheck} /> */}
+          {/* <MDBox mt={0.5}> */}
+          {/* {setStatusCheck(user.is_active)} */}
+            <Switch checked={StatusCheck} onChange={(event) => handleChangeCheck(event ,user.id , !StatusCheck)} />
+          {/* </MDBox> */}
         </MDBox>
       ),
       created: (
@@ -138,14 +142,36 @@ export default function data() {
         >
           <MDBox color="text" px={2}>
             <Icon
+              onClick={() => openMenu(user.id)}
               sx={{ cursor: "pointer", fontWeight: "bold" }}
               fontSize="small"
-              onClick={openMenu}
+              // onClick={openMenu}
             >
               more_vert
             </Icon>
           </MDBox>
-          {renderMenu}
+          <Menu
+          
+            id={user.id}
+            anchorEl={menu === user.id ? document.getElementById(`menu-${user.id}`) : null}
+            // open={menu === user.id}
+            // onClose={closeMenu}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            className="position-relative"
+            open={Boolean(menu)}
+            onClose={closeMenu}
+          >
+            <MenuItem onClick={() => {
+                  handleDeleteUser(selectedUserId);
+                }} style={{color:"danger"}}>Delete</MenuItem>
+          </Menu>
         </MDTypography>
       ),
     })),

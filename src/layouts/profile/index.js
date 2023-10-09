@@ -12,11 +12,12 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
+/*eslint-disable*/
 
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
-
+import MDInput from "components/MDInput";
 // @mui icons
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -25,7 +26,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-
+import MDButton from "components/MDButton";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -50,8 +51,44 @@ import team1 from "assets/images/team-1.jpg";
 import team2 from "assets/images/team-2.jpg";
 import team3 from "assets/images/team-3.jpg";
 import team4 from "assets/images/team-4.jpg";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { API } from "config/Api";
 
 function Overview() {
+  const [ProfileDetails, SetProfileDetails] = useState([]);
+  const [newPassword , setNewPassword] = useState(null);
+  const [confirmPassword , setConfirmPassword] = useState(null);
+  const [ErrnewPassword , ErrsetNewPassword] = useState(false);
+  const [ErrconfirmPassword , ErrsetConfirmPassword] = useState(false);
+  const adminAccessToken = localStorage.getItem("Admin-Token");
+  useEffect(() => {
+    axios
+      .get(API.BASE_URL + "userprofile/", {
+      headers: {
+        Authorization: `Bearer ${adminAccessToken}`,
+      },
+    }).then((response) => {
+      SetProfileDetails(response.data);
+    }).catch((error) =>{
+      console.log("error")
+    })
+  }, []);
+  const handleNewPassword = (e) => {
+      setNewPassword(e.target.value);
+  }
+  const handleConfirmPassword = (e) => {
+      setConfirmPassword(e.target.value)
+  }
+  const handleChangePassword = () =>{
+    console.log(newPassword, confirmPassword)
+    if (newPassword === null){
+      ErrsetNewPassword(true);
+    }
+    if (confirmPassword === null){
+      ErrsetConfirmPassword(true)
+    }
+  }
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -62,16 +99,15 @@ function Overview() {
             {/* <Grid item xs={12} md={6} xl={4}>
               <PlatformSettings />
             </Grid> */}
-            <Grid item xs={12} md={6} xl={4} sx={{ display: "flex" }}>
-              {/* <Divider orientation="vertical" sx={{ ml: -2, mr: 1 }} /> */}
-              <ProfileInfoCard
+            <Grid item xs={12} md={6} xl={8} sx={{ display: "flex" }}>
+              <Divider orientation="vertical" sx={{ ml: -2, mr: 1 }} />
+              {ProfileDetails && (
+                <ProfileInfoCard
                 title="profile information"
                 description="Hi, I’m Alec Thompson, Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
                 info={{
-                  fullName: "Alec M. Thompson",
-                  mobile: "(44) 123 1234 123",
-                  email: "alecthompson@mail.com",
-                  location: "USA",
+                  fullName: ProfileDetails.firstname + " " + ProfileDetails.lastname,
+                  email: ProfileDetails.email,
                 }}
                 // social={[
                 //   {
@@ -90,14 +126,33 @@ function Overview() {
                 //     color: "instagram",
                 //   },
                 // ]}
-                // action={{ route: "", tooltip: "Edit Profile" }}
+                action={{ route: "", tooltip: "Edit Profile" }}
                 shadow={false}
               />
+              )}
+              
               <Divider orientation="vertical" sx={{ mx: 0 }} />
             </Grid>
-            {/* <Grid item xs={12} xl={4}>
-              <ProfilesList title="conversations" profiles={profilesListData} shadow={false} />
-            </Grid> */}
+            <Grid item xs={12} md={6} xl={3}>
+              <MDTypography variant="h6" fontWeight="medium" textTransform="capitalize">
+                Change Password
+              </MDTypography>
+              <MDBox pt={4} pb={3} px={3}>
+                <MDBox component="form" role="form">
+                  <MDBox mb={2}>
+                    <MDInput type="email" label="New Password" onChange={handleNewPassword} fullWidth error={ErrnewPassword} />
+                  </MDBox>
+                  <MDBox mb={2}>
+                    <MDInput type="password" label="Confirm Password" onChange={handleConfirmPassword} fullWidth error={ErrconfirmPassword} />
+                  </MDBox>
+                  <MDBox mt={4} mb={1}>
+                    <MDButton variant="gradient" color="info" fullWidth onClick={handleChangePassword} >
+                      Change Password
+                    </MDButton>
+                  </MDBox>
+                </MDBox>
+              </MDBox>
+            </Grid>
           </Grid>
         </MDBox>
         {/* <MDBox pt={2} px={2} lineHeight={1.25}>

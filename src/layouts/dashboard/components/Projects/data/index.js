@@ -41,25 +41,6 @@ export default function data() {
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);
   const closeMenu = () => setMenu(null);
 
-  const renderMenu = (
-    <Menu
-      id="simple-menu"
-      anchorEl={menu}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "left",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={Boolean(menu)}
-      onClose={closeMenu}
-    >
-      <MenuItem onClick={closeMenu}>Download</MenuItem>
-      <MenuItem onClick={closeMenu}>Delete</MenuItem>
-    </Menu>
-  );
   // Function Calling
   useEffect(() => {
     axios
@@ -75,7 +56,6 @@ export default function data() {
         console.log(err);
       });
   }, []);
-  console.log(FilesList);
   const avatars = (members) =>
     members.map(([image, name]) => (
       <Tooltip key={name} title={name} placeholder="bottom">
@@ -137,8 +117,25 @@ export default function data() {
               more_vert
             </Icon>
           </MDBox>
-          {renderMenu}
+          <Menu
+          id="simple-menu"
+          anchorEl={menu}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          open={Boolean(menu)}
+          onClose={closeMenu}
+        >
+          <MenuItem><a href={files.csvfile}>Download</a></MenuItem>
+          <MenuItem><a href={files.id} style={{color:"red"}}>Delete</a></MenuItem>
+        </Menu>
         </MDTypography>
+
       ),
     })),
   };

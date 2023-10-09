@@ -33,6 +33,8 @@ import { useState } from "react";
 import axios from "axios";
 import { API } from "config/Api";
 import { Container, Grid } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Snackbar } from "@mui/material";
 
 function Cover() {
   // States Management
@@ -40,6 +42,13 @@ function Cover() {
   const [AddLastname, SetAddLastname] = useState("");
   const [AddEmail, SetAddEmail] = useState("");
   const [AddPassword, SetAddPassword] = useState("");
+  const [FirstNameNull, SetFirstNameNull] = useState(false);
+  const [LastNameNull, SetLastNameNull] = useState(false);
+  const [EmailNull, SetEmailNull] = useState(false);
+  const [PasseordNull, SetPasseordNull] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false); 
+
+  const navigate = useNavigate()
   // Function Calling
   const handleAddFirstname = (event) => {
     SetAddFirstname(event.target.value);
@@ -55,6 +64,31 @@ function Cover() {
   };
   const handleAddUser = () => {
     const formData = new FormData();
+    console.log(AddFirstname, AddLastname, AddEmail, AddPassword)
+    if (AddFirstname === ""){
+      SetFirstNameNull(true)
+    }
+    else {
+      SetFirstNameNull(false)
+    }
+    if (AddLastname === ""){
+      SetLastNameNull(true)
+    }
+    else {
+      SetLastNameNull(false)
+    }
+    if (AddEmail === ""){
+      SetEmailNull(true)
+    }
+    else {
+      SetEmailNull(false)
+    }
+    if (AddPassword === ""){
+      SetPasseordNull(true)
+    }
+    else {
+      SetPasseordNull(false)
+    }
     formData.append("firstname", AddFirstname);
     formData.append("lastname", AddLastname);
     formData.append("email", AddEmail);
@@ -62,11 +96,22 @@ function Cover() {
     axios
       .post(API.BASE_URL + "register/", formData)
       .then((response) => {
-        console.log(response);
+        setOpenSnackbar(true);
+
+        navigate("/users")
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.response.data.email[0]);
+        if (error.response.data.email[0] === "Enter a valid email address."){
+          SetEmailNull(true)
+        }
       });
+  };
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
   };
   return (
     <DashboardLayout>
@@ -106,6 +151,7 @@ function Cover() {
                           variant="standard"
                           onChange={handleAddFirstname}
                           fullWidth
+                          error={FirstNameNull}
                         />
                       </MDBox>
                       <MDBox mb={2}>
@@ -115,6 +161,7 @@ function Cover() {
                           variant="standard"
                           onChange={handleAddLastname}
                           fullWidth
+                          error={LastNameNull}
                         />
                       </MDBox>
                       <MDBox mb={2}>
@@ -124,6 +171,7 @@ function Cover() {
                           variant="standard"
                           onChange={handleAddEmail}
                           fullWidth
+                          error={EmailNull}
                         />
                       </MDBox>
                       <MDBox mb={2}>
@@ -133,6 +181,7 @@ function Cover() {
                           variant="standard"
                           onChange={handleAddPassword}
                           fullWidth
+                          error={PasseordNull}
                         />
                       </MDBox>
                       {/* <MDBox display="flex" alignItems="center" ml={-1}>
@@ -186,7 +235,12 @@ function Cover() {
         </Grid>
       </Grid>
       </Container>
-     
+      <Snackbar
+                open={openSnackbar}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+                message="Login successful or error message"
+              />
     </DashboardLayout>
   );
 }

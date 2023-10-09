@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-
+import MDButton from "components/MDButton";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -30,8 +30,12 @@ import DataTable from "examples/Tables/DataTable";
 // Data
 import authorsTableData from "layouts/tables/data/authorsTableData";
 import projectsTableData from "layouts/tables/data/projectsTableData";
-
+import { useNavigate } from "react-router-dom";
 function Tables() {
+  const navigate = useNavigate();
+  const hndleNavigate = () => {
+    navigate("/add-users");
+  };
   const { columns, rows } = authorsTableData();
   // const { columns: pColumns, rows: pRows } = projectsTableData();
 
@@ -55,6 +59,12 @@ function Tables() {
                 <MDTypography variant="h6" color="white">
                   Users
                 </MDTypography>
+                {/* <butotn className="btn btn-primary add-user-btn">Add User</butotn> */}
+                <MDBox>
+                  <MDButton variant="gradient" color="white" onClick={hndleNavigate}>
+                    Add User
+                  </MDButton>
+                </MDBox>
               </MDBox>
               <MDBox pt={3}>
                 <DataTable

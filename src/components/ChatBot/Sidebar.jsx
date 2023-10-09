@@ -40,7 +40,7 @@ const ChatBotSideBar = () => {
           </a>
         </div>
       </div>
-      <ul>
+      {/* <ul>
         <li className="search-list-titles">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +58,7 @@ const ChatBotSideBar = () => {
           </svg>
           <div className="title-chat">Hello Request</div>
         </li>
-      </ul>
+      </ul> */}
       <button className="logout" onClick={handleLogOut}>
         Log Out
       </button>

@@ -25,7 +25,8 @@ import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Icon from "@mui/material/Icon";
-
+import axios from "axios";
+import { API } from "config/Api";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -63,7 +64,20 @@ function Header({ children }) {
   }, [tabsOrientation]);
 
   const handleSetTabValue = (event, newValue) => setTabValue(newValue);
-
+  const [ProfileDetails, SetProfileDetails] = useState([]);
+  const adminAccessToken = localStorage.getItem("Admin-Token");
+  useEffect(() => {
+    axios
+      .get(API.BASE_URL + "userprofile/", {
+      headers: {
+        Authorization: `Bearer ${adminAccessToken}`,
+      },
+    }).then((response) => {
+      SetProfileDetails(response.data);
+    }).catch((error) =>{
+      console.log("error")
+    })
+  }, []);
   return (
     <MDBox position="relative" mb={5}>
       <MDBox
@@ -97,14 +111,17 @@ function Header({ children }) {
             <MDAvatar src={burceMars} alt="profile-image" size="xl" shadow="sm" />
           </Grid>
           <Grid item>
+          {ProfileDetails && (
             <MDBox height="100%" mt={0.5} lineHeight={1}>
-              <MDTypography variant="h5" fontWeight="medium">
-                Richard Davis
-              </MDTypography>
-              <MDTypography variant="button" color="text" fontWeight="regular">
-                CEO / Co-Founder
-              </MDTypography>
-            </MDBox>
+            <MDTypography variant="h5" fontWeight="medium">
+              {ProfileDetails.firstname + " " + ProfileDetails.lastname}
+            </MDTypography>
+            <MDTypography variant="button" color="text" fontWeight="regular">
+              {ProfileDetails.email}
+            </MDTypography>
+          </MDBox>
+          )}
+
           </Grid>
           {/* <Grid item xs={12} md={6} lg={4} sx={{ ml: "auto" }}>
             <AppBar position="static">

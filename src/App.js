@@ -52,8 +52,10 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 // Images
 import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function App() {
+  <ToastContainer autoclose={1000} />
   const adminToken = localStorage.getItem("Admin-Token");
   const userToken = localStorage.getItem("Token");
 
