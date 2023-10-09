@@ -95,6 +95,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
 
   const handleLogOutAdmin = () => {
     localStorage.removeItem("Admin-Token");
+    localStorage.removeItem("uploaded-csv");
     navigate("/");
     window.location.reload();
   };

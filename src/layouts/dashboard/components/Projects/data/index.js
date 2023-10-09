@@ -35,10 +35,16 @@ export default function data() {
   // States Management
   const adminAccessToken = localStorage.getItem("Admin-Token");
   const [FilesList, SetFilesList] = useState([]);
+  const [FilesUrl, SetFilesUrl] = useState('');
+  const [FilesId, SetFilesId] = useState('');
   // const { columns, rows } = data();
   const [menu, setMenu] = useState(null);
 
-  const openMenu = ({ currentTarget }) => setMenu(currentTarget);
+  const openMenu = ({ currentTarget }, file , id) => {
+    setMenu(currentTarget)
+    SetFilesUrl(file)
+    SetFilesId(id)
+  };
   const closeMenu = () => setMenu(null);
 
   // Function Calling
@@ -56,6 +62,8 @@ export default function data() {
         console.log(err);
       });
   }, []);
+  
+
   const avatars = (members) =>
     members.map(([image, name]) => (
       <Tooltip key={name} title={name} placeholder="bottom">
@@ -113,29 +121,28 @@ export default function data() {
       action: (
         <MDTypography variant="caption" color="text" fontWeight="medium">
           <MDBox color="text" px={2}>
-            <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={openMenu}>
+            <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={(event) => openMenu(event , files.csvfile , files.id)} >
               more_vert
             </Icon>
           </MDBox>
           <Menu
-          id="simple-menu"
-          anchorEl={menu}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          open={Boolean(menu)}
-          onClose={closeMenu}
-        >
-          <MenuItem><a href={files.csvfile}>Download</a></MenuItem>
-          <MenuItem><a href={files.id} style={{color:"red"}}>Delete</a></MenuItem>
-        </Menu>
+            id="simple-menu"
+            anchorEl={menu}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(menu)}
+            onClose={closeMenu}
+          >
+            <MenuItem><a href={FilesUrl}>Download</a></MenuItem>
+            <MenuItem><a href={FilesId} style={{color:"red"}}>Delete</a></MenuItem>
+          </Menu>
         </MDTypography>
-
       ),
     })),
   };

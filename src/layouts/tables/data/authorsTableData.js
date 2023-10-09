@@ -30,31 +30,20 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ReactSwitch from "react-switch";
 import MDButton from "components/MDButton";
-import { Switch } from "@mui/material";
 export default function data() {
   const adminAccessToken = localStorage.getItem("Admin-Token");
   const [UserList, SetUserList] = useState([]);
-  const [StatusCheck, setStatusCheck] = useState(true);
-
-  const handleChangeCheck = (event, id, status) => {
-    console.log("click", event.target.checked, id , status);
-    // setStatusCheck(status)
-    axios.post(API.BASE_URL+"userstatus/"+id+"/",{is_active:status}).then(response => {console.log("success", response)}).catch((error => {console.log("errro");}))
+  const handleChangeCheck = () => {
+    console.log("click");
   };
-  const [menu, setMenu] = useState(null);
-  const [selectedUserId, setSelectedUserId] = useState(null);
 
-  // const openMenu = ({ currentTarget }) => setMenu(currentTarget);
-  const openMenu = (userId) => {
-    setMenu(() => userId);
-    // setMenu(currentTarget);
-    setSelectedUserId(userId);
-  };
-  const closeMenu = () => setMenu(null);
   const handleDeleteUser = (userid) => {
-    console.log("delete user", userid);
-    axios.delete(API.BASE_URL+"userdelete/"+userid+"/").then((response=>{window.location.reload()}))
-    .catch((err => {console.log(err)}))
+    axios.delete(API.BASE_URL+"userdelete/"+userid+"/")
+    .then((res)=>{
+      window.location.reload()
+    }).catch((err)=>{
+      console.log(err)
+    })
   }
 
 
@@ -90,6 +79,14 @@ export default function data() {
     </MDBox>
   );
 
+  const [menu, setMenu] = useState(null);
+  const [userID, setUserID] = useState(null);
+
+  const openMenu = ({ currentTarget }, id) =>{
+    setMenu(currentTarget)
+    setUserID(id)
+  };
+  const closeMenu = () => setMenu(null);
 
   // userdelete
   return {
@@ -112,11 +109,7 @@ export default function data() {
       function: <Job title={user.is_admin ? "admin" : "user"} key={user.id} />,
       status: (
         <MDBox ml={-1} key={user.id}>
-          {/* <ReactSwitch checked={user.is_active} onChange={handleChangeCheck} /> */}
-          {/* <MDBox mt={0.5}> */}
-          {/* {setStatusCheck(user.is_active)} */}
-            <Switch checked={StatusCheck} onChange={(event) => handleChangeCheck(event ,user.id , !StatusCheck)} />
-          {/* </MDBox> */}
+          <ReactSwitch checked={user.is_active} onChange={handleChangeCheck} />
         </MDBox>
       ),
       created: (
@@ -142,35 +135,28 @@ export default function data() {
         >
           <MDBox color="text" px={2}>
             <Icon
-              onClick={() => openMenu(user.id)}
               sx={{ cursor: "pointer", fontWeight: "bold" }}
               fontSize="small"
-              // onClick={openMenu}
+              onClick={(event) => openMenu(event ,user.id)}
             >
               more_vert
             </Icon>
           </MDBox>
           <Menu
-          
-            id={user.id}
-            anchorEl={menu === user.id ? document.getElementById(`menu-${user.id}`) : null}
-            // open={menu === user.id}
-            // onClose={closeMenu}
+            id="simple-menu"
+            anchorEl={menu}
             anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
+              vertical: "top",
+              horizontal: "left",
             }}
             transformOrigin={{
               vertical: "top",
               horizontal: "right",
             }}
-            className="position-relative"
             open={Boolean(menu)}
             onClose={closeMenu}
           >
-            <MenuItem onClick={() => {
-                  handleDeleteUser(selectedUserId);
-                }} style={{color:"danger"}}>Delete</MenuItem>
+            <MenuItem onClick={handleDeleteUser(userID)} style={{color:"danger"}}>Delete</MenuItem>
           </Menu>
         </MDTypography>
       ),

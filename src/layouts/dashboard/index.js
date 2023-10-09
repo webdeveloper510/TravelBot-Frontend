@@ -45,6 +45,7 @@ function Dashboard() {
   // States Management
   const [CSVFileUpload, SetCSVFileUpload] = useState(null)
   const [loading, setLoading] = useState(false);
+  const [UpLoading, setUpLoading] = useState(false);
   const [ShowFeedStep, SetShowFeedStep] = useState(false);
   const adminAccessToken = localStorage.getItem("Admin-Token");
 
@@ -76,14 +77,21 @@ function Dashboard() {
   const fileInputCSV=(event)=>{
     SetCSVFileUpload(event.target.files[0])
   }
+  const uploadForTrain = localStorage.getItem("uploaded-csv")
   const FileUploadCSV=()=>{
+    SetShowFeedStep(false);
+    setUpLoading(true);
     const formdata = new FormData();
     formdata.append("csv_file", CSVFileUpload)
     axios.post(API.BASE_URL+"csvupload/", formdata)
     .then((res)=>{
           if (res.data.message==="File uploaded and data saved successfully"){
             console.log("File uploaded successfully")
-            SetShowFeedStep(false);
+            setTimeout(()=>{
+              setUpLoading(false)
+              window.location.reload();
+            },2000)
+            localStorage.setItem("uploaded-csv", "Upload Nedd to Train")
                 // toast.success(res.data.message, {autoClose:1000})
           }
           else{
@@ -105,6 +113,7 @@ function Dashboard() {
           },
     }).then((response)=>{
           setLoading(false);
+          localStorage.removeItem("uploaded-csv")
           close()
           toast.success("Model trained Successfully!", {autoClose:1000})
     }).catch((error)=>{
@@ -118,9 +127,9 @@ function Dashboard() {
       <MDBox py={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
-                <h3 className="heading-step">Step 1</h3>
-                <MDBox mb={1.5} onClick={handleShowFeed}>
-                  <ComplexStatisticsCard color="dark" icon="upload" title="Feed The Brain"/>
+                <h3 className="heading-step">Step 1 <span className="successTag"> {uploadForTrain? "Completed" : ""}</span></h3>
+                <MDBox mb={1.5} onClick={uploadForTrain ? null : handleShowFeed} style={uploadForTrain ? { cursor: "not-allowed" } : { cursor: "pointer" }} className={uploadForTrain ? "desabled":""}>
+                  <ComplexStatisticsCard className="desable-uploaded" color="dark" icon={uploadForTrain ? "stop": "upload"} title={uploadForTrain ? "Train Modal First" : "Feed The Brain" } />
                 </MDBox>
               {ShowFeedStep ? 
                ( <div className='modal'>
@@ -160,12 +169,23 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard icon="psychology" title="Train Model" />
               <MDButton variant="gradient" color="success" onClick={trainModel}>
-                Train The Model
+                Click to Train
               </MDButton>
             </MDBox>
           </Grid>
         </Grid>
         <MDBox>
+        {/* <Grid item xs={12} md={6} lg={3}> */}
+          <div className="your-component">
+              {/* Background overlay */}
+              {UpLoading && <div className="overlay"></div>}
+              {/* Render a loader based on the loading state */}
+              {UpLoading ? (
+              <div className="loader">Uploading CSV...</div>
+              ) : (<></>)}
+          </div>
+        {/* </Grid> */}
+
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={12}>
               <Projects />

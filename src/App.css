@@ -391,9 +391,9 @@ button.logout {
   font-weight: bold;
   cursor: pointer;
 }
-.MuiBox-root.css-79or14 {
+/* .MuiBox-root.css-79or14 {
   cursor: pointer;
-}
+} */
 .MuiBox-root.css-1mc398b {
   cursor: pointer;
   transition: 0.7s;
@@ -522,4 +522,10 @@ h6.MuiTypography-root.MuiTypography-h6.css-66yapz-MuiTypography-root {
 
 .position-relative {
   position: relative;
+}
+.desabled .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.MuiCard-root.css-1h15ts-MuiPaper-root-MuiCard-root{
+  background: #89b8ff;
+}
+span.successTag {
+  color: #5bb35f;
 }
