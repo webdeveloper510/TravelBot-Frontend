@@ -30,34 +30,81 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ReactSwitch from "react-switch";
 import MDButton from "components/MDButton";
+import MDSnackbar from "components/MDSnackbar";
+import { Switch } from "@mui/material";
 export default function data() {
+
+  //  States Management ========================================================================>
+
   const adminAccessToken = localStorage.getItem("Admin-Token");
   const [UserList, SetUserList] = useState([]);
-  const handleChangeCheck = () => {
-    console.log("click");
-  };
+  const [checkState , SetCheckState] = useState(false);
+  const [SuccessChangeStatus, SetSuccessChangeStatus] = useState(false);
+  const [SuccessDelete, setSuccessDelete] = useState(false);
+  const [menu, setMenu] = useState(null);
+  const [userID, setUserID] = useState(null);
 
+  //  UseEffects Management ========================================================================>
+
+    useEffect(() => {
+      axios.get(API.BASE_URL + "userlist/", {
+          headers: {
+            Authorization: `Bearer ${adminAccessToken}`,
+          },
+        }).then((res) => {
+          SetUserList(res.data.data);
+        }).catch((err) => {
+          console.log(err);
+        });
+    }, []);
+
+
+  //  Function Calling ========================================================================>
+
+  const handleCheckboxChange = (user) => {
+    const updatedUserList = UserList.map((u) => {
+      if (u.id === user.id) {
+        u.is_active = !u.is_active;
+      }
+      return u;
+    });
+    SetUserList(updatedUserList);
+    axios
+      .post(API.BASE_URL + `userstatus/${user.id}/`, { is_active: user.is_active })
+      .then((res) => {
+        SetSuccessChangeStatus(true);
+      })
+      .catch((err) => {
+        console.error("Error updating user status:", err);
+        SetUserList(UserList);
+      });
+  };
+  
+  const openMenu = ({ currentTarget }, id) =>{
+    setMenu(currentTarget)
+    setUserID(id)
+  };
   const handleDeleteUser = (userid) => {
     axios.delete(API.BASE_URL+"userdelete/"+userid+"/")
     .then((res)=>{
-      window.location.reload()
+      console.log("delete user", userid)
+      setSuccessDelete(true);
+      setTimeout(()=>{
+        window.location.reload();
+      },1000)
     }).catch((err)=>{
       console.log(err)
     })
   }
 
+  const closeMenu = () => setMenu(null);
+  const closeWarningSB = () => {
+    SetSuccessChangeStatus(false)
+    setSuccessDelete(false)
+  };
 
-  useEffect(() => {
-    axios.get(API.BASE_URL + "userlist/", {
-        headers: {
-          Authorization: `Bearer ${adminAccessToken}`,
-        },
-      }).then((res) => {
-        SetUserList(res.data.data);
-      }).catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  // Super Global Variables ----------============================================>
+
 
   const Author = ({ image, name, email }) => (
     <MDBox display="flex" alignItems="center" lineHeight={1}>
@@ -79,16 +126,10 @@ export default function data() {
     </MDBox>
   );
 
-  const [menu, setMenu] = useState(null);
-  const [userID, setUserID] = useState(null);
 
-  const openMenu = ({ currentTarget }, id) =>{
-    setMenu(currentTarget)
-    setUserID(id)
-  };
-  const closeMenu = () => setMenu(null);
 
-  // userdelete
+ 
+  // USer Management =================================================================>
   return {
     columns: [
       { Header: "Users", accessor: "user", width: "45%", align: "left" },
@@ -109,7 +150,11 @@ export default function data() {
       function: <Job title={user.is_admin ? "admin" : "user"} key={user.id} />,
       status: (
         <MDBox ml={-1} key={user.id}>
-          <ReactSwitch checked={user.is_active} onChange={handleChangeCheck} />
+         {user.is_active ? checkState : !checkState}
+    <Switch
+      checked={user.is_active ? !checkState : checkState}
+      onChange={() => handleCheckboxChange(user)}
+    />
         </MDBox>
       ),
       created: (
@@ -126,12 +171,9 @@ export default function data() {
       ),
       action: (
         <MDTypography
-          component="a"
-          href="#"
           variant="caption"
           color="text"
           fontWeight="medium"
-          key={user.id}
         >
           <MDBox color="text" px={2}>
             <Icon
@@ -156,8 +198,35 @@ export default function data() {
             open={Boolean(menu)}
             onClose={closeMenu}
           >
-            <MenuItem onClick={handleDeleteUser(userID)} style={{color:"danger"}}>Delete</MenuItem>
+            <MenuItem>Edit</MenuItem>
+            <MenuItem style={{color:"red"}} onClick={() => {handleDeleteUser(userID)}}> Delete</MenuItem>
           </Menu>
+
+          {/*  Snack BARS===========================================================================================> */}
+          <MDSnackbar
+            color="success"
+            icon="star"
+            title="Status Changed"
+            content="Status Changed Successfully!"
+            dateTime="Now"
+            open={SuccessChangeStatus}
+            onClose={closeWarningSB}
+            close={closeWarningSB}
+            bgWhite
+          />
+          <MDSnackbar
+            color="success"
+            icon="delete"
+            title="User Deleted"
+            content="User Deleted Successfully!"
+            dateTime="Now"
+            open={SuccessDelete}
+            onClose={closeWarningSB}
+            close={closeWarningSB}
+            bgWhite
+          />
+        {/* SNACK BARS Closed =---------------------------------------------------------- */}
+
         </MDTypography>
       ),
     })),

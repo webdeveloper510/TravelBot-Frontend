@@ -43,16 +43,21 @@ import { useNavigate } from "react-router-dom";
 import {toast} from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css'; 
 import MDSnackbar from "components/MDSnackbar";
-import { Snackbar } from "@mui/material";
+
 function Basic() {
+
   // States Management
+
   const [LoginEmail, setLoginEmail] = useState(null);
   const [LoginPassword, setLoginPassword] = useState(null);
   const [EmailNull, SetEmailNull] = useState(false);
   const [PasseordNull, SetPasseordNull] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false); 
+  const [SuccessLogIn, setSuccessLogIn] = useState(false);
+  const [ErrorLogIn, setErrorLogIn] = useState(false);
   const navigate = useNavigate();
+
   // Function Calling
+
   const handleEmailInput = (event) => {
     setLoginEmail(event.target.value);
   };
@@ -77,40 +82,31 @@ function Basic() {
     }
     formdata.append("email", LoginEmail);
     formdata.append("password", LoginPassword);
-    axios
-      .post(API.BASE_URL + "login/", formdata)
+    axios.post(API.BASE_URL + "login/", formdata)
       .then((response) => {
-        if (response.data.is_admin) {
-        setOpenSnackbar(true);
-
-          localStorage.setItem("Admin-Token", response.data.token.access);
-          navigate("/dashboard");
-          toast.success("Login")
-          window.location.reload();
-          
-
-        } else {
-          localStorage.setItem("Token", response.data.token.access);
-          navigate("/chat");
-          window.location.reload();
-        setOpenSnackbar(true);
-
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.success("err")
+        setSuccessLogIn(true);
+        setTimeout(()=> {
+            if (response.data.is_admin){
+              localStorage.setItem("Admin-Token", response.data.token.access);
+              navigate("/dashboard");
+              window.location.reload();
+            } else {
+              localStorage.setItem("Token", response.data.token.access);
+              navigate("/chat");
+              window.location.reload();
+            }
+        },1000)
+        }).catch((error) => {
+          setErrorLogIn(true);
       });
   };
   const handleEnterKey = () => {
     handleLogin()
   }
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnackbar(false);
-  };
+  const closeWarningSB = () => {
+    setSuccessLogIn(false);
+    setErrorLogIn(false)
+};
 
   return (
     <BasicLayout image={bgImage}>
@@ -155,7 +151,7 @@ function Basic() {
               <MDInput type="email" label="Email" onChange={handleEmailInput} fullWidth error={EmailNull} />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" onChange={handlePassword} fullWidth onKeyPress={handleEnterKey} error={PasseordNull} />
+              <MDInput type="password" label="Password" onChange={handlePassword} fullWidth error={PasseordNull} />
             </MDBox>
             {/* <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -192,12 +188,32 @@ function Basic() {
           </MDBox>
         </MDBox>
       </Card>
-      <Snackbar
-                open={openSnackbar}
-                autoHideDuration={3000}
-                onClose={handleCloseSnackbar}
-                message="Login successful or error message"
-              />
+
+        {/*  Snack BARS =================================================================================================> */}
+        <MDSnackbar
+            color="success"
+            icon="check"
+            title="Log In"
+            content="User Loged In Successfully!"
+            dateTime="Now"
+            open={SuccessLogIn}
+            onClose={closeWarningSB}
+            close={closeWarningSB}
+            bgWhite
+          />
+           <MDSnackbar
+            color="error"
+            icon="error"
+            title="Error Loging In"
+            content="Please Check Your Provided credintials!"
+            dateTime="Now"
+            open={ErrorLogIn}
+            onClose={closeWarningSB}
+            close={closeWarningSB}
+            bgWhite
+          />
+        {/*  Snack BARS CLOSED ===========================================================================================> */}
+
     </BasicLayout>
   );
 }

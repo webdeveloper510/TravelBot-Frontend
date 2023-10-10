@@ -31,13 +31,15 @@ import { API } from "config/Api";
 import Icon from "@mui/material/Icon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import MDSnackbar
+ from "components/MDSnackbar";
 export default function data() {
   // States Management
   const adminAccessToken = localStorage.getItem("Admin-Token");
   const [FilesList, SetFilesList] = useState([]);
   const [FilesUrl, SetFilesUrl] = useState('');
   const [FilesId, SetFilesId] = useState('');
-  // const { columns, rows } = data();
+  const [SuccessDeleteFile, setSuccessDeleteFile] = useState(false);
   const [menu, setMenu] = useState(null);
 
   const openMenu = ({ currentTarget }, file , id) => {
@@ -62,8 +64,23 @@ export default function data() {
         console.log(err);
       });
   }, []);
-  
-
+  const handleDeleteFile = (id) => {
+    axios.delete(API.BASE_URL+"deletefile/"+id+"/",{
+      headers: {
+        Authorization: `Bearer ${adminAccessToken}`,
+      },
+    }).then((res)=>{
+      setSuccessDeleteFile(true);
+      setTimeout(()=>{
+        window.location.reload();
+      },1000)
+    }).catch((err)=>{
+      console.log(err)
+    })
+  }
+  const closeWarningSB = () => {
+    setSuccessDeleteFile(false)
+};
   const avatars = (members) =>
     members.map(([image, name]) => (
       <Tooltip key={name} title={name} placeholder="bottom">
@@ -140,8 +157,33 @@ export default function data() {
             onClose={closeMenu}
           >
             <MenuItem><a href={FilesUrl}>Download</a></MenuItem>
-            <MenuItem><a href={FilesId} style={{color:"red"}}>Delete</a></MenuItem>
+            <MenuItem style={{color:"red"}} onClick={()=>{handleDeleteFile(FilesId)}}>Delete</MenuItem>
           </Menu>
+          {/*  Snack BARS===========================================================================================> */}
+
+          <MDSnackbar
+            color="success"
+            icon="delete"
+            title="File Deleted"
+            content="File Deleted Successfully!"
+            dateTime="Now"
+            open={SuccessDeleteFile}
+            onClose={closeWarningSB}
+            close={closeWarningSB}
+            bgWhite
+          />
+           {/* <MDSnackbar
+            color="error"
+            icon="error"
+            title="User Not Added"
+            content="User Not Added!"
+            dateTime="Now"
+            open={ErrorAddUser}
+            onClose={closeWarningSB}
+            close={closeWarningSB}
+            bgWhite
+          /> */}
+        {/* SNACK BARS Closed =---------------------------------------------------------- */}
         </MDTypography>
       ),
     })),

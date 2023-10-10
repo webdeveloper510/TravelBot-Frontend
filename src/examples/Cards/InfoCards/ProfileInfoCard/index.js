@@ -12,6 +12,7 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
+/*eslint-disable*/
 
 // react-routers components
 import { Link } from "react-router-dom";
@@ -32,13 +33,37 @@ import MDTypography from "components/MDTypography";
 // Material Dashboard 2 React base styles
 import colors from "assets/theme/base/colors";
 import typography from "assets/theme/base/typography";
+import { useEffect, useState } from "react";
+import { Grid } from "@mui/material";
+import MDInput from "components/MDInput";
+import MDButton from "components/MDButton";
+import axios from "axios";
+import { API } from "config/Api";
+import MDSnackbar from "components/MDSnackbar";
+function ProfileInfoCard({ title, description, info, action , shadow }) {
+  const [showEditForm, setShowEditForm] = useState(false)
+  const [userFirstName , setUserFirstName] = useState("")
+  const [userLastName , setUserLastName] = useState("")
+  const [userEmail , setUserEmail] = useState("")
+  const [userID , setUserID] = useState(null)
+  const [SuccessUpdateUser, setSuccessUpdateUser] = useState(false);
+  const [ErrorUpdateUser, setErrorUpdateUser] = useState(false);
 
-function ProfileInfoCard({ title, description, info, shadow }) {
+  const adminAccessToken = localStorage.getItem("Admin-Token");
+
   const labels = [];
   const values = [];
   const { socialMediaColors } = colors;
   const { size } = typography;
+  useEffect(()=>{
+    setUserID(action.val)
+    setUserEmail(info.email)
+    const fullNameArray = info.fullName.split(" ");
 
+  // Extract the first name and last name
+  setUserFirstName(fullNameArray[0])
+  setUserLastName(fullNameArray.slice(1).join(" "))
+  },[info, action.val])
   // Convert this form `objectKey` of the object key in to this `object key`
   Object.keys(info).forEach((el) => {
     if (el.match(/[A-Z\s]+/)) {
@@ -66,35 +91,46 @@ function ProfileInfoCard({ title, description, info, shadow }) {
     </MDBox>
   ));
 
-  // Render the card social media icons
-  // const renderSocial = social.map(({ link, icon, color }) => (
-  //   <MDBox
-  //     key={color}
-  //     component="a"
-  //     href={link}
-  //     target="_blank"
-  //     rel="noreferrer"
-  //     fontSize={size.lg}
-  //     color={socialMediaColors[color].main}
-  //     pr={1}
-  //     pl={0.5}
-  //     lineHeight={1}
-  //   >
-  //     {icon}
-  //   </MDBox>
-  // ));
+  const handleShowPOP=()=>{
+    setShowEditForm(true);
+  }
+  const handleCloseFeed=()=>{
+    setShowEditForm(false);
+  }
 
+  const handleUpdateProfile=()=>{
+    const formData=new FormData();
+    formData.append("firstname", userFirstName)
+    formData.append("lastname", userLastName)
+    formData.append("email", userEmail)
+    axios.put(API.BASE_URL+"profileupdate/"+userID+"/", formData,{
+      headers: {
+        Authorization: `Bearer ${adminAccessToken}`,
+      },
+    }).then((res)=>{
+      setSuccessUpdateUser(true);
+      setTimeout(()=>{
+        window.location.reload();
+      },800)
+    }).catch((err)=>{
+      setErrorUpdateUser(true);
+    })
+  }
+  const closeWarningSB = () => {
+    setSuccessUpdateUser(false);
+    setErrorUpdateUser(false)
+};
   return (
     <Card sx={{ height: "100%", boxShadow: !shadow && "none" }}>
       <MDBox display="flex" justifyContent="space-between" alignItems="center" pt={2} px={2}>
         <MDTypography variant="h6" fontWeight="medium" textTransform="capitalize">
           {title}
         </MDTypography>
-        {/* <MDTypography component={Link} to={action.route} variant="body2" color="secondary"> */}
+        <MDTypography component={Link} to={action.route} variant="body2" color="secondary" onClick={handleShowPOP}>
         <Tooltip placement="top">
           <Icon>edit</Icon>
         </Tooltip>
-        {/* </MDTypography> */}
+        </MDTypography>
       </MDBox>
       <MDBox p={2}>
         <MDBox mb={2} lineHeight={1}>
@@ -115,6 +151,67 @@ function ProfileInfoCard({ title, description, info, shadow }) {
           </MDBox> */}
         </MDBox>
       </MDBox>
+      {showEditForm?(
+          <div className='modal'>
+            <div className='modal-content'>
+            <div className="close-div">
+            <button className="close-button" icon="close" onClick={handleCloseFeed}>
+              <Icon>close</Icon>
+            </button>
+            </div>
+             <Grid item>
+              <MDTypography variant="h6" fontWeight="medium" textTransform="capitalize" textAlign="center" >
+                Edit Profile
+              </MDTypography>
+              <MDBox pt={4} pb={3} px={3}>
+                <MDBox component="form" role="form">
+                  <MDBox mb={2}>
+                    <MDInput type="text" label="First Name" value={userFirstName} fullWidth onChange={(e)=>setUserFirstName(e.target.value)} />
+                  </MDBox>
+                  <MDBox mb={2}>
+                    <MDInput type="text" label="Last Name" value={userLastName} fullWidth onChange={(e)=>setUserLastName(e.target.value)} />
+                  </MDBox>
+                  <MDBox mb={2}>
+                    <MDInput type="email" label="Email" value={userEmail} fullWidth onChange={(e)=>setUserEmail(e.target.value)} />
+                  </MDBox>
+                  <MDBox mt={4} mb={1}>
+                    <MDButton variant="gradient" color="info" fullWidth onClick={handleUpdateProfile} >
+                      Update
+                    </MDButton>
+                  </MDBox>
+                </MDBox>
+              </MDBox>
+            </Grid>
+            </div> 
+              {/*  Snack BARS===========================================================================================> */}
+
+                <MDSnackbar
+                   color="success"
+                   icon="check"
+                   title="Updated"
+                   content="Profile Updated Successfully!"
+                   dateTime="Now"
+                   open={SuccessUpdateUser}
+                   onClose={closeWarningSB}
+                   close={closeWarningSB}
+                   bgWhite
+                 />
+                  <MDSnackbar
+                   color="error"
+                   icon="error"
+                   title="Error"
+                   content="Something Went worng!"
+                   dateTime="Now"
+                   open={ErrorUpdateUser}
+                   onClose={closeWarningSB}
+                   close={closeWarningSB}
+                   bgWhite
+                 />
+               {/* SNACK BARS Closed =---------------------------------------------------------- */}
+         </div>
+
+      ):<></>}
+
     </Card>
   );
 }
@@ -130,10 +227,10 @@ ProfileInfoCard.propTypes = {
   description: PropTypes.string.isRequired,
   info: PropTypes.objectOf(PropTypes.string).isRequired,
   // social: PropTypes.arrayOf(PropTypes.object).isRequired,
-  // action: PropTypes.shape({
-  //   route: PropTypes.string.isRequired,
-  //   tooltip: PropTypes.string.isRequired,
-  // }).isRequired,
+  action: PropTypes.shape({
+    route: PropTypes.string.isRequired,
+    tooltip: PropTypes.string.isRequired,
+  }).isRequired,
   shadow: PropTypes.bool,
 };
 

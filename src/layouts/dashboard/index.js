@@ -41,12 +41,16 @@ import { useState } from "react";
 import axios from "axios";
 import { API } from "config/Api";
 import sampleCSV from "../../assets/csv/sampleformat.csv"
+import MDSnackbar from "components/MDSnackbar";
 function Dashboard() {
   // States Management
   const [CSVFileUpload, SetCSVFileUpload] = useState(null)
   const [loading, setLoading] = useState(false);
   const [UpLoading, setUpLoading] = useState(false);
   const [ShowFeedStep, SetShowFeedStep] = useState(false);
+  const [CSVUpload , SetCSVUpload] = useState(false);
+  const [CSVWarn , SetCSVWarn] = useState(false);
+  const [CSVError , SetCSVError] = useState(false);
   const adminAccessToken = localStorage.getItem("Admin-Token");
 
   // Function Calling
@@ -81,28 +85,29 @@ function Dashboard() {
   const FileUploadCSV=()=>{
     SetShowFeedStep(false);
     setUpLoading(true);
+    if (!CSVFileUpload){
+      SetCSVError(true)
+    }
     const formdata = new FormData();
     formdata.append("csv_file", CSVFileUpload)
     axios.post(API.BASE_URL+"csvupload/", formdata)
     .then((res)=>{
-          if (res.data.message==="File uploaded and data saved successfully"){
-            console.log("File uploaded successfully")
-            setTimeout(()=>{
-              setUpLoading(false)
-              window.location.reload();
-            },2000)
-            localStorage.setItem("uploaded-csv", "Upload Nedd to Train")
-                // toast.success(res.data.message, {autoClose:1000})
-          }
-          else{
-            // SetShowNextStep(true);
-                // toast.warn(res.data.message, {autoClose:1000})
-                console.log(res.data.message)
-          }
+      if (res.data.message==="File uploaded and data saved successfully"){
+        localStorage.setItem("uploaded-csv", "Upload Nedd to Train")
+        SetCSVUpload(true)
+        setTimeout(()=>{
+          setUpLoading(false)
+          window.location.reload();
+        },2000)
+      }
+      else{
+        setUpLoading(false)
+        SetCSVWarn(true)
+      }
     })
     .catch((err)=>{
-          // toast.warn("Please Check the file again !", {autoClose:1000})      
-          console.log("Please Check the file again !")      
+      setUpLoading(false)
+
     })
   }
   const trainModel=()=>{
@@ -121,6 +126,12 @@ function Dashboard() {
           console.error(error)
     })
 }
+
+const closeWarningSB = () => {
+  SetCSVUpload(false)
+  SetCSVWarn(false)
+  SetCSVError(false)
+};
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -132,60 +143,53 @@ function Dashboard() {
                   <ComplexStatisticsCard className="desable-uploaded" color="dark" icon={uploadForTrain ? "stop": "upload"} title={uploadForTrain ? "Train Modal First" : "Feed The Brain" } />
                 </MDBox>
               {ShowFeedStep ? 
-               ( <div className='modal'>
-                  <div className='content-popup'>
-                        <div className="close-div">
-                              <button className="close-button" icon="close" onClick={handleCloseFeed}>
-                                <Icon>close</Icon>
-                              </button>
-                        </div>
-                        <div className="preview-sample">
-                              <h3 className="heading">Feed The Brain</h3>
-                              <p className="info-csv">Please Upload an Valid CSV. If you don't have sample CSV. <br/>
-                              Click on <button type="button" className="sample-csv" onClick={downLoadSampleCSV}><u>Get Sample CSV</u></button>
-                              </p>
-                        </div>
-                        <div className="input-file">
-                              <input type="file" className="upload-csv-file" onChange={fileInputCSV}/>
-                              <button type="button" className="save-file" onClick={FileUploadCSV}>Upload</button>
-                        </div>
-
+                ( <div className='modal'>
+                    <div className='content-popup'>
+                      <div className="close-div">
+                        <button className="close-button" icon="close" onClick={handleCloseFeed}>
+                          <Icon>close</Icon>
+                        </button>
+                      </div>
+                      <div className="preview-sample">
+                        <h3 className="heading">Feed The Brain</h3>
+                        <p className="info-csv">Please Upload an Valid CSV. If you don't have sample CSV. <br/>
+                          Click on <button type="button" className="sample-csv" onClick={downLoadSampleCSV}><u>Get Sample CSV</u></button>
+                        </p>
+                      </div>
+                      <div className="input-file">
+                        <input type="file" className="upload-csv-file" onChange={fileInputCSV}/>
+                        <button type="button" className="save-file" onClick={FileUploadCSV}>Upload</button>
+                      </div>
+                    </div>
                   </div>
-
-                </div>)
-              : (<></>)}
+                ): (<></>)}
           </Grid>
-
           <Grid item xs={12} md={6} lg={3}>
-          <div className="your-component">
-            {/* Background overlay */}
-            {loading && <div className="overlay"></div>}
-            {/* Render a loader based on the loading state */}
-            {loading ? (
-            <div className="loader">Processing...</div>
-            ) : (<></>)}
-          </div>
+            <div className="your-component">
+              {loading && <div className="overlay"></div>}
+              {loading ? 
+                ( <div className="loader">Processing...</div>
+                ) : (<></>)
+              }
+            </div>
             <h3 className="heading-step">Step 2</h3>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard icon="psychology" title="Train Model" />
-              <MDButton variant="gradient" color="success" onClick={trainModel}>
+            <MDButton variant="gradient" color="success" onClick={trainModel}>
                 Click to Train
               </MDButton>
+             
             </MDBox>
           </Grid>
         </Grid>
         <MDBox>
-        {/* <Grid item xs={12} md={6} lg={3}> */}
           <div className="your-component">
-              {/* Background overlay */}
               {UpLoading && <div className="overlay"></div>}
-              {/* Render a loader based on the loading state */}
-              {UpLoading ? (
-              <div className="loader">Uploading CSV...</div>
-              ) : (<></>)}
+              {UpLoading ? 
+                ( <div className="loader">Uploading CSV...</div>
+                ) : (<></>)
+              }
           </div>
-        {/* </Grid> */}
-
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={12}>
               <Projects />
@@ -193,6 +197,42 @@ function Dashboard() {
           </Grid>
         </MDBox>
       </MDBox>
+
+          {/*  Snack BARS===========================================================================================> */}
+          <MDSnackbar
+            color="success"
+            icon="star"
+            title="Uploaded"
+            content="File Uploaded Successfully!"
+            dateTime="Now"
+            open={CSVUpload}
+            onClose={closeWarningSB}
+            close={closeWarningSB}
+            bgWhite
+          />
+          <MDSnackbar
+            color="warning"
+            icon="error"
+            title="Warning"
+            content="File must be .CSV Format!"
+            dateTime="Now"
+            open={CSVWarn}
+            onClose={closeWarningSB}
+            close={closeWarningSB}
+            bgWhite
+          />
+          <MDSnackbar
+            color="error"
+            icon="error"
+            title="Not Uploaded"
+            content="Please Select and Upload CSV!"
+            dateTime="Now"
+            open={CSVError}
+            onClose={closeWarningSB}
+            close={closeWarningSB}
+            bgWhite
+          />
+        {/* SNACK BARS Closed =---------------------------------------------------------- */}
     </DashboardLayout>
   );
 }

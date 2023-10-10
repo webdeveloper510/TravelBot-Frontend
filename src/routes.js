@@ -47,11 +47,11 @@ import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import ChatBot from "components/ChatBot/ChatBot";
 
-
 // @mui icons
 import Icon from "@mui/material/Icon";
 const adminToken = localStorage.getItem("Admin-Token");
 const userToken = localStorage.getItem("Token");
+
 
 const routes = [
   adminToken ? (
@@ -107,5 +107,4 @@ const routes = [
     component: <SignIn />,
   })
 ];
-
 export default routes;

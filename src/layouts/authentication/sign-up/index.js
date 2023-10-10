@@ -34,7 +34,7 @@ import axios from "axios";
 import { API } from "config/Api";
 import { Container, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Snackbar } from "@mui/material";
+import MDSnackbar from "components/MDSnackbar";
 
 function Cover() {
   // States Management
@@ -46,7 +46,8 @@ function Cover() {
   const [LastNameNull, SetLastNameNull] = useState(false);
   const [EmailNull, SetEmailNull] = useState(false);
   const [PasseordNull, SetPasseordNull] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false); 
+  const [SuccessAddUser, setSuccessAddUser] = useState(false);
+  const [ErrorAddUser, setErrorAddUser] = useState(false);
 
   const navigate = useNavigate()
   // Function Calling
@@ -93,25 +94,23 @@ function Cover() {
     formData.append("lastname", AddLastname);
     formData.append("email", AddEmail);
     formData.append("password", AddPassword);
-    axios
-      .post(API.BASE_URL + "register/", formData)
+    axios.post(API.BASE_URL + "register/", formData)
       .then((response) => {
-        setOpenSnackbar(true);
-
-        navigate("/users")
-      })
-      .catch((error) => {
-        console.log(error.response.data.email[0]);
+        setSuccessAddUser(true);
+        setTimeout(()=>{
+          navigate("/users")
+        },1000)
+      }).catch((error) => {
         if (error.response.data.email[0] === "Enter a valid email address."){
           SetEmailNull(true)
+          setErrorAddUser(true);
+
         }
       });
   };
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnackbar(false);
+  const closeWarningSB = () => {
+      setErrorAddUser(false);
+      setSuccessAddUser(false)
   };
   return (
     <DashboardLayout>
@@ -235,12 +234,33 @@ function Cover() {
         </Grid>
       </Grid>
       </Container>
-      <Snackbar
-                open={openSnackbar}
-                autoHideDuration={3000}
-                onClose={handleCloseSnackbar}
-                message="Login successful or error message"
-              />
+
+
+        {/*  Snack BARS===========================================================================================> */}
+
+          <MDSnackbar
+            color="success"
+            icon="star"
+            title="User Added"
+            content="User Added Successfully!"
+            dateTime="Now"
+            open={SuccessAddUser}
+            onClose={closeWarningSB}
+            close={closeWarningSB}
+            bgWhite
+          />
+           <MDSnackbar
+            color="error"
+            icon="error"
+            title="User Not Added"
+            content="User Not Added!"
+            dateTime="Now"
+            open={ErrorAddUser}
+            onClose={closeWarningSB}
+            close={closeWarningSB}
+            bgWhite
+          />
+        {/* SNACK BARS Closed =---------------------------------------------------------- */}
     </DashboardLayout>
   );
 }
