@@ -575,3 +575,9 @@ h6.MuiTypography-root.MuiTypography-h6.css-11c9emy {
   width: 90%;
   float: left;
 }
+button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.css-1rog5bu {
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  transform: translate(-50%,0px);
+}

@@ -175,10 +175,9 @@ const closeWarningSB = () => {
             <h3 className="heading-step">Step 2</h3>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard icon="psychology" title="Train Model" />
-            <MDButton variant="gradient" color="success" onClick={trainModel}>
+              <MDButton variant="gradient" color="success" onClick={trainModel}>
                 Click to Train
               </MDButton>
-             
             </MDBox>
           </Grid>
         </Grid>
