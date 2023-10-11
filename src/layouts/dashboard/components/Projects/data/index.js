@@ -32,9 +32,11 @@ import Icon from "@mui/material/Icon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MDSnackbar
- from "components/MDSnackbar";
-export default function data() {
+from "components/MDSnackbar";
+
+export default function data(props) {
   // States Management
+  console.log(props, "-----------")
   const adminAccessToken = localStorage.getItem("Admin-Token");
   const [FilesList, SetFilesList] = useState([]);
   const [FilesUrl, SetFilesUrl] = useState('');
@@ -59,11 +61,12 @@ export default function data() {
       })
       .then((res) => {
         SetFilesList(res.data.data);
+        props.setTrigger(false)
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [props.trigger]);
   const handleDeleteFile = (id) => {
     axios.delete(API.BASE_URL+"deletefile/"+id+"/",{
       headers: {
@@ -71,9 +74,7 @@ export default function data() {
       },
     }).then((res)=>{
       setSuccessDeleteFile(true);
-      setTimeout(()=>{
-        window.location.reload();
-      },1000)
+      props.setTrigger(true)
     }).catch((err)=>{
       console.log(err)
     })

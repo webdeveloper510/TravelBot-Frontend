@@ -56,7 +56,8 @@ import axios from "axios";
 import { API } from "config/Api";
 import { toast } from "react-toastify";
 import MDSnackbar from "components/MDSnackbar";
-function Overview() {
+function Overview(props) {
+
   // States MAnagement -------------------------------------------------------->
   const [ProfileDetails, SetProfileDetails] = useState([]);
   const [newPassword , setNewPassword] = useState(null);
@@ -66,9 +67,14 @@ function Overview() {
   const [warningSB, setWarningSB] = useState(false);
   const [SuccessSB, setSuccessSB] = useState(false);
   const adminAccessToken = localStorage.getItem("Admin-Token");
+  const [UpdateUser, setUpdateUser] = useState(false);
 
   // USeEffects Working -------------------------------------------------------->
 
+  // Create a function to update the state
+  const handleUpdateUser = (updated) => {
+    setUpdateUser(updated);
+  };
   useEffect(() => {
     axios
       .get(API.BASE_URL + "userprofile/", {
@@ -77,10 +83,11 @@ function Overview() {
       },
     }).then((response) => {
       SetProfileDetails(response.data);
+      setUpdateUser(false);
     }).catch((error) =>{
       console.log("error")
     })
-  }, []);
+  }, [UpdateUser]);
 
   // Function Calling -------------------------------------------------------->
 
@@ -116,12 +123,11 @@ function Overview() {
     setSuccessSB(false)
   };
 
-
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox mb={2} />
-      <Header>
+      <Header UpdateUser={UpdateUser}>
         <MDBox mt={5} mb={3}>
           <Grid container spacing={1}>
             {/* <Grid item xs={12} md={6} xl={4}>
@@ -139,7 +145,8 @@ function Overview() {
                   email: ProfileDetails.email,
                 }}
                 action={{ route: "" , tooltip: "Edit Profile", val: ProfileDetails.id}}
-                shadow={false}
+                shadow={false}               
+                setUpdateUser={handleUpdateUser}
               />
               )}
               

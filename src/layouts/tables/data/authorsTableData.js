@@ -43,6 +43,7 @@ export default function data() {
   const [SuccessDelete, setSuccessDelete] = useState(false);
   const [menu, setMenu] = useState(null);
   const [userID, setUserID] = useState(null);
+  const [UserDetail, setUserDetail] = useState(false);
 
   //  UseEffects Management ========================================================================>
 
@@ -53,10 +54,11 @@ export default function data() {
           },
         }).then((res) => {
           SetUserList(res.data.data);
+          setUserDetail(false)
         }).catch((err) => {
           console.log(err);
         });
-    }, []);
+    }, [UserDetail]);
 
 
   //  Function Calling ========================================================================>
@@ -85,13 +87,12 @@ export default function data() {
     setUserID(id)
   };
   const handleDeleteUser = (userid) => {
+
     axios.delete(API.BASE_URL+"userdelete/"+userid+"/")
     .then((res)=>{
       console.log("delete user", userid)
       setSuccessDelete(true);
-      setTimeout(()=>{
-        window.location.reload();
-      },1000)
+      setUserDetail(true);
     }).catch((err)=>{
       console.log(err)
     })
@@ -151,10 +152,10 @@ export default function data() {
       status: (
         <MDBox ml={-1} key={user.id}>
          {user.is_active ? checkState : !checkState}
-    <Switch
-      checked={user.is_active ? !checkState : checkState}
-      onChange={() => handleCheckboxChange(user)}
-    />
+          <ReactSwitch
+            checked={user.is_active ? !checkState : checkState}
+            onChange={() => handleCheckboxChange(user)} color="success"
+          />
         </MDBox>
       ),
       created: (

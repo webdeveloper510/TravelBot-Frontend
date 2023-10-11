@@ -59,8 +59,26 @@ const PreViewPage = () => {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    }).then((res)=>{console.log("-------------->", getChatHistory(res.data))}).catch((error)=>{console.log(err)})
+    }).then((res)=>{
+      // getChatHistory(res.data.data)
+      const chatHistory = res.data.data;
+      const questionArray = chatHistory.map((item) => item.questions);
+      const answerArray = chatHistory.map((item) => item.answer);
+
+      // Update the questions and answers state
+      setQuestions(questionArray);
+      setAnswers(answerArray);
+    }).catch((error)=>{
+      console.log(error)
+    })
   },[])
+  // console.log(chatHistory)
+  // chatHistory.map((item, i)=>{
+  //   // setQuestions(...item.questions, item.questions)
+  //   // setAnswers(item.answer)
+  //   // console.log(item.date)
+  //   console.log(item)
+  // })
   return (
     <div className="chat-side px-5">
       <div className="chat-messages">

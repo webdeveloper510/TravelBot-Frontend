@@ -39,7 +39,8 @@ import breakpoints from "assets/theme/base/breakpoints";
 import burceMars from "assets/images/bruce-mars.jpg";
 import backgroundImage from "assets/images/bg-profile.jpeg";
 
-function Header({ children }) {
+function Header({ children , UpdateUser}) {
+  console.log(UpdateUser)
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
 
@@ -77,7 +78,7 @@ function Header({ children }) {
     }).catch((error) =>{
       console.log("error")
     })
-  }, []);
+  }, [UpdateUser]);
   return (
     <MDBox position="relative" mb={5}>
       <MDBox

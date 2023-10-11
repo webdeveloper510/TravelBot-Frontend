@@ -37,11 +37,12 @@ import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 import Popup from "reactjs-popup";
 
 import MDTypography from "components/MDTypography";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { API } from "config/Api";
 import sampleCSV from "../../assets/csv/sampleformat.csv"
 import MDSnackbar from "components/MDSnackbar";
+import data from "./components/Projects/data";
 function Dashboard() {
   // States Management
   const [CSVFileUpload, SetCSVFileUpload] = useState(null)
@@ -51,6 +52,8 @@ function Dashboard() {
   const [CSVUpload , SetCSVUpload] = useState(false);
   const [CSVWarn , SetCSVWarn] = useState(false);
   const [CSVError , SetCSVError] = useState(false);
+  const [ModelTrain , SetModelTrain] = useState(false);
+  const [Trigger , setTrigger] = useState(false);
   const adminAccessToken = localStorage.getItem("Admin-Token");
 
   // Function Calling
@@ -82,6 +85,10 @@ function Dashboard() {
     SetCSVFileUpload(event.target.files[0])
   }
   const uploadForTrain = localStorage.getItem("uploaded-csv")
+
+  useEffect(()=>{
+    
+  },[data])
   const FileUploadCSV=()=>{
     SetShowFeedStep(false);
     setUpLoading(true);
@@ -95,10 +102,11 @@ function Dashboard() {
       if (res.data.message==="File uploaded and data saved successfully"){
         localStorage.setItem("uploaded-csv", "Upload Nedd to Train")
         SetCSVUpload(true)
-        setTimeout(()=>{
+        setTrigger(true)
+        // setTimeout(()=>{
           setUpLoading(false)
-          window.location.reload();
-        },2000)
+        //   // window.location.reload();
+        // },2000)
       }
       else{
         setUpLoading(false)
@@ -118,6 +126,7 @@ function Dashboard() {
           },
     }).then((response)=>{
           setLoading(false);
+          SetModelTrain(true);
           localStorage.removeItem("uploaded-csv")
           close()
           toast.success("Model trained Successfully!", {autoClose:1000})
@@ -131,6 +140,7 @@ const closeWarningSB = () => {
   SetCSVUpload(false)
   SetCSVWarn(false)
   SetCSVError(false)
+  SetModelTrain(false);
 };
   return (
     <DashboardLayout>
@@ -191,7 +201,7 @@ const closeWarningSB = () => {
           </div>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={12}>
-              <Projects />
+              <Projects trigger={Trigger} setTrigger={setTrigger}/>
             </Grid>
           </Grid>
         </MDBox>
@@ -227,6 +237,17 @@ const closeWarningSB = () => {
             content="Please Select and Upload CSV!"
             dateTime="Now"
             open={CSVError}
+            onClose={closeWarningSB}
+            close={closeWarningSB}
+            bgWhite
+          />
+           <MDSnackbar
+            color="success"
+            icon="check"
+            title="Model Trained"
+            content="Model Trained Successfully!"
+            dateTime="Now"
+            open={ModelTrain}
             onClose={closeWarningSB}
             close={closeWarningSB}
             bgWhite

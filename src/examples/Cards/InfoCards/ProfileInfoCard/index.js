@@ -40,7 +40,7 @@ import MDButton from "components/MDButton";
 import axios from "axios";
 import { API } from "config/Api";
 import MDSnackbar from "components/MDSnackbar";
-function ProfileInfoCard({ title, description, info, action , shadow }) {
+function ProfileInfoCard({ title, description, info, action , shadow , setUpdateUser}) {
   const [showEditForm, setShowEditForm] = useState(false)
   const [userFirstName , setUserFirstName] = useState("")
   const [userLastName , setUserLastName] = useState("")
@@ -48,9 +48,10 @@ function ProfileInfoCard({ title, description, info, action , shadow }) {
   const [userID , setUserID] = useState(null)
   const [SuccessUpdateUser, setSuccessUpdateUser] = useState(false);
   const [ErrorUpdateUser, setErrorUpdateUser] = useState(false);
+  // const [UpdateUser, setUpdateUser] = useState(false);
 
   const adminAccessToken = localStorage.getItem("Admin-Token");
-
+  console.log(setUpdateUser)
   const labels = [];
   const values = [];
   const { socialMediaColors } = colors;
@@ -108,10 +109,9 @@ function ProfileInfoCard({ title, description, info, action , shadow }) {
         Authorization: `Bearer ${adminAccessToken}`,
       },
     }).then((res)=>{
-      setSuccessUpdateUser(true);
-      setTimeout(()=>{
-        window.location.reload();
-      },800)
+      setShowEditForm(false);
+      // setSuccessUpdateUser(true);
+        setUpdateUser(true);
     }).catch((err)=>{
       setErrorUpdateUser(true);
     })
@@ -232,6 +232,7 @@ ProfileInfoCard.propTypes = {
     tooltip: PropTypes.string.isRequired,
   }).isRequired,
   shadow: PropTypes.bool,
+  // setUpdateUser: true,
 };
 
 export default ProfileInfoCard;

@@ -20,7 +20,7 @@ import Card from "@mui/material/Card";
 import Icon from "@mui/material/Icon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-
+import PropTypes from "prop-types"; // Import PropTypes
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -31,8 +31,11 @@ import DataTable from "examples/Tables/DataTable";
 // Data
 import data from "layouts/dashboard/components/Projects/data";
 
-function Projects() {
-  const { columns, rows } = data();
+function Projects({ trigger, setTrigger }) {
+  const { columns, rows } = data({
+    trigger: trigger,
+    setTrigger: setTrigger,
+  });
   const [menu, setMenu] = useState(null);
 
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);
@@ -100,5 +103,8 @@ function Projects() {
     </Card>
   );
 }
-
+Projects.propTypes = {
+  trigger: PropTypes.any, // Change 'any' to the specific type if necessary
+  setTrigger: PropTypes.func, // Change 'func' to the specific type if necessary
+};
 export default Projects;
