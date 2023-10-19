@@ -39,7 +39,7 @@ export default function data(props) {
   // States Management
   console.log(props, "-----------")
   const adminAccessToken = localStorage.getItem("Admin-Token");
-  const [FilesList, SetFilesList] = useState([]);
+  // const [FilesList, SetFilesList] = useState([]);
   const [FilesUrl, SetFilesUrl] = useState('');
   const [FilesId, SetFilesId] = useState('');
   const [SuccessDeleteFile, setSuccessDeleteFile] = useState(false);
@@ -68,21 +68,21 @@ export default function data(props) {
         setShowFeedInput(false);
   };
   // Function Calling
-  useEffect(() => {
-    axios
-      .get(API.BASE_URL + "csvfilehistory/", {
-        headers: {
-          Authorization: `Bearer ${adminAccessToken}`,
-        },
-      })
-      .then((res) => {
-        SetFilesList(res.data.data);
-        props.setTrigger(false)
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [props.trigger]);
+  // useEffect(() => {
+  //   axios
+  //     .get(API.BASE_URL + "csvfilehistory/", {
+  //       headers: {
+  //         Authorization: `Bearer ${adminAccessToken}`,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       SetFilesList(res.data.data);
+  //       props.setTrigger(false)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, [props.trigger]);
   // const handleDeleteFile = (id) => {
   //   axios.delete(API.BASE_URL+"deletefile/"+id+"/",{
   //     headers: {
@@ -95,6 +95,7 @@ export default function data(props) {
   //     console.log(err)
   //   })
   // }
+  const FilesList = [{"id":1,"data":"Traveling to Russia in winter can be a unique and exciting experience, but it's important to be prepared and plan accordingly because Russian winters are quite cold."}]
   const closeWarningSB = () => {
     setSuccessDeleteFile(false)
 };
@@ -124,18 +125,18 @@ export default function data(props) {
       ),
       srno: (
         <MDBox display="flex" py={1}>
-          1
+          {files.id}
         </MDBox>
       ),
       answers:(
         <MDBox>
-        Traveling to Russia in winter can be a unique and exciting experience, but it's important to be prepared and plan accordingly because Russian winters are quite cold. 
+        {files.data}
         </MDBox>
       ),
       action: (
         <MDTypography variant="caption" color="text" fontWeight="medium">
           <MDBox color="text" px={2}>
-            <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={(event) => openMenu(event , files.csvfile , files.id)} >
+            <Icon sx={{ cursor: "pointer", fontWeight: "bold" }} fontSize="small" onClick={(event) => openMenu(event , files.id)}>
               more_vert
             </Icon>
           </MDBox>
@@ -153,7 +154,7 @@ export default function data(props) {
             open={Boolean(menu)}
             onClose={closeMenu}
           >
-            <MenuItem style={{color:"blue"}} onClick={()=>{handleEditFile(FilesId)}}>Edit</MenuItem>
+            <MenuItem style={{color:"blue"}} onClick={()=>{handleEditFile()}}>Edit</MenuItem>
             <MenuItem style={{color:"red"}} >Delete</MenuItem> 
             {/* onClick={()=>{handleDeleteFile(FilesId)}} */}
           </Menu>

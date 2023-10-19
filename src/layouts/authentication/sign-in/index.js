@@ -66,8 +66,6 @@ function Basic() {
   };
   const handleLogin = () => {
     const formdata = new FormData();
-    console.log(LoginEmail)
-    console.log(LoginPassword)
     if (LoginEmail === null) {
       SetEmailNull(true)
     }

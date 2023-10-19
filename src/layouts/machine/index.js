@@ -87,7 +87,7 @@ const FeedMachine = () => {
                           </div>
                           <Grid item>
                             <MDTypography variant="h6" fontWeight="medium" textTransform="capitalize" textAlign="center" >
-                              Enter Feed
+                              Enter Suggestion
                             </MDTypography>
                             <MDBox pt={4} pb={3} px={3}>
                               <MDBox component="form" role="form">
@@ -95,7 +95,7 @@ const FeedMachine = () => {
                                   <MDInput type="text" label="Question" onChange={handleAddQuestion} value={feedQuestionAdd} fullWidth  />
                                 </MDBox>
                                 <MDBox mb={2}>
-                                <TextField id="outlined-multiline-static" label="Add Feed" multiline rows={4} fullWidth variant="outlined" value={feedAdded} onChange={handleFeedAdd}/>                                
+                                <TextField id="outlined-multiline-static" label="Answer" multiline rows={4} fullWidth variant="outlined" value={feedAdded} onChange={handleFeedAdd}/>                                
                                 </MDBox>
                                 <MDBox mt={4} mb={1}>
                                   <MDButton variant="gradient" color="info" fullWidth onClick={handleFeedClick}>

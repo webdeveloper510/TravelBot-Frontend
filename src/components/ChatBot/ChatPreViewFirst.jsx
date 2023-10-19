@@ -25,7 +25,7 @@ const PreViewPage = () => {
   const [AnswerUpdate, setAnswerUpdate] = useState(false);
   const [AnswerTime, setAnswerTime] = useState(false);
   const [EffectReloadState, setEffectReloadState] = useState(false);
-  let AnswerGet
+  let AnswerGet , AnswerTImeGet
   const accessToken = localStorage.getItem("Token");
   const handleInputQuestion = (event) => {
     setCurrentQuestion(event.target.value);
@@ -45,18 +45,15 @@ const PreViewPage = () => {
         },
       })
       .then((response) => {
-            console.log(response);
             AnswerGet = response.data.Answer;
             setAnswers([...answers, AnswerGet]); // Update answers state here
             setCurrentAnswer(AnswerGet);
             setLatestAnswerIndex(answers.length);
             setEffectReloadState(true);
-        // }
         
       })
       .catch((error) => {
-        console.log(error);
-            AnswerGet = "No Data Found";
+            AnswerGet = error.response.data.Answer;
             setAnswers([...answers, AnswerGet]); // Update answers state here
             setCurrentAnswer(AnswerGet);
             setLatestAnswerIndex(answers.length);
@@ -74,7 +71,6 @@ const PreViewPage = () => {
         Authorization: `Bearer ${accessToken}`,
       },
     }).then((res)=>{
-      console.log(res);
       // getChatHistory(res.data.data)
       const chatHistory = res.data.data;
       const questionArray = chatHistory.map((item) => item.questions);
@@ -238,16 +234,16 @@ const PreViewPage = () => {
                           </div>
                           <Grid item>
                             <MDTypography variant="h6" fontWeight="medium" textTransform="capitalize" textAlign="center" >
-                              Enter Answer
+                              Enter Suggestion
                             </MDTypography>
                             <MDBox pt={4} pb={3} px={3}>
                               <MDBox component="form" role="form">
                                 <MDBox mb={2}>
-                                <TextField id="outlined-multiline-static" label="Edit Answer" multiline rows={4} fullWidth variant="outlined" value={NewAnswer} onChange={handleChangeInputAnswer}/>                                
+                                <TextField id="outlined-multiline-static" multiline rows={4} fullWidth variant="outlined" value={NewAnswer} onChange={handleChangeInputAnswer}/>                                
                                 </MDBox>
                                 <MDBox mt={4} mb={1}>
                                   <MDButton variant="gradient" color="info" fullWidth onClick={handleAnswerUpdate}>
-                                    Update
+                                    Click To Enter
                                   </MDButton>
                                 </MDBox>
                               </MDBox>
