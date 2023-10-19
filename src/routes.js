@@ -46,6 +46,7 @@ import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import ChatBot from "components/ChatBot/ChatBot";
+import FeedMachine from "layouts/machine";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -54,6 +55,9 @@ const userToken = localStorage.getItem("Token");
 
 
 const routes = [
+
+  // --------------------------------------------------------------->
+
   adminToken ? (
     {
       type: "collapse",
@@ -73,6 +77,9 @@ const routes = [
     route: "/users",
     component: <Tables />,
   }):(<></>),
+
+  // --------------------------------------------------------------->
+
   adminToken ? 
   ({
     type: "collapse",
@@ -91,6 +98,33 @@ const routes = [
     route: "/add-users",
     component: <SignUp />,
   }):(<></>),
+
+  // --------------------------------------------------------------->
+
+  adminToken ? (
+    {
+      type: "collapse",
+      name: "Feed The Machine",
+      key: "feed-the-machine",
+      icon: <Icon fontSize="small">psychology</Icon>,
+      route: "/feed-the-machine",
+      component: <FeedMachine />,
+    }
+  ):(<></>),
+
+
+  // adminToken ? (
+  //   {
+  //     type: "collapse",
+  //     name: "ABC",
+  //     key: "ABC",
+  //     icon: <Icon fontSize="small">psychology</Icon>,
+  //     route: "/abc",
+  //     component: <Notifications />,
+  //   }
+  // ):(<></>),
+  // --------------------------------------------------------------->
+
   userToken ? 
   ({
     name: "User Chat Page",

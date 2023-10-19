@@ -177,7 +177,14 @@
   position: relative;
   }
 
+  .thumbs-check svg {
+    margin-right: 14px;
+    font-size: 30px !important;
+}
 
+.thumbs-check {
+    text-align: end;
+}
   
 .text-right {
   text-align: right;
@@ -247,6 +254,7 @@ button.btn.btn-primary {
   h3.question {
     margin: 0 0 0 10px;
     font-size: 17px;
+    padding-right: 60px;
     font-weight: 400;
     font-family: sans-serif;
   }

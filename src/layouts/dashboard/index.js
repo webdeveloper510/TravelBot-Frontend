@@ -58,16 +58,13 @@ function Dashboard() {
 
   // Function Calling
   const downLoadSampleCSV = () => {
-    const sampleCSV =`id,question,answer,label,,,,,,
-    1,What is Python?,Python is a high-level general-purpose programming language. Its design philosophy emphasizes code readability with the use of significant indentation. Python is dynamically typed and garbage-collected. It supports multiple programming paradigms including structured object-oriented and functional programming.,python,,,,,,
-    ,,,,,,,,,
-    ,,,,,,,,,
-    ,,,,,,,,,
-    ,,,,,,,,,
-    ,,,,,,,,,
-    ,,,,,,,,,
-    ,,,,,,,,,
-    ,,,,,,,,,`
+    const sampleCSV =`ID,Vendor,NET Cost by Experience,NET Cost by Hour,NET Cost Per Person Adult,NET Cost Per Person Child/Senior,Is The Guide Included in the cost,Maximum Pax per cost,Location,Description of the Experience,Time of Visit (in hours),Contact First Name,Contact Last Name,Contact Number,Contact Email,Tag 1,Tag 2,Tag 3,Tag 4,Tag 5,Tag 6
+    1,Falconry Experience,170,,,,Yes,,Ghar Lapsi,,1:30,Lawrence ,Formosa,35699906804,lawrence@ssfalconry.com,Family,Outdoors,Western Malta,Rural,People of Malta,Artisan
+    2,Vedala Palace Private Visit,250,,,,Yes,,Siggiewi,,1:30,Charles,Marsh,35621221221,carmel.a.marsh@gov.mt ,Knights,Exclusive,Private,Western Malta,Noble,
+    3,Guide Generic,,35.4,,,,,,,,,,,,,,,,,
+    4,Percius Mercedes,,35.4,,,,,,,,,,,,,,,,,
+    5,Percius Vito,,53.1,,,,,,,,,,,,,,,,,
+    `
     const blob = new Blob([sampleCSV], { type: "text/csv" });
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
@@ -148,9 +145,12 @@ const closeWarningSB = () => {
       <MDBox py={3}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
-                <h3 className="heading-step">Step 1 <span className="successTag"> {uploadForTrain? "Completed" : ""}</span></h3>
-                <MDBox mb={1.5} onClick={uploadForTrain ? null : handleShowFeed} style={uploadForTrain ? { cursor: "not-allowed" } : { cursor: "pointer" }} className={uploadForTrain ? "desabled":""}>
+                {/* <h3 className="heading-step">Step 1 <span className="successTag"> {uploadForTrain? "Completed" : ""}</span></h3> */}
+                {/* <MDBox mb={1.5} onClick={uploadForTrain ? null : handleShowFeed} style={uploadForTrain ? { cursor: "not-allowed" } : { cursor: "pointer" }} className={uploadForTrain ? "desabled":""}>
                   <ComplexStatisticsCard className="desable-uploaded" color="dark" icon={uploadForTrain ? "stop": "upload"} title={uploadForTrain ? "Train Modal First" : "Feed The Brain" } />
+                </MDBox> */}
+                <MDBox mb={1.5} onClick={handleShowFeed} style={{cursor: "pointer" }} >
+                  <ComplexStatisticsCard className="desable-uploaded" color="dark" icon={"upload"} title={"Feed The Brain" } />
                 </MDBox>
               {ShowFeedStep ? 
                 ( <div className='modal'>
@@ -182,13 +182,13 @@ const closeWarningSB = () => {
                 ) : (<></>)
               }
             </div>
-            <h3 className="heading-step">Step 2</h3>
+            {/* <h3 className="heading-step">Step 2</h3>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard icon="psychology" title="Train Model" />
               <MDButton variant="gradient" color="success" onClick={trainModel}>
                 Click to Train
               </MDButton>
-            </MDBox>
+            </MDBox> */}
           </Grid>
         </Grid>
         <MDBox>

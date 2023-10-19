@@ -4,13 +4,27 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { API } from "config/Api";
 import  logo from "../../assets/images/logo.png";
-
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import  Icon  from "@mui/material/Icon";
+import  Grid  from "@mui/material/Grid";
+import MDTypography from "components/MDTypography";
+import  TextField from "@mui/material/TextField";
+import MDBox from "components/MDBox";
+import MDButton from "components/MDButton";
+import MDSnackbar from "components/MDSnackbar";
 const PreViewPage = () => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [answers, setAnswers] = useState([]);
   const [chatHistory, getChatHistory] = useState([]);
+  const [latestAnswerIndex, setLatestAnswerIndex] = useState(null);
+  const [NewAnswer, setNewAnswer] = useState(null);
+  const [showAnswerChange, setShowAnswerChange] = useState(false);
+  const [AnswerUpdate, setAnswerUpdate] = useState(false);
+  const [AnswerTime, setAnswerTime] = useState(false);
+  const [EffectReloadState, setEffectReloadState] = useState(false);
   let AnswerGet
   const accessToken = localStorage.getItem("Token");
   const handleInputQuestion = (event) => {
@@ -31,14 +45,12 @@ const PreViewPage = () => {
         },
       })
       .then((response) => {
-        // // console.log(response.data.data.Message);
-        // if (response.data.data.Message === "Data Not Found"){
-        //   AnswerGet = response.data.data.Message
-
-        // }else {
-            AnswerGet = response.data.data.Answer;
+            console.log(response);
+            AnswerGet = response.data.Answer;
             setAnswers([...answers, AnswerGet]); // Update answers state here
             setCurrentAnswer(AnswerGet);
+            setLatestAnswerIndex(answers.length);
+            setEffectReloadState(true);
         // }
         
       })
@@ -47,6 +59,7 @@ const PreViewPage = () => {
             AnswerGet = "No Data Found";
             setAnswers([...answers, AnswerGet]); // Update answers state here
             setCurrentAnswer(AnswerGet);
+            setLatestAnswerIndex(answers.length);
       });
   };
   const handleKeyPress = (event) => {
@@ -54,31 +67,49 @@ const PreViewPage = () => {
       handleQuestionSubmit();
     }
   };
+
   useEffect(()=>{
     axios.get(API.BASE_URL+"userhistory/", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     }).then((res)=>{
+      console.log(res);
       // getChatHistory(res.data.data)
       const chatHistory = res.data.data;
       const questionArray = chatHistory.map((item) => item.questions);
       const answerArray = chatHistory.map((item) => item.answer);
-
+      const answerTIme = chatHistory.map((item) => item.time);
+      setEffectReloadState(false);
       // Update the questions and answers state
       setQuestions(questionArray);
       setAnswers(answerArray);
+      setAnswerTime(answerTIme);
     }).catch((error)=>{
       console.log(error)
     })
-  },[])
-  // console.log(chatHistory)
-  // chatHistory.map((item, i)=>{
-  //   // setQuestions(...item.questions, item.questions)
-  //   // setAnswers(item.answer)
-  //   // console.log(item.date)
-  //   console.log(item)
-  // })
+  },[EffectReloadState])
+
+
+  const handleEditAnswer=()=>{
+    setShowAnswerChange(true);
+  };
+  const handleChangeInputAnswer = (event) => {
+    setNewAnswer(event.target.value);
+  };
+  const handleCloseAnswerUpdate=() => {
+    setShowAnswerChange(false);
+  };
+  const handleAnswerUpdate = () => {
+    setShowAnswerChange(false);
+    setAnswerUpdate(true);
+  };
+  const handleSaveAnswer=()=>{
+    setLatestAnswerIndex(null);
+  }
+  const closeWarningSB = () => {
+    setAnswerUpdate(false);
+  };
   return (
     <div className="chat-side px-5">
       <div className="chat-messages">
@@ -119,12 +150,14 @@ const PreViewPage = () => {
                   <div className="question-submit">
                     <h3 className="question">{question}</h3>
                     <div className="text-right">
-                    <small>12:09 Pm</small>
+
+                    {/* <small>{AnswerTime[index] ? AnswerTime[index].split(':').slice(0, 2).join(':') : ""}</small> */}
                     </div>
                   </div>
                     </div>
                   {answers.length > 0 && answers[index] !== "" ? (
-                    <div key={index} className="display-flex">
+                    <div key={index} >
+                      <div className="display-flex">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="30"
@@ -138,14 +171,22 @@ const PreViewPage = () => {
                     <div className="user-response">   
                       <h3 className="answer">{answers[index] ? answers[index]:"...."}</h3>
                     <div className="text-right">
-                    <small>12:09 pm</small>
+                    <small>{AnswerTime[index] ? AnswerTime[index].split(':').slice(0, 2).join(':') : ""}</small>
                     </div>
                     </div>
+                    </div>
+                    {latestAnswerIndex === index ? (
+                <div className="thumbs-check">
+
+                  <ThumbUpIcon color="info" style={{ cursor: "pointer" }} onClick={handleSaveAnswer}/>
+                  <ThumbDownIcon color="warning" style={{ cursor: "pointer" }} onClick={handleEditAnswer}/>
+                </div>
+              ) : (
+                ""
+              )}
+
                     </div>
                   ) : (<></>
-                    // <div className="user-response">
-                    //   <h3 className="answer">No response</h3>
-                    // </div>
                   )}
                 </div>
               ))}
@@ -156,105 +197,6 @@ const PreViewPage = () => {
           <div className="logo-ct">
           <img src={logo} alt="chat image"/>
           </div>
-          // <div className="chat-list">
-          //   <div className="chat-list-box">
-          //     <h3 className="mb-3 d-flex m-auto text-lg font-normal">
-          //       <svg
-          //         stroke="currentColor"
-          //         fill="none"
-          //         strokeWidth="1.5"
-          //         viewBox="0 -5 30 24"
-          //         strokeLinecap="round"
-          //         strokeLinejoin="round"
-          //         className="h-6 w-6"
-          //         height="1em"
-          //         width="1em"
-          //         xmlns="http://www.w3.org/2000/svg"
-          //       >
-          //         <circle cx="12" cy="12" r="5"></circle>
-          //         <line x1="12" y1="1" x2="12" y2="3"></line>
-          //         <line x1="12" y1="21" x2="12" y2="23"></line>
-          //         <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          //         <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          //         <line x1="1" y1="12" x2="3" y2="12"></line>
-          //         <line x1="21" y1="12" x2="23" y2="12"></line>
-          //         <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          //         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          //       </svg>
-          //       Examples
-          //     </h3>
-          //     <ul className="d-flex flex-column w-full m-auto">
-          //       <button className="w-full bg-gray mb-2">&quot;Tell me about India&quot; →</button>
-          //       <button className="w-full bg-gray mb-2">
-          //         &quot;Where can I go in this summer ?&quot; →
-          //       </button>
-          //       <button className="w-full bg-gray mb-2">&quot;Suggest me best plan&quot; →</button>
-          //     </ul>
-          //   </div>
-          //   <div className="chat-list-box">
-          //     <h3 className="mb-3 d-flex items-center m-auto text-lg font-normal md:flex-col md:gap-2">
-          //       <svg
-          //         xmlns="http://www.w3.org/2000/svg"
-          //         fill="none"
-          //         viewBox="0 0 24 24"
-          //         strokeWidth="1.5"
-          //         stroke="currentColor"
-          //         aria-hidden="true"
-          //         className="h-6 w-6"
-          //       >
-          //         <path
-          //           strokeLinecap="round"
-          //           strokeLinejoin="round"
-          //           d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-          //         ></path>
-          //       </svg>
-          //       Capabilities
-          //     </h3>
-          //     <ul className="d-flex flex-column w-full m-auto">
-          //       <li className="w-full bg-gray d-flex mb-2">
-          //         Remembers what user said earlier in the conversation
-          //       </li>
-          //       <li className="w-full bg-gray d-flex mb-2">
-          //         Allows user to provide follow-up corrections
-          //       </li>
-          //       <li className="w-full bg-gray d-flex mb-2">
-          //         Trained to decline inappropriate requests
-          //       </li>
-          //     </ul>
-          //   </div>
-          //   <div className="chat-list-box">
-          //     <h3 className="mb-3 d-flex items-center m-auto text-lg font-normal md:flex-col md:gap-2">
-          //       <svg
-          //         stroke="currentColor"
-          //         fill="none"
-          //         strokeWidth="1.5"
-          //         viewBox="0 0 24 24"
-          //         strokeLinecap="round"
-          //         strokeLinejoin="round"
-          //         className="h-6 w-6"
-          //         height="1em"
-          //         width="1em"
-          //         xmlns="http://www.w3.org/2000/svg"
-          //       >
-          //         <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-          //         <line x1="12" y1="9" x2="12" y2="13"></line>
-          //         <line x1="12" y1="17" x2="12.01" y2="17"></line>
-          //       </svg>
-          //       Limitations
-          //     </h3>
-          //     <ul className="d-flex flex-column w-full m-auto">
-          //       <li className="w-full bg-gray d-flex mb-2">
-          //         May occasionally generate incorrect information
-          //       </li>
-          //       <li className="w-full bg-gray d-flex mb-2">
-          //         May occasionally produce harmful instructions or biased content
-          //       </li>
-          //       <li className="w-full bg-gray d-flex mb-2">
-          //         Limited knowledge of world and events after 2021
-          //       </li>
-          //     </ul>
-          //   </div>
-          // </div>
         )}
       </div>
 
@@ -286,6 +228,47 @@ const PreViewPage = () => {
           © 2023 Chatbot, All rights reserved
         </span>
       </div>
+                  {showAnswerChange?(
+                        <div className='modal'>
+                          <div className='modal-content'>
+                          <div className="close-div">
+                          <button className="close-button" icon="close" onClick={handleCloseAnswerUpdate}>
+                            <Icon>close</Icon>
+                          </button>
+                          </div>
+                          <Grid item>
+                            <MDTypography variant="h6" fontWeight="medium" textTransform="capitalize" textAlign="center" >
+                              Enter Answer
+                            </MDTypography>
+                            <MDBox pt={4} pb={3} px={3}>
+                              <MDBox component="form" role="form">
+                                <MDBox mb={2}>
+                                <TextField id="outlined-multiline-static" label="Edit Answer" multiline rows={4} fullWidth variant="outlined" value={NewAnswer} onChange={handleChangeInputAnswer}/>                                
+                                </MDBox>
+                                <MDBox mt={4} mb={1}>
+                                  <MDButton variant="gradient" color="info" fullWidth onClick={handleAnswerUpdate}>
+                                    Update
+                                  </MDButton>
+                                </MDBox>
+                              </MDBox>
+                            </MDBox>
+                          </Grid>
+                          </div> 
+                      </div>
+                    ):<></>}
+
+          {/*  Snack BARS===========================================================================================> */}
+          <MDSnackbar
+            color="success"
+            icon="check"
+            title="Answer Updated"
+            content="Answer Updated Successfully!"
+            dateTime="Now"
+            open={AnswerUpdate}
+            onClose={closeWarningSB}
+            close={closeWarningSB}
+            bgWhite
+          />
     </div>
   );
 };
