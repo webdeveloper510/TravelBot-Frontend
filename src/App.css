@@ -119,7 +119,7 @@
   
   .chat-messages {
     max-height: 90vh;
-    height:90vh;
+    height:89vh;
     position: relative;
     overflow-y: scroll;
     width: 100%;

@@ -1,7 +1,7 @@
 /*eslint-disable*/
 
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , useRef} from "react";
 import { API } from "config/Api";
 import  logo from "../../assets/images/logo.png";
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
@@ -25,10 +25,16 @@ const PreViewPage = () => {
   const [AnswerUpdate, setAnswerUpdate] = useState(false);
   const [AnswerTime, setAnswerTime] = useState(false);
   const [EffectReloadState, setEffectReloadState] = useState(false);
+  const chatContainerRef = useRef(null);
   let AnswerGet , AnswerTImeGet
   const accessToken = localStorage.getItem("Token");
   const handleInputQuestion = (event) => {
     setCurrentQuestion(event.target.value);
+  };
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   };
   const handleQuestionSubmit = () => {
     if (currentQuestion.trim() !== "") {
@@ -50,13 +56,16 @@ const PreViewPage = () => {
             setCurrentAnswer(AnswerGet);
             setLatestAnswerIndex(answers.length);
             setEffectReloadState(true);
+            scrollToBottom();
         
       })
       .catch((error) => {
-            AnswerGet = error.response.data.Answer;
+            AnswerGet = error.response.data.Answer
             setAnswers([...answers, AnswerGet]); // Update answers state here
             setCurrentAnswer(AnswerGet);
             setLatestAnswerIndex(answers.length);
+          scrollToBottom();
+
       });
   };
   const handleKeyPress = (event) => {
@@ -108,7 +117,7 @@ const PreViewPage = () => {
   };
   return (
     <div className="chat-side px-5">
-      <div className="chat-messages">
+      <div className="chat-messages" ref={chatContainerRef}>
         <div className="loader-">
           <div className="dot"></div>
           <div className="dot"></div>
@@ -221,7 +230,7 @@ const PreViewPage = () => {
           </button>
         </div>
         <span className="text-center text-gray w-100 mt-2 copyright">
-          © 2023 Chatbot, All rights reserved
+          © 2023 Exclusive Malta, All rights reserved
         </span>
       </div>
                   {showAnswerChange?(
