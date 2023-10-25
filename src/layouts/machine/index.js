@@ -14,15 +14,21 @@ import Projects from "./components/Projects";
 import MDInput from "components/MDInput";
 import Card from "@mui/material/Card";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { API } from "config/Api";
+import MDSnackbar from "components/MDSnackbar";
 const FeedMachine = () => {
       useEffect(()=>{
         
       },[data])
 
+      const [Trigger , setTrigger] = useState(false); 
       const [feedAdded , setFeedAdded] = useState(null)
       const [feedQuestionAdd , setFeedQuestionAdd] = useState(null)
       const [showFeedInput, setShowFeedInput] = useState(false);
-
+      const [SuccessAddSuggestion, setSuccessAddSuggestion] = useState(false);
+      const [ErrorAddSuggestion, setErrorAddSuggestion] = useState(false);
+      const adminAccessToken = localStorage.getItem("Admin-Token");
 
       const handleFeedAdd = (event) => {
         setFeedAdded(event.target.value);
@@ -32,9 +38,26 @@ const FeedMachine = () => {
       };
       
       const handleFeedClick = () => {
-        setShowFeedInput(false);
+        const formData = new FormData();
+        formData.append("question", feedQuestionAdd);
+        formData.append("answer", feedAdded);
+        axios.post(API.BASE_URL+"add-suggestion/", formData, {
+            headers: {
+              Authorization: `Bearer ${adminAccessToken}`,
+            },
+        }).then((response) => {
+          setShowFeedInput(false);
+          setSuccessAddSuggestion(true);
+          setTrigger(true)
+        }).catch((error)=>{
+          console.log(error)
+          setErrorAddSuggestion(true);
+        })
       };
-
+      const closeWarningSB=()=>{
+        setSuccessAddSuggestion(false);
+        setErrorAddSuggestion(false);
+      }
       const handleFeedMachine=() => {
             setShowFeedInput(true);
       };
@@ -42,9 +65,6 @@ const FeedMachine = () => {
             setShowFeedInput(false);
       };
       const navigate = useNavigate();
-      const hndleNavigate = () => {
-        navigate("/add-users");
-      };
       return (
             <DashboardLayout>
               <DashboardNavbar />
@@ -72,7 +92,7 @@ const FeedMachine = () => {
                           </MDBox>
                         </MDBox>
                         <Grid item xs={12} md={6} lg={12}>
-                                <Projects />
+                                <Projects  trigger={Trigger} setTrigger={setTrigger}/>
                               </Grid>
                       </Card>
                     </Grid>
@@ -111,13 +131,13 @@ const FeedMachine = () => {
                 </MDBox>
             {/*  Snack BARS===========================================================================================> */}
 
-                {/* <MDSnackbar
+                <MDSnackbar
                    color="success"
                    icon="check"
-                   title="Updated"
-                   content="Profile Updated Successfully!"
+                   title="Suggestion Added"
+                   content="Suggestion Added Successfully!"
                    dateTime="Now"
-                   open={SuccessUpdateUser}
+                   open={SuccessAddSuggestion}
                    onClose={closeWarningSB}
                    close={closeWarningSB}
                    bgWhite
@@ -128,11 +148,11 @@ const FeedMachine = () => {
                    title="Error"
                    content="Something Went worng!"
                    dateTime="Now"
-                   open={ErrorUpdateUser}
+                   open={ErrorAddSuggestion}
                    onClose={closeWarningSB}
                    close={closeWarningSB}
                    bgWhite
-                 /> */}
+                 />
                {/* SNACK BARS Closed =---------------------------------------------------------- */}
             </DashboardLayout>
       )
