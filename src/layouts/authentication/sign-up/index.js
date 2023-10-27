@@ -206,7 +206,7 @@ function Cover() {
                       </MDBox> */}
                       <MDBox mt={4} mb={1}>
                         <MDButton variant="gradient" color="info" onClick={handleAddUser} fullWidth>
-                          add user
+                          Submit
                         </MDButton>
                       </MDBox>
                       {/* <MDBox mt={3} mb={1} textAlign="center">

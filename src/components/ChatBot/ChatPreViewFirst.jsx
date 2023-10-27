@@ -13,10 +13,8 @@ import  TextField from "@mui/material/TextField";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
-
-const PreViewPage = () => {
-
-  // States Management ------------------------------------------------------------------------------------->
+import svgIcon from "../../assets/images/logos/7024404.svg"
+const PreViewPage = (ChatID) => {
 
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState("");
@@ -33,18 +31,29 @@ const PreViewPage = () => {
   const [EffectReloadState, setEffectReloadState] = useState(false);
   const chatContainerRef = useRef(null);
   const [UpdatedConstAnsId, setUpdatedConstAnsId] = useState(null)
+  const [ValueChatGet, setValueChatGet] = useState(null)
+  const [NewUserF, setNewUserF] = useState(false)
   const accessToken = localStorage.getItem("Token");
 
 
   // Functions Management ------------------------------------------------------------------------------------->
-
   useEffect(()=>{
-    axios.get(API.BASE_URL+"userhistory/", {
+  if (ChatID.ChatID===null || ChatID.ChatID===""){
+  }else {
+    GetChatDetails(ChatID.ChatID)
+  }
+  },[EffectReloadState , ChatID.ChatID])
+
+  const GetChatDetails=(id)=>{
+
+
+    axios.get(API.BASE_URL + "getchat/"+id+"/",{
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     }).then((res)=>{
-      // getChatHistory(res.data.data)
+      console.log(res.data.data);
+      setValueChatGet(res.data.data);
       const chatHistory = res.data.data;
       const questionArray = chatHistory.map((item) => item.questions);
       const answerArray = chatHistory.map((item) => item.answer);
@@ -52,7 +61,6 @@ const PreViewPage = () => {
       const answerID = chatHistory.map((item) => item.id);
 
       setEffectReloadState(false);
-      // Update the questions and answers state
       setQuestions(questionArray);
       setAnswers(answerArray);
       setAnswerTime(answerTIme);
@@ -60,9 +68,7 @@ const PreViewPage = () => {
     }).catch((error)=>{
       console.log(error)
     })
-  },[EffectReloadState])
-
-
+  }
 
 
   const handleInputQuestion = (event) => {
@@ -77,14 +83,21 @@ const PreViewPage = () => {
   };
 
 
+
   const handleQuestionSubmit = () => {
     if (currentQuestion.trim() !== "") {
       setQuestions([...questions, currentQuestion]);
       setCurrentQuestion("");
       scrollToBottom();
     }
+
     const formdata = new FormData();
     formdata.append("query", currentQuestion); // Assuming currentQuestion is defined
+    if (ChatID.ChatID===null || ChatID.ChatID===""){
+    formdata.append("topic_id", ''); // Assuming currentQuestion is defined
+    }else {
+      formdata.append("topic_id", ChatID.ChatID); // Assuming currentQuestion is defined
+    }
     axios.post(API.BASE_URL + "prediction/", formdata, {
         headers: {
           Authorization: `Bearer ${accessToken}`, // Assuming accessToken is defined
@@ -100,15 +113,17 @@ const PreViewPage = () => {
         setEffectReloadState(true); // Assuming setEffectReloadState is defined
         scrollToBottom(); // Assuming scrollToBottom is defined
       }).catch((error) => {
-        console.log(error);
         const AnswerGet = error.response.data.Answer; // Declare AnswerGet
+        const AnswerIDGet = error.response.data.id; // Declare AnswerIDGet
+        setAnswerID([...AnswerID, AnswerIDGet]);
+        setCurrentAnswerID(AnswerIDGet);
         setAnswers([...answers, AnswerGet]); // Assuming answers and setAnswers are defined
         setCurrentAnswer(AnswerGet);
         setLatestAnswerIndex(answers.length); // Assuming setLatestAnswerIndex is defined
         scrollToBottom(); // Assuming scrollToBottom is defined
       });
   }
-
+console.log(AnswerID , answers ,)
 // Enter Function On Submit Question 
 
   const handleKeyPress = (event) => {
@@ -127,6 +142,7 @@ const PreViewPage = () => {
 // Handle Answer edit (Suggestions) Open Pop-Up
 
   const handleEditAnswer=(id)=>{
+    console.log(id);
     setUpdatedConstAnsId(id)
     setShowAnswerChange(true);
   };
@@ -183,7 +199,8 @@ const PreViewPage = () => {
 
 
         {/* Main Question Page Start */}
-
+        {ValueChatGet?.length>0?(<>
+        
 
         {questions.length > 0 ? (
           <>
@@ -213,6 +230,7 @@ const PreViewPage = () => {
                         <svg xmlns="http://www.w3.org/2000/svg"   width="30"   height="30"   data-name="Layer 1"   viewBox="0 0 24 24"   className="display-flex self-center mr-2" >
                           <path d="M22 11a4 4 0 00-2-3.48A3 3 0 0020 7a3 3 0 00-3-3h-.18A3 3 0 0012 2.78 3 3 0 007.18 4H7a3 3 0 00-3 3 3 3 0 000 .52 4 4 0 00-.55 6.59A4 4 0 007 20h.18A3 3 0 0012 21.22 3 3 0 0016.82 20H17a4 4 0 003.5-5.89A4 4 0 0022 11zM11 8.55a4.72 4.72 0 00-.68-.32 1 1 0 00-.64 1.9A2 2 0 0111 12v1.55a4.72 4.72 0 00-.68-.32 1 1 0 00-.64 1.9A2 2 0 0111 17v2a1 1 0 01-1 1 1 1 0 01-.91-.6 4.07 4.07 0 00.48-.33 1 1 0 10-1.28-1.54A2 2 0 017 18a2 2 0 01-2-2 2 2 0 01.32-1.06A3.82 3.82 0 006 15a1 1 0 000-2 1.84 1.84 0 01-.69-.13A2 2 0 015 9.25a3.1 3.1 0 00.46.35 1 1 0 101-1.74.9.9 0 01-.34-.33A.92.92 0 016 7a1 1 0 011-1 .76.76 0 01.21 0 3.85 3.85 0 00.19.47 1 1 0 001.37.37 1 1 0 00.36-1.34A1.06 1.06 0 019 5a1 1 0 012 0zm7.69 4.32A1.84 1.84 0 0118 13a1 1 0 000 2 3.82 3.82 0 00.68-.06A2 2 0 0119 16a2 2 0 01-2 2 2 2 0 01-1.29-.47 1 1 0 00-1.28 1.54 4.07 4.07 0 00.48.33 1 1 0 01-.91.6 1 1 0 01-1-1v-2a2 2 0 011.32-1.87 1 1 0 00-.64-1.9 4.72 4.72 0 00-.68.32V12a2 2 0 011.32-1.87 1 1 0 00-.64-1.9 4.72 4.72 0 00-.68.32V5a1 1 0 012 0 1.06 1.06 0 01-.13.5 1 1 0 00.36 1.37 1 1 0 001.37-.37 3.85 3.85 0 00.19-.5.76.76 0 01.21 0 1 1 0 011 1 1 1 0 01-.17.55.9.9 0 01-.33.31 1 1 0 001 1.74 2.66 2.66 0 00.5-.35 2 2 0 01-.27 3.62z"></path>
                         </svg>
+                          
                           <div className="user-response">   
                               <h3 className="answer">{answers[index] ? answers[index]:"...."}</h3>
                             <div className="text-right">
@@ -236,10 +254,15 @@ const PreViewPage = () => {
           </>
         ) : (
 
-          <div className="logo-ct">
+          <><div className="logo-ct">
           <img src={logo} alt="chat image"/>
-          </div>
+          </div></>
         )}
+        </>):<>
+        
+        <div className="logo-ct">
+          <img src={logo} alt="chat image"/>
+          </div></>}
       </div>
 
       <div className="input-group-container">
@@ -251,7 +274,7 @@ const PreViewPage = () => {
             onChange={handleInputQuestion}
             onKeyPress={handleKeyPress}
           />
-          <button className="btn btn-primary" type="submit" onClick={handleQuestionSubmit}>
+          <button className="btn btn-primary" type="submit" onClick={()=>{handleQuestionSubmit}}>
             <svg
               id="ic_send"
               fill="#FFFFFF"

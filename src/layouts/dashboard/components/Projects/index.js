@@ -12,7 +12,7 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-
+/*eslint-disable*/
 import { useState } from "react";
 
 // @mui material components
@@ -31,7 +31,7 @@ import DataTable from "examples/Tables/DataTable";
 // Data
 import data from "layouts/dashboard/components/Projects/data";
 
-function Projects({ trigger, setTrigger }) {
+  function Projects({ trigger, setTrigger }) {
   const { columns, rows } = data({
     trigger: trigger,
     setTrigger: setTrigger,
@@ -103,8 +103,8 @@ function Projects({ trigger, setTrigger }) {
     </Card>
   );
 }
-Projects.propTypes = {
-  trigger: PropTypes.any, // Change 'any' to the specific type if necessary
-  setTrigger: PropTypes.func, // Change 'func' to the specific type if necessary
-};
-export default Projects;
+  Projects.propTypes = {
+    trigger: PropTypes.any, // Change 'any' to the specific type if necessary
+    setTrigger: PropTypes.func, // Change 'func' to the specific type if necessary
+  };
+  export default Projects;

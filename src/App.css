@@ -18,28 +18,29 @@
   }
   
   .sidebar a {
-      display: block;
-      margin-bottom: 3px;
       color: #fff;
       padding: 16px;
       text-decoration: none;
       border-bottom: 1px solid #fff;
       cursor: pointer;
+      width: 100%;
+      display: flex;
   }
+  .sidebar svg {
+    display: flex;
+    align-self: center;
+  }
+
   span.truncate {
       text-overflow: ellipsis;
       margin: 0 0 0 15px;
       font-size: 18px;
       font-family: system-ui;
   }
-    .sidebar a.active {
-        background-color: #fff;
-        color: #000;
-    }
+
     
-    .sidebar a:hover:not(.active) {
-        background-color: #b3c7e5;
-        color: #000;
+    .sidebar a:hover:not.active {
+      color: #000;
     }
     
     div.content {
@@ -593,3 +594,14 @@ h6.MuiTypography-root.MuiTypography-h6.css-11c9emy {
   float: left;
   width: 88%;
 }
+/* .new-chat-bttn.active{
+  background: #fff;
+}
+.sidebar a.active {
+  background-color: #fff;
+  color: #000;
+} */
+/* .sidebar a.active {
+  background-color: #fff;
+  color: #000;
+} */

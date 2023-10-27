@@ -45,7 +45,12 @@ export default function data(props) {
   
   
   // FUMCTIONS Management -------------------------------------------------------------------------------------------->
-
+  const handlefeedQuestion = (event) => {
+    setFeedQuestionAdd(event.target.value);
+  };
+  const handlefeedAns = (event) => {
+    setFeedAdded(event.target.value);
+  };
 
   useEffect(() => {
     axios
@@ -87,6 +92,7 @@ export default function data(props) {
           Authorization: `Bearer ${adminAccessToken}`,
         },
     }).then((response) => {
+      console.log(response)
       setShowFeedInput(false);
       setUpdateFeedValue(true);
       setUpdateState(true)
@@ -178,10 +184,11 @@ export default function data(props) {
                     <MDBox pt={4} pb={3} px={3}>
                           <MDBox component="form" role="form">
                             <MDBox mb={2}>
-                              <MDInput type="text" label="Question" value={feedQuestionAdd} onChange={(e) => setFeedQuestionAdd(e.target.value)} fullWidth  />
+                      
+                              <MDInput type="text"   onChange={handlefeedQuestion} name="feedQuestionAdd" label="Question" defaultValue={feedQuestionAdd} fullWidth  />
                             </MDBox>
                             <MDBox mb={2}>
-                              <TextField id="outlined-multiline-static" label="Add Feed" multiline rows={4}  value={feedAdded} onChange={(e) => setFeedAdded(e.target.value)} fullWidth variant="outlined" />                                
+                              <TextField id="outlined-multiline-static" label="Add Feed"      onChange={handlefeedAns} name="answer" multiline rows={4}  defaultValue={feedAdded} fullWidth variant="outlined" />                                
                             </MDBox>
                             <MDBox mt={4} mb={1}>
                               <MDButton variant="gradient" color="info" fullWidth onClick={handleSubmitUpdateFeed} >Feed</MDButton>
