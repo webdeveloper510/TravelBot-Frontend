@@ -18,9 +18,22 @@ import axios from "axios";
 import { API } from "config/Api";
 import MDSnackbar from "components/MDSnackbar";
 const FeedMachine = () => {
+  const [topicId , setopicId] = useState(null)
       useEffect(()=>{
         
       },[data])
+
+      useEffect(()=>{
+        axios.get(API.BASE_URL+"topics/",{
+          headers: {
+            Authorization: `Bearer ${adminAccessToken}`,
+          },
+        }).then((response)=>{
+          setopicId(response.data.data[0].id);
+        }).catch((error)=>{
+          console.log(error)
+        })
+      },[])
 
       const [Trigger , setTrigger] = useState(false); 
       const [feedAdded , setFeedAdded] = useState(null)
@@ -41,6 +54,11 @@ const FeedMachine = () => {
         const formData = new FormData();
         formData.append("question", feedQuestionAdd);
         formData.append("answer", feedAdded);
+        if (topicId){
+        formData.append("topic_id", topicId);
+        }else{
+          formData.append("topic_id", '');
+        }
         axios.post(API.BASE_URL+"add-suggestion/", formData, {
             headers: {
               Authorization: `Bearer ${adminAccessToken}`,
