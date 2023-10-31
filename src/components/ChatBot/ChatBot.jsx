@@ -46,7 +46,9 @@ const ChatBot = () => {
   const [ChatDate, setChatDate] = useState(null)
   const [ChatTopicName, setChatTopicName] = useState(null)
   const [NewUserF, setNewUserF] = useState(false)
+  const [first_load , setFirstLoad] = useState(true)
   // const [DefaultChatID , setDefaultChatID] = useState(null);
+  const [StateForIndexCheck , setStateForIndexCheck] = useState(null);
   const navigate = useNavigate();
 
 
@@ -57,10 +59,13 @@ const ChatBot = () => {
         Authorization: `Bearer ${accessToken}`,
       },
     }).then((resp)=>{
-      console.log(resp);
       const index=resp.data.data.length
+      setStateForIndexCheck(index);
       setTopicsState(resp.data.data)
-      // setChatID(resp.data.data[index-1].id)
+      if(first_load){
+        setChatID(resp.data.data[index-1].id)
+        setFirstLoad(false)
+      }
       setChatDateForItem(resp.data.data[index-1].created_at__date)
       setnewAddState(false)
       setEffectReloadState(false)
@@ -198,7 +203,11 @@ const handleQuestionSubmit = () => {
       setAnswers([...answers, AnswerGet]); // Assuming answers and setAnswers are defined
       setCurrentAnswer(AnswerGet);
       setLatestAnswerIndex(answers.length); // Assuming setLatestAnswerIndex is defined
-      setEffectReloadState(true); // Assuming setEffectReloadState is defined
+      // if (StateForIndexCheck === 0){
+        setEffectReloadState(true); // Assuming setEffectReloadState is defined
+      // }else{
+      // setEffectReloadState(false); // Assuming setEffectReloadState is defined
+      // }
       scrollToBottom(); // Assuming scrollToBottom is defined
     }).catch((error) => {
       const AnswerGet = error.response.data.Answer; // Declare AnswerGet
@@ -319,7 +328,7 @@ const setChatDateForItem = (date) => {
       </div>
        {TopicsState.map((index) => (  
         
-       <div className='new-chat-bttn'onClick={() => {setChatID(index.id,    getSideBArValueUpdated()) 
+       <div className='new-chat-bttn'onClick={() => {setChatID(index.id) 
        setChatDateForItem(index.created_at__date)}} style={{ background: index.id === ChatID ? "#fff" : "" }}>
           <div className="bttn-chat">
           <a className="flex px-3 active" href="#chat" style={{ color: index.id === ChatID ? "#000" : "" }}>
