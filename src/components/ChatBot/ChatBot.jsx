@@ -25,6 +25,7 @@ const ChatBot = () => {
   const [newAddState , setnewAddState] = useState(false);
   const [ChatID , setChatID] = useState(null);
 
+  const [vendorState , setvendorState] = useState(null)
 
 
   const [questions, setQuestions] = useState([]);
@@ -175,21 +176,24 @@ const scrollToBottom = () => {
   }
 };
 
-
-
+  const vendorName = localStorage.getItem("vendorName");
 const handleQuestionSubmit = () => {
   if (currentQuestion.trim() !== "") {
     setQuestions([...questions, currentQuestion]);
     setCurrentQuestion("");
     scrollToBottom();
   }
-
   const formdata = new FormData();
   formdata.append("query", currentQuestion); // Assuming currentQuestion is defined
   if (ChatID===null || ChatID===""){
   formdata.append("topic_id", ''); // Assuming currentQuestion is defined
   }else {
     formdata.append("topic_id", ChatID); // Assuming currentQuestion is defined
+  }
+  if (vendorName){
+    formdata.append("vendor_name" , vendorName)
+  }else{
+    formdata.append("vendor_name" , '')
   }
   axios.post(API.BASE_URL + "prediction/", formdata, {
       headers: {
@@ -203,6 +207,11 @@ const handleQuestionSubmit = () => {
       setAnswers([...answers, AnswerGet]); // Assuming answers and setAnswers are defined
       setCurrentAnswer(AnswerGet);
       setLatestAnswerIndex(answers.length); // Assuming setLatestAnswerIndex is defined
+      // setvendorState(response.data.vendor)    
+      const newVendorName = response.data.vendor;
+      console.log(newVendorName)
+      localStorage.setItem("vendorName", newVendorName)
+
       // if (StateForIndexCheck === 0){
         setEffectReloadState(true); // Assuming setEffectReloadState is defined
       // }else{
@@ -295,6 +304,7 @@ const setChatDateForItem = (date) => {
 
   const handleLogOut = () => {
     localStorage.removeItem("Token");
+    localStorage.removeItem("vendorName");
     navigate("/");
     window.location.reload();
   };
