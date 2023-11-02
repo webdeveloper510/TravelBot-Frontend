@@ -24,15 +24,10 @@ const ChatBot = () => {
   const [TopicsState, setTopicsState] = useState([])
   const [newAddState , setnewAddState] = useState(false);
   const [ChatID , setChatID] = useState(null);
-
-  const [vendorState , setvendorState] = useState(null)
-
-
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [answers, setAnswers] = useState([]);
-  const [chatHistory, getChatHistory] = useState([]);
   const [latestAnswerIndex, setLatestAnswerIndex] = useState(null);
   const [AnswerID, setAnswerID] = useState([]);
   const [CurrentAnswerID, setCurrentAnswerID] = useState(null);
@@ -45,14 +40,13 @@ const ChatBot = () => {
   const [UpdatedConstAnsId, setUpdatedConstAnsId] = useState(null)
   const [ValueChatGet, setValueChatGet] = useState(null)
   const [ChatDate, setChatDate] = useState(null)
-  const [ChatTopicName, setChatTopicName] = useState(null)
-  const [NewUserF, setNewUserF] = useState(false)
   const [first_load , setFirstLoad] = useState(true)
-  // const [DefaultChatID , setDefaultChatID] = useState(null);
   const [StateForIndexCheck , setStateForIndexCheck] = useState(null);
   const navigate = useNavigate();
+  const vendorName = localStorage.getItem("vendorName");
 
-
+// Function Callings ---------------------------------------------------------------------------------------------->
+// ******************************** USEEFFECTS ********************************
 
   useEffect(()=>{
     axios.get(API.BASE_URL+"topics/",{
@@ -77,7 +71,54 @@ const ChatBot = () => {
 
 
 
-  // Function Calling ---------------------------------------------------------------->
+
+  useEffect(()=>{
+    if (ChatID===null || ChatID===""){
+    }else {
+      GetChatDetails(ChatID)
+    }
+    },[EffectReloadState , ChatID])
+    
+    const GetChatDetails=(id)=>{
+      axios.get(API.BASE_URL + "getchat/"+id+"/",{
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then((res)=>{
+        console.log(res.data.data);
+        setValueChatGet(res.data.data);
+        const chatHistory = res.data.data;
+        const questionArray = chatHistory.map((item) => item.questions);
+        const answerArray = chatHistory.map((item) => item.answer);
+        const answerTIme = chatHistory.map((item) => item.time);
+        const answerID = chatHistory.map((item) => item.id);
+        const TopicName = chatHistory.map((item) => item.topic);
+        console.log(TopicName, "=======================")
+        for (let i=0; i<TopicName.length; i++){
+          if(TopicName[i]===""){
+            continue
+          }else{
+            console.log(TopicName[i], "=================")
+            
+            UpdateTopicName(TopicName[i], ChatID)
+            break
+          }
+        }
+        setEffectReloadState(false);
+        setQuestions(questionArray);
+        setAnswers(answerArray);
+        setAnswerTime(answerTIme);
+        setAnswerID(answerID);
+      }).catch((error)=>{
+        console.log(error)
+      })
+    }
+
+
+
+
+// // Functions Management ------------------------------------------------------------------------------------->
+
 
   const handleNewChatClick = () => {
     axios.post(API.BASE_URL+"topics/",{name:"Chat"},{
@@ -93,66 +134,8 @@ const ChatBot = () => {
     })
   };
 
-// --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-
-
-// // Functions Management ------------------------------------------------------------------------------------->
-useEffect(()=>{
-if (ChatID===null || ChatID===""){
-}else {
-  GetChatDetails(ChatID)
-}
-},[EffectReloadState , ChatID])
-
-const GetChatDetails=(id)=>{
-  axios.get(API.BASE_URL + "getchat/"+id+"/",{
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  }).then((res)=>{
-    console.log(res.data.data);
-    setValueChatGet(res.data.data);
-    const chatHistory = res.data.data;
-    const questionArray = chatHistory.map((item) => item.questions);
-    const answerArray = chatHistory.map((item) => item.answer);
-    const answerTIme = chatHistory.map((item) => item.time);
-    const answerID = chatHistory.map((item) => item.id);
-    const TopicName = chatHistory.map((item) => item.topic);
-    console.log(TopicName, "=======================")
-    for (let i=0; i<TopicName.length; i++){
-      if(TopicName[i]===""){
-        continue
-      }else{
-        console.log(TopicName[i], "=================")
-        
-        UpdateTopicName(TopicName[i], ChatID)
-        break
-      }
-    }
-    setEffectReloadState(false);
-    setQuestions(questionArray);
-    setAnswers(answerArray);
-    setAnswerTime(answerTIme);
-    setAnswerID(answerID);
-  }).catch((error)=>{
-    console.log(error)
-  })
-}
-const getSideBArValueUpdated=()=>{
-  axios.get(API.BASE_URL+"topics/",{
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  }).then((resp)=>{
-    console.log(resp);
-    setTopicsState(resp.data.data)
-    console.log(ChatID)
-   
-  }).catch((error)=>{
-  })
-}
 const UpdateTopicName=(topic_name , id)=>{
   axios.put(API.BASE_URL+"update-topics/"+id+"/",{name:topic_name},{
     headers: {
@@ -165,6 +148,8 @@ const UpdateTopicName=(topic_name , id)=>{
     console.log(error)
   })
 }
+
+
 const handleInputQuestion = (event) => {
   setCurrentQuestion(event.target.value);
 };
@@ -176,7 +161,6 @@ const scrollToBottom = () => {
   }
 };
 
-  const vendorName = localStorage.getItem("vendorName");
 const handleQuestionSubmit = () => {
   if (currentQuestion.trim() !== "") {
     setQuestions([...questions, currentQuestion]);
@@ -184,11 +168,14 @@ const handleQuestionSubmit = () => {
     scrollToBottom();
   }
   const formdata = new FormData();
-  formdata.append("query", currentQuestion); // Assuming currentQuestion is defined
+  formdata.append("query", currentQuestion); 
+
   if (ChatID===null || ChatID===""){
-  formdata.append("topic_id", ''); // Assuming currentQuestion is defined
+  formdata.append("topic_id", ''); 
+
   }else {
-    formdata.append("topic_id", ChatID); // Assuming currentQuestion is defined
+    formdata.append("topic_id", ChatID); 
+
   }
   if (vendorName){
     formdata.append("vendor_name" , vendorName)
@@ -197,36 +184,43 @@ const handleQuestionSubmit = () => {
   }
   axios.post(API.BASE_URL + "prediction/", formdata, {
       headers: {
-        Authorization: `Bearer ${accessToken}`, // Assuming accessToken is defined
+        Authorization: `Bearer ${accessToken}`, 
+
       },
     }).then((response) => {
-      const AnswerGet = response.data.Answer; // Declare AnswerGet
-      const AnswerIDGet = response.data.id; // Declare AnswerIDGet
-      setAnswerID([...AnswerID, AnswerIDGet]);
-      setCurrentAnswerID(AnswerIDGet);
-      setAnswers([...answers, AnswerGet]); // Assuming answers and setAnswers are defined
-      setCurrentAnswer(AnswerGet);
-      setLatestAnswerIndex(answers.length); // Assuming setLatestAnswerIndex is defined
-      // setvendorState(response.data.vendor)    
-      const newVendorName = response.data.vendor;
-      console.log(newVendorName)
-      localStorage.setItem("vendorName", newVendorName)
+      const AnswerGet = response.data.Answer; 
 
-      // if (StateForIndexCheck === 0){
-        setEffectReloadState(true); // Assuming setEffectReloadState is defined
-      // }else{
-      // setEffectReloadState(false); // Assuming setEffectReloadState is defined
-      // }
-      scrollToBottom(); // Assuming scrollToBottom is defined
-    }).catch((error) => {
-      const AnswerGet = error.response.data.Answer; // Declare AnswerGet
-      const AnswerIDGet = error.response.data.id; // Declare AnswerIDGet
+      const AnswerIDGet = response.data.id; 
+
       setAnswerID([...AnswerID, AnswerIDGet]);
       setCurrentAnswerID(AnswerIDGet);
-      setAnswers([...answers, AnswerGet]); // Assuming answers and setAnswers are defined
+      setAnswers([...answers, AnswerGet]); 
+
       setCurrentAnswer(AnswerGet);
-      setLatestAnswerIndex(answers.length); // Assuming setLatestAnswerIndex is defined
-      scrollToBottom(); // Assuming scrollToBottom is defined
+      setLatestAnswerIndex(answers.length); 
+
+
+      const newVendorName = response.data.vendor;
+      localStorage.setItem("vendorName", newVendorName)
+      setEffectReloadState(true); 
+
+
+      scrollToBottom(); 
+
+    }).catch((error) => {
+      const AnswerGet = error.response.data.Answer; 
+
+      const AnswerIDGet = error.response.data.id; 
+
+      setAnswerID([...AnswerID, AnswerIDGet]);
+      setCurrentAnswerID(AnswerIDGet);
+      setAnswers([...answers, AnswerGet]); 
+
+      setCurrentAnswer(AnswerGet);
+      setLatestAnswerIndex(answers.length); 
+
+      scrollToBottom(); 
+
     });
 }
 // Enter Function On Submit Question 
@@ -309,6 +303,9 @@ const setChatDateForItem = (date) => {
     window.location.reload();
   };
 
+
+  // ####----------------------------------------------------------------RETURN VALUE Statements ---------------------------------------------------------------->
+
   return (
     <div className="main">
       <div className="chat">
@@ -370,7 +367,7 @@ const setChatDateForItem = (date) => {
         </div>
 
 
-        {/* ----------------------------------------------------------------------------------------------------------------------------------------------- */}
+        {/* ----------------------------------------------------------------CHAT SECTION----------------------------------------------------------------- */}
 
 
         <div className="content">
@@ -459,7 +456,7 @@ const setChatDateForItem = (date) => {
             onChange={handleInputQuestion}
             onKeyPress={handleKeyPress}
           />
-          <button className="btn btn-primary" type="submit" onClick={()=>{handleQuestionSubmit}}>
+          <button className="btn btn-primary" type="submit" onClick={()=>{handleQuestionSubmit()}}>
             <svg
               id="ic_send"
               fill="#FFFFFF"
