@@ -200,7 +200,7 @@ const handleQuestionSubmit = () => {
       setLatestAnswerIndex(answers.length); 
 
 
-      const newVendorName = response.data.vendor;
+      const newVendorName = response.data.vendor_name;
       localStorage.setItem("vendorName", newVendorName)
       setEffectReloadState(true); 
 
