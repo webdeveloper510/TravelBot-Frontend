@@ -133,7 +133,7 @@ const routes = [
     route: "/chat",
     component: <ChatBot />,
   }):(<></>),
-  adminToken || userToken ?(<></>):
+  adminToken && userToken ?(<></>):
   ({
     name: "Sign In",
     key: "sign-in",
