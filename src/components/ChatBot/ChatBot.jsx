@@ -43,7 +43,7 @@ const ChatBot = () => {
   const [first_load , setFirstLoad] = useState(true)
   const [StateForIndexCheck , setStateForIndexCheck] = useState(null);
   const navigate = useNavigate();
-  const vendorName = localStorage.getItem("vendorName");
+  let vendorName = localStorage.getItem("vendorName");
   const [firstnameLetter , setfirstnameLetter] = useState(null);
 // Function Callings ---------------------------------------------------------------------------------------------->
 // ******************************** USEEFFECTS ********************************
@@ -178,6 +178,8 @@ const scrollToBottom = () => {
   }
 };
 
+
+
 const handleQuestionSubmit = () => {
   if (currentQuestion.trim() !== "") {
     setQuestions([...questions, currentQuestion]);
@@ -195,13 +197,17 @@ const handleQuestionSubmit = () => {
 
   }
   if (vendorName){
-    formdata.append("vendor_name" , vendorName)
+    vendorName = JSON.stringify(vendorName)
+    console.log(vendorName);
+    formdata.append("vendor_name" , JSON.parse(vendorName))
+    console.log(JSON.parse(vendorName))
   }else{
     formdata.append("vendor_name" , '')
   }
   axios.post(API.BASE_URL + "prediction/", formdata, {
       headers: {
         Authorization: `Bearer ${accessToken}`, 
+        "Content-Type":"application/json"
 
       },
     }).then((response) => {
@@ -218,7 +224,7 @@ const handleQuestionSubmit = () => {
 
 
       const newVendorName = response.data.vendor_name;
-      localStorage.setItem("vendorName", newVendorName)
+      localStorage.setItem("vendorName", JSON.stringify(newVendorName))
       setEffectReloadState(true); 
 
 
