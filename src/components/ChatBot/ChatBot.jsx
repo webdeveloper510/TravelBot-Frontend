@@ -489,7 +489,9 @@ const setChatDateForItem = (date) => {
 
       <div className="input-group-container">
         <div className="input-padd">
-          <input
+        {/* <textarea id="another-textarea" tabindex="0" data-id="request-:r11:-10" rows="1" placeholder="Message ChatGPT…" class="m-0 w-full resize-none border-0 bg-transparent py-[10px] pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:py-4 md:pr-12 gizmo:md:py-3.5 gizmo:placeholder-black/50 gizmo:dark:placeholder-white/50 pl-3 md:pl-4" style={{maxHeight: "200px", height: "52px", overflowY: "hidden"}} /> */}
+          <textarea
+          id="another-textarea"
             type="text"
             className="form-control-chat"
             value={currentQuestion}
