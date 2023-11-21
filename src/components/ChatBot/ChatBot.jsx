@@ -6,7 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PsychologyIcon from '@mui/icons-material/Psychology';
 
-
+import ReactTyped from "react-typed";
 
 import  logo from "../../assets/images/logo.png";
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
@@ -102,7 +102,14 @@ const ChatBot = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       }).then((res)=>{
-        console.log(res.data.data);
+        console.log('here',res.data.data);
+        for (let i = 0; i < res.data.data.length; i++) {
+          const inputString=res.data.data[i].answer
+          let lines = inputString.split("\n");
+        
+          res.data.data[i].answer=lines
+      }
+      console.log(res.data.data);
         setValueChatGet(res.data.data);
         const chatHistory = res.data.data;
         const questionArray = chatHistory.map((item) => item.questions);
@@ -208,13 +215,11 @@ const handleQuestionSubmit = () => {
       headers: {
         Authorization: `Bearer ${accessToken}`, 
         "Content-Type":"application/json"
-
       },
     }).then((response) => {
       const AnswerGet = response.data.Answer; 
-
       const AnswerIDGet = response.data.id; 
-
+      console.log(AnswerGet, "================================")
       setAnswerID([...AnswerID, AnswerIDGet]);
       setCurrentAnswerID(AnswerIDGet);
       setAnswers([...answers, AnswerGet]); 
@@ -222,7 +227,15 @@ const handleQuestionSubmit = () => {
       setCurrentAnswer(AnswerGet);
       setLatestAnswerIndex(answers.length); 
 
+      let inputString = "Line 1\nLine 2\nLine 3";
 
+      // Split the string into an array of lines
+      let lines = inputString.split("\n");
+      
+      // Print each line
+      for (let i = 0; i < lines.length; i++) {
+          console.log(lines[i]);
+      }
       const newVendorName = response.data.vendor_name;
       localStorage.setItem("vendorName", JSON.stringify(newVendorName))
       setEffectReloadState(true); 
@@ -432,10 +445,6 @@ const setChatDateForItem = (date) => {
                   {answers.length > 0 && answers[index] !== "" ? (
                     <div key={index} >
                       <div className="display-flex">
-                        {/* <svg xmlns="http://www.w3.org/2000/svg"   width="30"   height="30"   data-name="Layer 1"   viewBox="0 0 24 24"   className="display-flex self-center mr-2" >
-                          <path d="M22 11a4 4 0 00-2-3.48A3 3 0 0020 7a3 3 0 00-3-3h-.18A3 3 0 0012 2.78 3 3 0 007.18 4H7a3 3 0 00-3 3 3 3 0 000 .52 4 4 0 00-.55 6.59A4 4 0 007 20h.18A3 3 0 0012 21.22 3 3 0 0016.82 20H17a4 4 0 003.5-5.89A4 4 0 0022 11zM11 8.55a4.72 4.72 0 00-.68-.32 1 1 0 00-.64 1.9A2 2 0 0111 12v1.55a4.72 4.72 0 00-.68-.32 1 1 0 00-.64 1.9A2 2 0 0111 17v2a1 1 0 01-1 1 1 1 0 01-.91-.6 4.07 4.07 0 00.48-.33 1 1 0 10-1.28-1.54A2 2 0 017 18a2 2 0 01-2-2 2 2 0 01.32-1.06A3.82 3.82 0 006 15a1 1 0 000-2 1.84 1.84 0 01-.69-.13A2 2 0 015 9.25a3.1 3.1 0 00.46.35 1 1 0 101-1.74.9.9 0 01-.34-.33A.92.92 0 016 7a1 1 0 011-1 .76.76 0 01.21 0 3.85 3.85 0 00.19.47 1 1 0 001.37.37 1 1 0 00.36-1.34A1.06 1.06 0 019 5a1 1 0 012 0zm7.69 4.32A1.84 1.84 0 0118 13a1 1 0 000 2 3.82 3.82 0 00.68-.06A2 2 0 0119 16a2 2 0 01-2 2 2 2 0 01-1.29-.47 1 1 0 00-1.28 1.54 4.07 4.07 0 00.48.33 1 1 0 01-.91.6 1 1 0 01-1-1v-2a2 2 0 011.32-1.87 1 1 0 00-.64-1.9 4.72 4.72 0 00-.68.32V12a2 2 0 011.32-1.87 1 1 0 00-.64-1.9 4.72 4.72 0 00-.68.32V5a1 1 0 012 0 1.06 1.06 0 01-.13.5 1 1 0 00.36 1.37 1 1 0 001.37-.37 3.85 3.85 0 00.19-.5.76.76 0 01.21 0 1 1 0 011 1 1 1 0 01-.17.55.9.9 0 01-.33.31 1 1 0 001 1.74 2.66 2.66 0 00.5-.35 2 2 0 01-.27 3.62z"></path>
-                        </svg> */}
-                        {/* <svg xmlns="http://www.w3.org/2000/svg"  data-name="Layer 1" width="45" height="45" viewBox="0 0 168 168" id="artificial-intelligence"><circle cx="2" cy="149.5" r="2" fill="#2d4356"></circle><path fill="#2d4356" d="M11 147.5H8a2 2 0 0 0 0 4h3a2 2 0 0 0 0-4Z"></path><path fill="#0bceb2" d="M118.154 155.5h-8.308a2.006 2.006 0 0 0 0 4h8.308a2.006 2.006 0 0 0 0-4zm-60 0h-8.308a2.006 2.006 0 0 0 0 4h8.308a2.006 2.006 0 0 0 0-4zm45.846 0H64a2 2 0 0 0 0 4h15.94v2H72a2 2 0 0 0 0 4h25a2 2 0 0 0 0-4h-8.94v-2H104a2 2 0 0 0 0-4z"></path><path fill="#2d4356" d="M59 51.79V46.5a1.996 1.996 0 0 0-1.01-1.74l-14-8A2.004 2.004 0 0 0 41 38.5v21.47l-8-6.43V37.21a7 7 0 1 0-4 0V54.5a2.007 2.007 0 0 0 .75 1.56l11 8.83a1.377 1.377 0 0 0 .25.17V86.5a1.988 1.988 0 0 0 .48 1.3L47 94.24v16.55a7 7 0 1 0 4 0V93.5a1.988 1.988 0 0 0-.48-1.3L45 85.76V41.95l10 5.71v4.13a7 7 0 1 0 4 0ZM28 30.5a3 3 0 1 1 3 3 2.996 2.996 0 0 1-3-3Zm24 87a3 3 0 1 1-3-3 2.996 2.996 0 0 1 3 3Zm5-56a3 3 0 1 1 3-3 2.996 2.996 0 0 1-3 3Z"></path><path fill="#0bceb2" d="M77.41 53.09 70 45.67V30.5a2 2 0 0 0-4 0v16a1.966 1.966 0 0 0 .59 1.41L74 55.33v29.34l-15 15V85.21a7 7 0 1 0-4 0v19.29a2.01 2.01 0 0 0 1.23 1.85 2.068 2.068 0 0 0 .77.15 1.959 1.959 0 0 0 1.41-.59l19-19A1.966 1.966 0 0 0 78 85.5v-31a1.966 1.966 0 0 0-.59-1.41zM57 81.5a3 3 0 1 1 3-3 2.996 2.996 0 0 1-3 3zM32 96.79V83.21a7 7 0 1 0-4 0v13.58a7 7 0 1 0 4 0zM27 76.5a3 3 0 1 1 3 3 2.996 2.996 0 0 1-3-3zm3 30a3 3 0 1 1 3-3 2.996 2.996 0 0 1-3 3z"></path><path fill="#2d4356" d="M160 147.5h-3a2 2 0 0 0 0 4h3a2 2 0 0 0 0-4Z"></path><circle cx="166" cy="149.5" r="2" fill="#2d4356"></circle><path fill="#2d4356" d="M150.72 147.5h-22.26a10.611 10.611 0 0 0 2.22-6.49v-4.17l3.31-2.62a1.995 1.995 0 0 0 .39-2.73l-2.51-3.51 3.99-1.39a2 2 0 0 0 1.24-2.53l-2.12-6.29h5.81a4.205 4.205 0 0 0 3.45-1.82 4.336 4.336 0 0 0 .48-3.98l-8.52-22.66 2.43-5.31a1.968 1.968 0 0 0 .18-.83V72.09c-.63-15.12-6.8-27.84-17.85-36.79A54.87 54.87 0 0 0 84.4 23.54a1.754 1.754 0 0 0-.4-.04h-8a2.006 2.006 0 0 0-2 2v16a1.966 1.966 0 0 0 .59 1.41l8 8a1.966 1.966 0 0 0 1.41.59h12a1.966 1.966 0 0 0 1.41-.59l3.26-3.25a6.993 6.993 0 1 0-2.83-2.83l-2.67 2.67H84.83L78 40.67V27.5h5.81a1.872 1.872 0 0 0 .58.04c17.8-.67 36.14 7.39 45 23.96h-6.68a7.001 7.001 0 1 0-8.71 8.71V78.5H99a2.006 2.006 0 0 0-2 2v11H81a1.966 1.966 0 0 0-1.41.59l-16 16a1.966 1.966 0 0 0-.59 1.41v16.29a7 7 0 1 0 4 0v-15.46L81.83 95.5H118a2 2 0 0 0 1.79-1.11l6-12a1.944 1.944 0 0 0 .21-.89v-7h8.81v8.24l-2.59 5.66a2.054 2.054 0 0 0-.06 1.54l8.82 23.45a.305.305 0 0 1-.03.29.194.194 0 0 1-.16.09h-8.59a1.996 1.996 0 0 0-1.63.84 2.022 2.022 0 0 0-.27 1.8l2.38 7.05-4.65 1.62a1.97 1.97 0 0 0-1.25 1.28 1.994 1.994 0 0 0 .28 1.77l2.96 4.14-2.58 2.03a2.005 2.005 0 0 0-.76 1.57v5.14a6.538 6.538 0 0 1-3.16 5.63 6.123 6.123 0 0 1-3.11.86c-8.36 0-40.41-10.52-40.41-28v-4.17a2 2 0 0 0-4 0v4.17c0 13.8 15.03 23.13 27.94 28H17.28a2.017 2.017 0 1 0 0 4h133.44a2.017 2.017 0 1 0 0-4ZM104 38.5a3 3 0 1 1-3 3 2.996 2.996 0 0 1 3-3Zm-36 94a3 3 0 1 1-3-3 2.996 2.996 0 0 1 3 3Zm45-79a3 3 0 1 1 3 3 2.996 2.996 0 0 1-3-3Zm11 17a2.006 2.006 0 0 0-2 2v8.53l-5.24 10.47H101v-9h15a2 2 0 0 0 2-2V60.21a7.077 7.077 0 0 0 4.71-4.71h8.56a48.373 48.373 0 0 1 3.43 15Z"></path><path fill="#0bceb2" d="M103 58.5a7.059 7.059 0 0 0-3.33.84l-3.26-3.25A1.966 1.966 0 0 0 95 55.5H84a2.006 2.006 0 0 0-2 2v16a2.022 2.022 0 0 0 .7 1.52l6.3 5.4V91.5h4v-12a1.988 1.988 0 0 0-.7-1.52l-6.3-5.4V59.5h8.17l2.67 2.67A7.002 7.002 0 1 0 103 58.5Zm0 10a3 3 0 1 1 3-3 2.996 2.996 0 0 1-3 3Z"></path><path fill="#2d4356" d="M54 30.5a3 3 0 1 0-3-3 3.003 3.003 0 0 0 3 3zm0-4.5a1.5 1.5 0 1 1-1.5 1.5A1.501 1.501 0 0 1 54 26zm94.856 18.5a2 2 0 1 0 2 2 2.002 2.002 0 0 0-2-2zm0 3a1 1 0 1 1 1-1 1.001 1.001 0 0 1-1 1zm-16.156-24a2 2 0 1 0 2 2 2.002 2.002 0 0 0-2-2zm0 3a1 1 0 1 1 1-1 1.001 1.001 0 0 1-1 1zm17.156-24a2 2 0 1 0 2 2 2.002 2.002 0 0 0-2-2zm0 3a1 1 0 1 1 1-1 1.001 1.001 0 0 1-1 1zm-138.16 43a2 2 0 1 0-2 2 2.002 2.002 0 0 0 2-2zm-3 0a1 1 0 1 1 1 1 1.001 1.001 0 0 1-1-1z"></path><path fill="#0bceb2" d="M8.111 11.765 9.597 9.81l-.939-.532-.954 2.19h-.032l-.969-2.175-.956.548 1.472 1.909v.031l-2.301-.297v1.064l2.316-.297v.031L5.747 14.19l.892.564 1.018-2.206h.031l.939 2.19.986-.563-1.502-1.878v-.031l2.362.282v-1.064l-2.362.313v-.032zM38.334 6.23l-.856 1.099.513.325.586-1.271h.018l.541 1.261.568-.324-.865-1.081v-.018l1.36.162V5.77l-1.36.18v-.018l.856-1.126-.541-.306-.55 1.261h-.018l-.558-1.252-.55.315.847 1.1v.018L37 5.77v.613l1.334-.171v.018zM163.029 29.021v-1.043l-2.317.307v-.031l1.458-1.918-.921-.522-.936 2.148h-.031l-.951-2.133-.937.538 1.443 1.872v.031l-2.256-.292v1.043l2.271-.291v.031l-1.458 1.872.875.553.998-2.165h.03l.921 2.149.967-.552-1.473-1.842v-.031l2.317.276zM80.701 13.288l1.258-1.655-.794-.45-.808 1.853h-.027l-.82-1.84-.808.464 1.245 1.615v.026L78 13.05v.9l1.96-.251v.026l-1.258 1.615.754.477.861-1.867h.026l.795 1.853.834-.476-1.271-1.589v-.026l1.999.238v-.9l-1.999.264v-.026z"></path></svg> */}
                         <svg
                           className="display-flex self-center mr-2"
                           xmlns="http://www.w3.org/2000/svg"
@@ -454,7 +463,20 @@ const setChatDateForItem = (date) => {
                           ></path>
                         </svg>
                           <div className="user-response">   
-                              <h3 className="answer">{answers[index] ? answers[index]:"...."}</h3>
+                          <h3 className="answer">
+                            {answers[index] ? (
+                              typeof answers[index] === "string" ? (
+                                answers[index]
+                              ) : (
+                                answers[index].map((answer, i) => (
+                                  <li key={i} style={{listStyle:'none'}}>{answer}</li>
+                                ))
+                              )
+                            ) : (
+                              <ReactTyped strings={["Typing....."]} typeSpeed={100} loop />
+                            )}
+                          </h3>
+
                             <div className="text-right">
                                 <small>{AnswerTime[index] ? AnswerTime[index].split(':').slice(0, 2).join(':') : ""}</small>
                             </div>
