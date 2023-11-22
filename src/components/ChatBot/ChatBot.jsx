@@ -103,12 +103,14 @@ const ChatBot = () => {
         },
       }).then((res)=>{
         console.log('here',res.data.data);
+        if (res.data.data){
         for (let i = 0; i < res.data.data.length; i++) {
           const inputString=res.data.data[i].answer
           let lines = inputString.split("\n");
         
           res.data.data[i].answer=lines
       }
+    }
       console.log(res.data.data);
         setValueChatGet(res.data.data);
         const chatHistory = res.data.data;

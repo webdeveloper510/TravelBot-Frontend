@@ -202,7 +202,7 @@ textarea#another-textarea {
   border: 0;
   background: transparent;
   padding: 10px 10px;
-  focus-ring: 0;
+  /* focus-ring: 0;
   focus-visible-ring: 0;
   dark-background: transparent;
   padding-md: 4px 12px;
@@ -210,7 +210,7 @@ textarea#another-textarea {
   gizmo-placeholder: black/50;
   gizmo-dark-placeholder: white/50;
   padding-left: 3px;
-  padding-md-left: 4px;
+  padding-md-left: 4px; */
   max-height: 200px;
   height: 52px;
   overflow-y: hidden;
