@@ -119,7 +119,17 @@ const ChatBot = () => {
         const answerTIme = chatHistory.map((item) => item.time);
         const answerID = chatHistory.map((item) => item.id);
         const TopicName = chatHistory.map((item) => item.topic);
-        console.log(TopicName, "=======================")
+        axios.get(API.BASE_URL+"topics/",{
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }).then((res)=>{
+          res.data.data.map((data, i)=>{
+            if (data.id === id){
+              localStorage.setItem("vendorName",  data.vendor_name)
+            }
+          })
+        })
         for (let i=0; i<TopicName.length; i++){
           if(TopicName[i]===""){
             continue
@@ -206,10 +216,7 @@ const handleQuestionSubmit = () => {
 
   }
   if (vendorName){
-    vendorName = JSON.stringify(vendorName)
-    console.log(vendorName);
-    formdata.append("vendor_name" , JSON.parse(vendorName))
-    console.log(JSON.parse(vendorName))
+    formdata.append("vendor_name" , vendorName)
   }else{
     formdata.append("vendor_name" , '')
   }
@@ -239,7 +246,7 @@ const handleQuestionSubmit = () => {
           console.log(lines[i]);
       }
       const newVendorName = response.data.vendor_name;
-      localStorage.setItem("vendorName", JSON.stringify(newVendorName))
+      localStorage.setItem("vendorName2", JSON.stringify(newVendorName))
       setEffectReloadState(true); 
 
 
