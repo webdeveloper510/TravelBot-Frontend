@@ -5,6 +5,12 @@
     */
 
 /*!
+	Copyright (c) 2018 Jed Watson.
+	Licensed under the MIT License (MIT), see
+	http://jedwatson.github.io/classnames
+*/
+
+/*!
      * 
      *   typed.js - A JavaScript Typing Animation Library
      *   Author: Matt Boldt <me@mattboldt.com>
@@ -46,12 +52,6 @@
  * https://www.chartjs.org
  * (c) 2023 Chart.js Contributors
  * Released under the MIT License
- */
-
-/*!
- * github-buttons v2.27.0
- * (c) 2023 なつき
- * @license BSD-2-Clause
  */
 
 /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
