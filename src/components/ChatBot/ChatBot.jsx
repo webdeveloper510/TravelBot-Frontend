@@ -1,13 +1,9 @@
 /*eslint-disable*/
 import React, {useEffect , useState , useRef} from "react";
-import PreViewPage from "./ChatPreViewFirst";
 import { API } from "config/Api";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import PsychologyIcon from '@mui/icons-material/Psychology';
-
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import ReactTyped from "react-typed";
-
 import  logo from "../../assets/images/logo.png";
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
@@ -18,8 +14,28 @@ import  TextField from "@mui/material/TextField";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
-import svgIcon from "../../assets/images/base64.online.png"
+import AddCircleOutline  from "@mui/icons-material/AddCircleOutline";
+import DOMPurify from 'dompurify';
+// import Dialog from "@mui/material/Dialog";
+// import DialogTitle from '@mui/material/DialogTitle';
+// import List from '@mui/material/List';
+// import ListItem from '@mui/material/ListItem';
+// import ListItemButton from '@mui/material/ListItemButton';
+// import Avatar from '@mui/material/Avatar';
+// import ListItemAvatar from '@mui/material/ListItemAvatar';
+// import { blue } from '@mui/material/colors';
+// import PersonIcon from '@mui/icons-material/Person';
+// import ListItemText from '@mui/material/ListItemText';
+// import AddIcon from '@mui/icons-material/Add';
+// import TravelForm2 from "components/userSideTravelFom";
+
+
+
 const ChatBot = () => {
+
+  let vendorName = localStorage.getItem("vendorName");
+
+
   const accessToken = localStorage.getItem("Token");
   const [TopicsState, setTopicsState] = useState([])
   const [newAddState , setnewAddState] = useState(false);
@@ -43,9 +59,8 @@ const ChatBot = () => {
   const [first_load , setFirstLoad] = useState(true)
   const [StateForIndexCheck , setStateForIndexCheck] = useState(null);
   const navigate = useNavigate();
-  let vendorName = localStorage.getItem("vendorName");
   const [firstnameLetter , setfirstnameLetter] = useState(null);
-// Function Callings ---------------------------------------------------------------------------------------------->
+  // const [PopUpState, setPopUpState]=useState(false);
 // ******************************** USEEFFECTS ********************************
 
 
@@ -55,12 +70,11 @@ const ChatBot = () => {
         Authorization: `Bearer ${accessToken}`,
       },
     }).then((res)=>{
-      console.log(res)
       setfirstnameLetter(res.data.firstname[0])
     }).catch((err)=>{
       console.log(err)
     })
-  })
+  },[])
 
 
 
@@ -100,18 +114,41 @@ const ChatBot = () => {
       axios.get(API.BASE_URL + "getchat/"+id+"/",{
         headers: {
           Authorization: `Bearer ${accessToken}`,
-        },
+        },                                              
       }).then((res)=>{
-        console.log('here',res.data.data);
-        if (res.data.data){
+        // if (res.data.data){
+        //   for (let i = 0; i < res.data.data.length; i++) {
+        //     const inputString = res.data.data[i].answer;
+        //     const matchResult = inputString.match(/\['(.*?)'\]/);
+        //     if (matchResult==null ){
+        //       setValueChatGet(res.data.data[i].answer);
+        //     }
+        //     else {
+        //       // const extractedString = matchResult ? matchResult[1] : '';
+        //       // const clearHTML = extractedString.replace(/\n/g, '<br>');
+        //       // const sanitizedHtml = DOMPurify.sanitize(clearHTML);
+        //       // const htmlAnswer = sanitizedHtml.replace(/\\n/g, '').trim(); // Remove literal "\n"
+        //       // const Answer2 = htmlAnswer.replace(/\\/g, ''); // Remove remaining backslashes
+        //       // const ActualAnswer = Answer2.replace(/\\n/g, '').trim();  // Trim leading and trailing spaces
+        //       // const ActualAnswer3 = Answer2.replace(" ", '').trim();  // Trim leading and trailing spaces
+        //       // res.data.data[i].answer = ActualAnswer3;
+        //     }
+        //   }          
+        // }       
+
         for (let i = 0; i < res.data.data.length; i++) {
-          const inputString=res.data.data[i].answer
-          let lines = inputString.split("\n");
+          const inputString = res.data.data[i].answer;
+          const answerstring = inputString.replace(/['",']/g, '');
+          const formattedString = answerstring.replace(/(\d+: .+?:)(\n- -[^:\n]+)/g, '$1\n  $2');
+          const withoutBrackets = formattedString.replace(/^\[|\]$/g, '');  // Remove square brackets at the beginning and end
+          const withoutDoubleHyphen = withoutBrackets.replace(/[--]/g, '   ');  // Replace "--" with two spaces
+          let lines = withoutDoubleHyphen.split("\\n");
+          console.log(lines)
+          res.data.data[i].answer = lines;
+        }
         
-          res.data.data[i].answer=lines
-      }
-    }
-      console.log(res.data.data);
+        
+      console.log(res.data.data)                                                          
         setValueChatGet(res.data.data);
         const chatHistory = res.data.data;
         const questionArray = chatHistory.map((item) => item.questions);
@@ -126,7 +163,12 @@ const ChatBot = () => {
         }).then((res)=>{
           res.data.data.map((data, i)=>{
             if (data.id === id){
-              localStorage.setItem("vendorName",  data.vendor_name)
+              if (data.vendor_name=="Undefined"){
+                var vendorNameGet = []
+              }else {
+                vendorNameGet = data.vendor_name
+              }
+              localStorage.setItem("vendorName",  vendorNameGet)
             }
           })
         })
@@ -134,8 +176,6 @@ const ChatBot = () => {
           if(TopicName[i]===""){
             continue
           }else{
-            console.log(TopicName[i], "=================")
-            
             UpdateTopicName(TopicName[i], ChatID)
             break
           }
@@ -152,7 +192,6 @@ const ChatBot = () => {
 
 
 
-
 // // Functions Management ------------------------------------------------------------------------------------->
 
 
@@ -162,7 +201,6 @@ const ChatBot = () => {
         Authorization: `Bearer ${accessToken}`,
       },
     }).then((response)=>{
-      console.log(response)
       setChatID(response.data.data.id);
       setnewAddState(true);
     }).catch((error)=>{
@@ -178,8 +216,7 @@ const UpdateTopicName=(topic_name , id)=>{
       Authorization: `Bearer ${accessToken}`,
     },
   }).then((response)=>{
-    console.log(response)
-
+    console.log()
   }).catch((error)=>{
     console.log(error)
   })
@@ -200,6 +237,7 @@ const scrollToBottom = () => {
 
 
 const handleQuestionSubmit = () => {
+  console.log('hit')
   if (currentQuestion.trim() !== "") {
     setQuestions([...questions, currentQuestion]);
     setCurrentQuestion("");
@@ -228,25 +266,12 @@ const handleQuestionSubmit = () => {
     }).then((response) => {
       const AnswerGet = response.data.Answer; 
       const AnswerIDGet = response.data.id; 
-      console.log(AnswerGet, "================================")
       setAnswerID([...AnswerID, AnswerIDGet]);
       setCurrentAnswerID(AnswerIDGet);
       setAnswers([...answers, AnswerGet]); 
 
       setCurrentAnswer(AnswerGet);
       setLatestAnswerIndex(answers.length); 
-
-      let inputString = "Line 1\nLine 2\nLine 3";
-
-      // Split the string into an array of lines
-      let lines = inputString.split("\n");
-      
-      // Print each line
-      for (let i = 0; i < lines.length; i++) {
-          console.log(lines[i]);
-      }
-      const newVendorName = response.data.vendor_name;
-      localStorage.setItem("vendorName2", JSON.stringify(newVendorName))
       setEffectReloadState(true); 
 
 
@@ -286,7 +311,6 @@ const handleChangeInputAnswer = (event) => {
 // Handle Answer edit (Suggestions) Open Pop-Up
 
 const handleEditAnswer=(id)=>{
-  console.log(id);
   setUpdatedConstAnsId(id)
   setShowAnswerChange(true);
 };
@@ -313,7 +337,7 @@ const handleAnswerUpdate = () => {
     setEffectReloadState(true); // Assuming setEffectReloadState is defined
 
   }).catch((error)=>{
-  setShowAnswerChange(false);
+      setShowAnswerChange(false);
   })
 };
 
@@ -347,6 +371,7 @@ const setChatDateForItem = (date) => {
     navigate("/");
     window.location.reload();
   };
+
 
 
   // ####----------------------------------------------------------------RETURN VALUE Statements ---------------------------------------------------------------->
@@ -478,7 +503,7 @@ const setChatDateForItem = (date) => {
                                 answers[index]
                               ) : (
                                 answers[index].map((answer, i) => (
-                                  <li key={i} style={{listStyle:'none'}}>{answer}</li>
+                                  <li key={i} style={{listStyle:'none', whiteSpace: "pre-wrap"}}>{answer}</li>
                                 ))
                               )
                             ) : (
@@ -520,6 +545,8 @@ const setChatDateForItem = (date) => {
 
       <div className="input-group-container">
         <div className="input-padd">
+        {/* <Icon className="add-icon"></Icon> */}
+        {/* <AddCircleOutline style={{ fontSize: "large" }} onClick={handleStatePopUpOpen}/> */}
         {/* <textarea id="another-textarea" tabindex="0" data-id="request-:r11:-10" rows="1" placeholder="Message ChatGPT…" class="m-0 w-full resize-none border-0 bg-transparent py-[10px] pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:py-4 md:pr-12 gizmo:md:py-3.5 gizmo:placeholder-black/50 gizmo:dark:placeholder-white/50 pl-3 md:pl-4" style={{maxHeight: "200px", height: "52px", overflowY: "hidden"}} /> */}
           <textarea
           id="another-textarea"
@@ -527,7 +554,7 @@ const setChatDateForItem = (date) => {
             className="form-control-chat"
             value={currentQuestion}
             onChange={handleInputQuestion}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyPress}
           />
           <button className="btn btn-primary" type="submit" onClick={()=>{handleQuestionSubmit()}}>
             <svg
@@ -576,7 +603,40 @@ const setChatDateForItem = (date) => {
                           </div> 
                       </div>
                     ):<></>}
+          {/*  Snack BARS===========================================================================================> */}
 
+
+          {/* <SimpleDialog
+            selectedValue={selectedValue}
+            open={PopUpState}
+            onClose={handleClosePopUp}
+          /> */}
+
+            {/* <Dialog onClose={handleClosePopUp} open={PopUpState}>
+                  <DialogTitle style={{textAlign:"center"}}>User Query</DialogTitle>
+                  <List sx={{ pt: 0 }}>
+                      <ListItem disableGutters key="User Information Gathering Form">
+                        <ListItemButton onClick={handleSendTravelerForm}>
+                          <ListItemAvatar>
+                            <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
+                            <Icon fontSize="large">listAlt</Icon>
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText primary="User Information Gathering Form" />
+                        </ListItemButton>
+                      </ListItem>
+                    <ListItem disableGutters>
+                      <ListItemButton autoFocus>
+                        <ListItemAvatar>
+                          <Avatar sx={{ bgcolor: blue[100], color: blue[600]}}>
+                          <Icon fontSize="large">group</Icon>
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText primary="User's Form List" />
+                      </ListItemButton>
+                    </ListItem>
+                  </List>
+                </Dialog> */}
           {/*  Snack BARS===========================================================================================> */}
           <MDSnackbar
             color="success"

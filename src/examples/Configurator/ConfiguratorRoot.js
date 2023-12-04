@@ -19,9 +19,9 @@ import { styled } from "@mui/material/styles";
 
 export default styled(Drawer)(({ theme, ownerState }) => {
   const { boxShadows, functions, transitions } = theme;
-  const { openConfigurator } = ownerState;
+  // const { openConfigurator } = ownerState;
 
-  const configuratorWidth = 360;
+  const configuratorWidth = 300;
   const { lg } = boxShadows;
   const { pxToRem } = functions;
 
@@ -36,16 +36,6 @@ export default styled(Drawer)(({ theme, ownerState }) => {
     }),
   });
 
-  // drawer styles when openConfigurator={false}
-  const drawerCloseStyles = () => ({
-    left: "initial",
-    right: pxToRem(-350),
-    transition: transitions.create("all", {
-      easing: transitions.easing.sharp,
-      duration: transitions.duration.short,
-    }),
-  });
-
   return {
     "& .MuiDrawer-paper": {
       height: "100vh",
@@ -54,7 +44,8 @@ export default styled(Drawer)(({ theme, ownerState }) => {
       borderRadius: 0,
       boxShadow: lg,
       overflowY: "auto",
-      ...(openConfigurator ? drawerOpenStyles() : drawerCloseStyles()),
+      ...drawerOpenStyles(),
+      // ...(openConfigurator ? drawerOpenStyles() : drawerCloseStyles()),
     },
   };
 });

@@ -47,7 +47,7 @@ import "./App.css";
 import routes from "routes";
 
 // Material Dashboard 2 React contexts
-import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
+import { useMaterialUIController, setMiniSidenav } from "context";
 
 // Images
 import brandWhite from "assets/images/logo-ct.png";
@@ -132,7 +132,7 @@ export default function App() {
 
       if (route.route) {
         {
-          pathname !== "/chat"?(
+          pathname !== "/chat" && pathname !== "/travel-form2" && pathname!=="/traveller-data"?(
             <Sidenav
             color={sidenavColor}
             brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
@@ -171,7 +171,7 @@ export default function App() {
       onClick={handleConfiguratorOpen}
     > 
     {
-      pathname !== "/chat"?(
+      pathname !== "/chat" && pathname !== "/travel-form2" && pathname!=="/traveller-data" ?(
         <Sidenav
             color={sidenavColor}
             brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
@@ -220,7 +220,7 @@ export default function App() {
       {layout === "dashboard" && (
         <>
           {
-            pathname !== "/chat" ? (
+            pathname !== "/chat" && pathname !== "/travel-form2" &&  pathname!=="/traveller-data" ? (
               <Sidenav
                 color={sidenavColor}
                 brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
@@ -230,11 +230,12 @@ export default function App() {
                 onMouseLeave={handleOnMouseLeave}
               />
             ) : (
-              <></>
+              <>
+          <Configurator />
+              </>
             )
           }
-          <Configurator />
-          {configsButton}
+          {/* {configsButton} */}
         </>
       )}
 

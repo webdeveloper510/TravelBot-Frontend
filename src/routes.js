@@ -47,7 +47,9 @@ import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 import ChatBot from "components/ChatBot/ChatBot";
 import FeedMachine from "layouts/machine";
-
+import TravelForm from "layouts/userAdminTravelForm";
+import TravelForm2 from "components/userSideTravelFom";
+import TravellerFormData from "components/travellerFormsData";
 // @mui icons
 import Icon from "@mui/material/Icon";
 const adminToken = localStorage.getItem("Admin-Token");
@@ -111,18 +113,35 @@ const routes = [
       component: <FeedMachine />,
     }
   ):(<></>),
+adminToken ? (
+    {
+      type: "collapse",
+      name: "Travel Form",
+      key: "travel-form",
+      icon: <Icon fontSize="small">list</Icon>,
+      route: "/travel-form",
+      component: <TravelForm />,
+    }
+  ):(<></>),
+  userToken ? (
+    {
+      name: "User Chat Page",
+      key: "form",
+      // icon: <Icon fontSize="small">assignment</Icon>,
+      route: "/travel-form2",
+      component: <TravelForm2 />,
+    }
+  ):(<></>),
 
-
-  // adminToken ? (
-  //   {
-  //     type: "collapse",
-  //     name: "ABC",
-  //     key: "ABC",
-  //     icon: <Icon fontSize="small">psychology</Icon>,
-  //     route: "/abc",
-  //     component: <Notifications />,
-  //   }
-  // ):(<></>),
+  userToken ? (
+    {
+      name: "Travellers Data",
+      key: "form-data",
+      // icon: <Icon fontSize="small">assignment</Icon>,
+      route: "/traveller-data",
+      component: <TravellerFormData />,
+    }
+  ):(<></>),
   // --------------------------------------------------------------->
 
   userToken ? 
@@ -133,6 +152,7 @@ const routes = [
     route: "/chat",
     component: <ChatBot />,
   }):(<></>),
+
   adminToken && userToken ?(<></>):
   ({
     name: "Sign In",
