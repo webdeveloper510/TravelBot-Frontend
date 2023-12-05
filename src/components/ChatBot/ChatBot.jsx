@@ -102,38 +102,19 @@ const ChatBot = () => {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },                                              
-      }).then((res)=>{
-        // if (res.data.data){
-        //   for (let i = 0; i < res.data.data.length; i++) {
-        //     const inputString = res.data.data[i].answer;
-        //     const matchResult = inputString.match(/\['(.*?)'\]/);
-        //     if (matchResult==null ){
-        //       setValueChatGet(res.data.data[i].answer);
-        //     }
-        //     else {
-        //       // const extractedString = matchResult ? matchResult[1] : '';
-        //       // const clearHTML = extractedString.replace(/\n/g, '<br>');
-        //       // const sanitizedHtml = DOMPurify.sanitize(clearHTML);
-        //       // const htmlAnswer = sanitizedHtml.replace(/\\n/g, '').trim(); // Remove literal "\n"
-        //       // const Answer2 = htmlAnswer.replace(/\\/g, ''); // Remove remaining backslashes
-        //       // const ActualAnswer = Answer2.replace(/\\n/g, '').trim();  // Trim leading and trailing spaces
-        //       // const ActualAnswer3 = Answer2.replace(" ", '').trim();  // Trim leading and trailing spaces
-        //       // res.data.data[i].answer = ActualAnswer3;
-        //     }
-        //   }          
-        // }       
-
-        for (let i = 0; i < res.data.data.length; i++) {
-          const inputString = res.data.data[i].answer;
-          const answerstring = inputString.replace(/['",']/g, '');
-          const formattedString = answerstring.replace(/(\d+: .+?:)(\n- -[^:\n]+)/g, '$1\n  $2');
-          const withoutBrackets = formattedString.replace(/^\[|\]$/g, '');  // Remove square brackets at the beginning and end
-          const withoutDoubleHyphen = withoutBrackets.replace(/[--]/g, '   ');  // Replace "--" with two spaces
-          let lines = withoutDoubleHyphen.split("\\n");
-          console.log(lines)
-          res.data.data[i].answer = lines;
-        }
-        
+      }).then((res)=>{      
+        if (res.data.data){
+          for (let i = 0; i < res.data.data.length; i++) {
+            const inputString = res.data.data[i].answer;
+            const answerstring = inputString.replace(/['",']/g, '');
+            const formattedString = answerstring.replace(/(\d+: .+?:)(\n- -[^:\n]+)/g, '$1\n  $2');
+            const withoutBrackets = formattedString.replace(/^\[|\]$/g, '');  // Remove square brackets at the beginning and end
+            const withoutDoubleHyphen = withoutBrackets.replace(/[--]/g, '   ');  // Replace "--" with two spaces
+            let lines = withoutDoubleHyphen.split("\\n");
+            console.log(lines)
+            res.data.data[i].answer = lines;
+          }
+      }
         
       console.log(res.data.data)                                                          
         setValueChatGet(res.data.data);
