@@ -14,20 +14,7 @@ import  TextField from "@mui/material/TextField";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
-import AddCircleOutline  from "@mui/icons-material/AddCircleOutline";
-import DOMPurify from 'dompurify';
-// import Dialog from "@mui/material/Dialog";
-// import DialogTitle from '@mui/material/DialogTitle';
-// import List from '@mui/material/List';
-// import ListItem from '@mui/material/ListItem';
-// import ListItemButton from '@mui/material/ListItemButton';
-// import Avatar from '@mui/material/Avatar';
-// import ListItemAvatar from '@mui/material/ListItemAvatar';
-// import { blue } from '@mui/material/colors';
-// import PersonIcon from '@mui/icons-material/Person';
-// import ListItemText from '@mui/material/ListItemText';
-// import AddIcon from '@mui/icons-material/Add';
-// import TravelForm2 from "components/userSideTravelFom";
+
 
 
 
@@ -503,7 +490,7 @@ const setChatDateForItem = (date) => {
                                 answers[index]
                               ) : (
                                 answers[index].map((answer, i) => (
-                                  <li key={i} style={{listStyle:'none', whiteSpace: "pre-wrap"}}>{answer}</li>
+                                  <li key={i} style={{listStyle:'none', whiteSpace: "pre-wrap"}} dangerouslySetInnerHTML={{ __html: answer }}></li>
                                 ))
                               )
                             ) : (
