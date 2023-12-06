@@ -9,18 +9,20 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import React from "react";
 import DataTable from "examples/Tables/DataTable";
 import travellersData from "components/travellerFormsData/data/travellersData"
+import Configurator from "examples/Configurator";
 const TravellerFormData=()=>{
   const { columns, rows } = travellersData();
 
       return (
             // <DashboardLayout>
 
-            <div className="main">
-                  <DashboardNavbar absolute isMini/>
+            <div>
+                  {/* <DashboardNavbar absolute isMini/> */}
                   <Container>
                         <Grid item xs={6} mt={8}>
-                              <Grid item xs={12}>
-                                    <Card>
+                              <Grid item xs={8}>
+                                    <MDTypography mb={4}>Customer Data</MDTypography>
+                                    <Card mt={8}>
                                           <MDBox
                                                 mx={2}
                                                 mt={-3}
@@ -44,7 +46,11 @@ const TravellerFormData=()=>{
                                                 />
                                           </MDBox>
                                     </Card>
+                                            {/* ----------------------------------------------------------------Configurator SECTION----------------------------------------------------------------- */}
                               </Grid>
+                                            <Grid item xs={4}>
+                                  <Configurator relative />
+                                  </Grid>
                         </Grid>
                   </Container>
                   </div>

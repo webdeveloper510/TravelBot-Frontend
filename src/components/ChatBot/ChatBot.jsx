@@ -14,6 +14,7 @@ import  TextField from "@mui/material/TextField";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
+import Configurator from "examples/Configurator";
 
 
 
@@ -619,6 +620,9 @@ const setChatDateForItem = (date) => {
           />
     </div>
         </div>
+        {/* ----------------------------------------------------------------Configurator SECTION----------------------------------------------------------------- */}
+
+        <Configurator />
       </div>
     </div>
   );
