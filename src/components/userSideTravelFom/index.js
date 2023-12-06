@@ -28,6 +28,8 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import timepicker from 'react-time-picker';  
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { blue } from '@mui/material/colors';
+import MDSnackbar from "components/MDSnackbar";
+import { useNavigate } from "react-router-dom";
 const TravelForm=()=>{
 
       const theme = createTheme({
@@ -47,7 +49,7 @@ const TravelForm=()=>{
       // GLOBAL VARIABLES ========================================================================>
       
       const accessToken = localStorage.getItem("Token")
-
+      const navigate = useNavigate()
       // USESTATES ========================================================================>
 
       const [EmaployeeName, setEmaployeeName]=useState(null);
@@ -84,19 +86,17 @@ const TravelForm=()=>{
       const [AgesOfTravellersError, setAgesOfTravellersError]=useState(false);
       const [LengthToStayError, setLengthToStayError]=useState(false);
       const [BudgetSelectError, setBudgetSelectError]=useState(false);
-      const [FlightArrivalTimeError, setFlightArrivalTimeError]=useState(false);
-      const [FlightArrivalNumberError, setFlightArrivalNumberError]=useState(false);
-      const [FlightDepartureTimeError, setFlightDepartureTimeError]=useState(false);
-      const [FlightDepartureNumberError, setFlightDepartureNumberError]=useState(false);
       const [AccommodationSpecificError, setAccommodationSpecificError]=useState(false);
       const [MaltaExperienceError, setMaltaExperienceError]=useState(false);
       const [StartTimeError, setStartTimeError]=useState(false);
       const [LunchTimeError, setLunchTimeError]=useState(false);
       const [DinnerTimeError, setDinnerTimeError]=useState(false);
       const [IssuesNPhobiasError, setIssuesNPhobiasError]=useState(false);
-
+      const [inSuccessState,setInSuccessState]=useState(false);
       const [inErrorState, setInErrorState]=useState(false);
 
+
+      const [ErrorValue,setErrorValue]=useState("");
       //  Start Handle States Functions   ================================================>
 
       // ----------------------------------Name of Employee------------------------------------------------------------------->
@@ -232,23 +232,12 @@ const TravelForm=()=>{
             const minutes = dateObject.getMinutes();
             const seconds = dateObject.getSeconds();
 
-            const ArrivalTime=`Time: ${hours}:${minutes}:${seconds}`
-            if(ArrivalTime==null || ArrivalTime==""){
-                  setFlightArrivalTimeError(true);
-            }else{
-                  setFlightArrivalTimeError(false);
-            }
+            const ArrivalTime=`${hours}:${minutes}:${seconds}`
             setFlightArrivalTime(ArrivalTime)
       }      
       // -----------------------------------------What is the flight arrival number------------------------------------------------------------>
 
       const handleFlightArrivalNumber=(textValue)=>{
-            if (textValue=="" || textValue==null){
-                  setFlightArrivalNumberError(true);
-            }
-            else{
-                  setFlightArrivalNumberError(false);
-            }
             setFlightArrivalNumber(textValue)
       }
       
@@ -260,24 +249,13 @@ const TravelForm=()=>{
             const minutes = dateObject.getMinutes();
             const seconds = dateObject.getSeconds();
 
-            const DepartureTime=`Time: ${hours}:${minutes}:${seconds}`
-            if(DepartureTime==null || DepartureTime==""){
-                  setFlightDepartureTimeError(true);
-            }else{
-                  setFlightDepartureTimeError(false);
-            }
+            const DepartureTime=`${hours}:${minutes}:${seconds}`
             setFlightDepartureTime(DepartureTime)
       }
 
       // -----------------------------------------What is the flight arrival number------------------------------------------------------------>
 
       const handleFlightDepartureNumber=(textValue)=>{
-            if (textValue=="" || textValue==null){
-                  setFlightDepartureNumberError(true);
-            }
-            else{
-                  setFlightDepartureNumberError(false);
-            }
             setFlightDepartureNumber(textValue)
       }
       // ------------------------------------Would you be willing to experience more than one hotel while in Malta?----------------------------------------------------------------->
@@ -343,9 +321,6 @@ const TravelForm=()=>{
             setLunchTime(event.target.value)
       }   
 
-      // const onManualAddTime=(eve)=>{
-      //       console.log(eve.target.value)
-      // }
 
       // ----------------------------------------Preferred Dinner Time------------------------------------------------------------->
 
@@ -369,8 +344,8 @@ const TravelForm=()=>{
       // START FUNCTION CALLS ================================================>
 
       const handleSubmitUSerDetails=()=>{
-            const fieldsArray = [EmaployeeName, TourNumber, ClienFirstName, ClienLastName, Nationalities, DatesOfTravel,  NumberOfTravellers, AgesOfTravellers, LengthToStay, BudgetSelect, FlightArrivalTime, FlightArrivalNumber, FlightDepartureTime, FlightDepartureNumber, AccommodationSpecific, MaltaExperience, StartTime, LunchTime, DinnerTime, IssuesNPhobias,]
-            const ErrorArray = [setEmaployeeNameError,setTourNumberError,setClienFirstNameError,setClienLastNameError,setNationalitiesError,setDatesOfTravelError,setNumberOfTravellersError,setAgesOfTravellersError,setLengthToStayError,setBudgetSelectError,setFlightArrivalTimeError,setFlightArrivalNumberError,setFlightDepartureTimeError,setFlightDepartureNumberError,setAccommodationSpecificError,setMaltaExperienceError,setStartTimeError,setLunchTimeError,setDinnerTimeError,setIssuesNPhobiasError,]
+            const fieldsArray = [EmaployeeName, TourNumber, ClienFirstName, ClienLastName, Nationalities, DatesOfTravel,  NumberOfTravellers, AgesOfTravellers, LengthToStay, BudgetSelect,  AccommodationSpecific, MaltaExperience, StartTime, LunchTime, DinnerTime, IssuesNPhobias,]
+            const ErrorArray = [setEmaployeeNameError,setTourNumberError,setClienFirstNameError,setClienLastNameError,setNationalitiesError,setDatesOfTravelError,setNumberOfTravellersError,setAgesOfTravellersError,setLengthToStayError,setBudgetSelectError,setAccommodationSpecificError,setMaltaExperienceError,setStartTimeError,setLunchTimeError,setDinnerTimeError,setIssuesNPhobiasError,]
             for(let i=0;i<fieldsArray.length;i++) {
                   if(fieldsArray[i]=="" || fieldsArray[i]==null){
                         ErrorArray[i](true)
@@ -401,12 +376,31 @@ const TravelForm=()=>{
                         headers: {
                               Authorization: `Bearer ${accessToken}`,
                         },
+
                   }).then((response)=>{
-                        console.log(response)
+                        setInSuccessState(true)
+                        setTimeout(()=>{
+                              navigate("/traveller-data")
+                        },1000)
                   }).catch((error)=>{
-                        console.log(error)
+                        if (error.response.data.error.message=="This Tour Number is already exist"){
+                              setErrorValue(error.response.data.error.message)
+                        }
+                        else{
+                              setErrorValue("Please Fill All Mandatory Fields !")
+                        }
+                        setInErrorState(true)
+
                   })
       }
+
+      // Handle POPUPs ================================================>
+
+
+      const closeWarningSB = () => {
+            setInSuccessState(false)
+            setInErrorState(false)
+          };
 
       // STOP FUNCTION CALLS ================================================>
       return(
@@ -421,38 +415,38 @@ const TravelForm=()=>{
 
                                     {/* Name of Employee* =================================================================================================>*/}
 
-                                    <MDBox mb={2} >
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3} >
                                           <TextField id="standard-basic" type="text" variant="standard" label="Name of Employee*" value={EmaployeeName} onChange={(e)=>{handleEmployeeName(e.target.value)}} fullWidth  error={EmaployeeNameError} />
                                     </MDBox>
 
                                     {/* Tour Number* =================================================================================================>*/}
 
-                                    <MDBox mb={2} >
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3} >
                                           <TextField id="standard-basic" variant="standard" label="Tour Number*" value={TourNumber} onChange={(e)=>{handleTourNumber(e.target.value)}} fullWidth error={TourNumberError} />
                                     </MDBox>
 
                                     {/* Lead Client First Name* =================================================================================================>*/}
 
-                                    <MDBox mb={2} mt={2}>
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
                                           <TextField id="standard-basic" variant="standard" label="Lead Client First Name*" value={ClienFirstName} onChange={(e)=>{handleClientFirstName(e.target.value)}} fullWidth error={ClienFirstNameError} />
                                     </MDBox>
 
                                     {/* Lead Client Last Name* =================================================================================================>*/}
 
-                                    <MDBox mb={2}>
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
                                           <TextField id="standard-basic" variant="standard" label="Lead Client Last Name*" value={ClienLastName} onChange={(e)=>{handleClientLastName(e.target.value)}} fullWidth error={ClienLastNameError} />
                                     </MDBox>
 
                                     {/* Nationalities* =================================================================================================>*/}
 
-                                    <MDBox mb={2}>
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
                                           <TextField id="standard-basic" variant="standard" label="Nationalities*" value={Nationalities} onChange={(e)=>{handleTravelNationalities(e.target.value)}} fullWidth error={NationalitiesError} />
                                     </MDBox>
 
                                     {/* Dates of Travel* =================================================================================================>*/}
 
-                                    <MDBox mb={2}>
-                                          <MDTypography id="standard-basic"   > Dates of Travel*  </MDTypography>
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
+                                          <MDTypography id="standard-basic" style={DatesOfTravelError?{color:"red"}:{}}  > Dates of Travel*  </MDTypography>
                                            <Divider />
                                           <DateRangePicker
                                           format="yyyy-MM-dd"
@@ -468,19 +462,19 @@ const TravelForm=()=>{
 
                                     {/* How many persons are travelling?* =================================================================================================>*/}
 
-                                    <MDBox mb={2}>
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
                                           <TextField id="standard-basic" variant="standard" label="How many persons are travelling?*" value={NumberOfTravellers} type="number" onChange={(e)=>{handleTravellerNumbers(e.target.value)}} fullWidth error={NumberOfTravellersError} />
                                     </MDBox>
 
                                     {/* All ages of travellers* =================================================================================================>*/}
 
-                                    <MDBox mb={2}>
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
                                           <TextField id="standard-basic" variant="standard" label="All ages of travellers*" value={AgesOfTravellers} onChange={(e)=>{handleTravellerAges(e.target.value)}} fullWidth error={AgesOfTravellersError} />
                                     </MDBox>
 
                                     {/* Travel Dates / Length of Stay (in Malta))* =================================================================================================>*/}
 
-                                    <MDBox mb={2}>
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
                                           <TextField id="standard-basic" variant="standard" label="Travel Dates / Length of Stay (in Malta)*" value={LengthToStay} onChange={(e)=>{handleLengthToStay(e.target.value)}} fullWidth error={LengthToStayError} />
                                     </MDBox>
 
@@ -500,7 +494,7 @@ const TravelForm=()=>{
 
                                     {/* What is the flight arrival time of the clients* =================================================================================================>*/}
 
-                                    <MDBox mb={2}>
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
                                           <MDTypography id="standard-basic" >What is the flight arrival time of the clients*  </MDTypography>
                                           <Divider />
                                           <ThemeProvider theme={theme}>
@@ -518,12 +512,12 @@ const TravelForm=()=>{
                                     </MDBox>
                                     {/* What is the flight arrival number* =================================================================================================>*/}
 
-                                    <MDBox mb={2}>
-                                          <TextField id="standard-basic" variant="standard" label="What is the flight arrival number*" value={FlightArrivalNumber} onChange={(e)=>{handleFlightArrivalNumber(e.target.value)}} fullWidth error={FlightArrivalNumberError} />
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
+                                          <TextField id="standard-basic" variant="standard" label="What is the flight arrival number*" value={FlightArrivalNumber} onChange={(e)=>{handleFlightArrivalNumber(e.target.value)}} fullWidth  />
                                     </MDBox>
                                     {/* What is the flight departure time of the clients* =================================================================================================>*/}
 
-                                    <MDBox mb={2}>
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
                                           <MDTypography id="standard-basic"    >What is the flight departure time of the clients*  </MDTypography>
                                           <Divider />
                                           <ThemeProvider theme={theme}>
@@ -542,8 +536,8 @@ const TravelForm=()=>{
                                     </MDBox>
                                     {/* What is the flight departure number* =================================================================================================>*/}
 
-                                    <MDBox mb={2}>
-                                          <TextField id="standard-basic" variant="standard" label="What is the flight departure number*" value={FlightDepartureNumber} onChange={(e)=>{handleFlightDepartureNumber(e.target.value)}} fullWidth error={FlightDepartureNumberError} />
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
+                                          <TextField id="standard-basic" variant="standard" label="What is the flight departure number*" value={FlightDepartureNumber} onChange={(e)=>{handleFlightDepartureNumber(e.target.value)}} fullWidth  />
                                     </MDBox>
 
                                     {/* OR do we set it up whereby we ask the user to check off by tag?* =================================================================================================>*/}
@@ -675,6 +669,30 @@ const TravelForm=()=>{
                               </MDBox>
                         </MDBox>
                   </Card>
+
+{/* POPUPS */}
+            <MDSnackbar
+                  color="success"
+                  icon="star"
+                  title="Form Submission"
+                  content="Form Submitted Successfully !"
+                  dateTime="Now"
+                  open={inSuccessState}
+                  onClose={closeWarningSB}
+                  close={closeWarningSB}
+                  bgWhite
+          />
+            <MDSnackbar
+                  color="error"
+                  icon="error"
+                  title="Check Fields"
+                  content={ErrorValue}
+                  dateTime="Now"
+                  open={inErrorState}
+                  onClose={closeWarningSB}
+                  close={closeWarningSB}
+                  bgWhite
+          />
             </DashboardLayout>
       )
 }

@@ -24,22 +24,27 @@ import MDButton from "components/MDButton";
 import { useNavigate } from "react-router-dom";
 // Custom styles for the Configurator
 import ConfiguratorRoot from "examples/Configurator/ConfiguratorRoot";
-import { ListAlt } from "@mui/icons-material";
+import { ArrowBack, ListAlt } from "@mui/icons-material";
 import { LoginOutlined } from "@mui/icons-material";
 import { Group } from "@mui/icons-material";
 import { Icon } from "@mui/material";
-
+import { useLocation } from "react-router-dom";
+import { useState } from "react";
 
 function Configurator() {
   // --------------------------------------------------------------------------------->
   const navigate = useNavigate();
-  
+  const location= useLocation();
+  const PathName = location.pathname
   const handleSendTravelerForm = () => {
     navigate("/travel-form2");
   };
   const handleSendTravelerData = () => {
     navigate("/traveller-data");
   };
+  const handleGoBack=()=>{
+    navigate("/chat");
+  }
   return (
     <ConfiguratorRoot variant="permanent">
       <MDBox
@@ -82,6 +87,22 @@ function Configurator() {
         <Group />
         &nbsp; Customer List
       </MDButton>
+      <Divider />
+
+      {PathName=="/travel-form2" || PathName=="/traveller-data"?(
+        <MDButton
+          target="_blank"
+          rel="noreferrer"
+          color="dark"
+          onClick={handleGoBack}
+
+        >
+          <ArrowBack />
+          &nbsp; Go Back
+        </MDButton>
+
+      ):(<></>)}
+
 
       <Divider />
     </ConfiguratorRoot>
