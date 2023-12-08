@@ -574,38 +574,6 @@ const setChatDateForItem = (date) => {
                     ):<></>}
           {/*  Snack BARS===========================================================================================> */}
 
-
-          {/* <SimpleDialog
-            selectedValue={selectedValue}
-            open={PopUpState}
-            onClose={handleClosePopUp}
-          /> */}
-
-            {/* <Dialog onClose={handleClosePopUp} open={PopUpState}>
-                  <DialogTitle style={{textAlign:"center"}}>User Query</DialogTitle>
-                  <List sx={{ pt: 0 }}>
-                      <ListItem disableGutters key="User Information Gathering Form">
-                        <ListItemButton onClick={handleSendTravelerForm}>
-                          <ListItemAvatar>
-                            <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                            <Icon fontSize="large">listAlt</Icon>
-                            </Avatar>
-                          </ListItemAvatar>
-                          <ListItemText primary="User Information Gathering Form" />
-                        </ListItemButton>
-                      </ListItem>
-                    <ListItem disableGutters>
-                      <ListItemButton autoFocus>
-                        <ListItemAvatar>
-                          <Avatar sx={{ bgcolor: blue[100], color: blue[600]}}>
-                          <Icon fontSize="large">group</Icon>
-                          </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText primary="User's Form List" />
-                      </ListItemButton>
-                    </ListItem>
-                  </List>
-                </Dialog> */}
           {/*  Snack BARS===========================================================================================> */}
           <MDSnackbar
             color="success"

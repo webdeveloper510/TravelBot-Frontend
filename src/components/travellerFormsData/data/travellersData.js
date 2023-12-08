@@ -42,7 +42,7 @@ export default function data() {
   const [SuccessChangeStatus, SetSuccessChangeStatus] = useState(false);
   const [SuccessDelete, setSuccessDelete] = useState(false);
   const [menu, setMenu] = useState(null);
-  const [userID, setUserID] = useState(null);
+  const [travllerID, settravllerID] = useState(null);
   const [UserDetail, setUserDetail] = useState(false);
 
   //  UseEffects Management ========================================================================>
@@ -64,10 +64,13 @@ export default function data() {
 
   //  Function Calling ========================================================================>
 
+  const handlePrepareItinerary=(travllerID)=>{
+    console.log(travllerID, "===");
+  }
   
   const openMenu = ({ currentTarget }, id) =>{
     setMenu(currentTarget)
-    setUserID(id)
+    settravllerID(id)
   };
 
   const closeMenu = () => setMenu(null);
@@ -176,7 +179,7 @@ export default function data() {
             onClose={closeMenu}
           >
             <MenuItem>Edit</MenuItem>
-            <MenuItem style={{color:"blue"}}> Chat</MenuItem>
+            <MenuItem style={{color:"blue"}} onClick={handlePrepareItinerary(travllerID)}> Prepare Itinerary </MenuItem>
           </Menu>
 
           {/*  Snack BARS===========================================================================================> */}

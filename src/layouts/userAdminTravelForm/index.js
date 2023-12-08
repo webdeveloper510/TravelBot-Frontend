@@ -11,11 +11,6 @@ import FormLabel from "@mui/material/FormLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import Typography from "@mui/material/Typography";
-import  ExpandMoreIcon  from "@mui/icons-material/ExpandMore";
 import TextField from '@mui/material/TextField';
 import axios from "axios";
 import { API } from "config/Api";
@@ -25,12 +20,30 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import timepicker from 'react-time-picker';  
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { blue } from '@mui/material/colors';
 import MDSnackbar from "components/MDSnackbar";
 import { useNavigate } from "react-router-dom";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import {OutlinedInput,FormControl,Stack,Chip} from "@mui/material";
+import CancelIcon from "@mui/icons-material/Cancel";
+import CheckIcon from "@mui/icons-material/Check";
+
 const TravelForm=()=>{
+
+
+      // USEFUL GLOBAL VARIABLE'S Declarations =================================================>
+
+      const accessToken = localStorage.getItem("Admin-Token")
+
+      const TagsValues = [
+            "Knights","Artisans","Food & Wine","Nobile Malta","Exclusive/Private/After hours","Shopping","Catholic","Heritage or Culture/UNESCO","Art","Soft Adventure","Active","Water Activity","WWII","Family","Music","Gozo","Nature/Outdoors","Nightlife","Day of Leisure"
+      ]
+      const IssuesanNPhobias = [
+            "Claustrophobic","Vegan","Does not drink","Does not swim/like being on the water","No alcohol","Jewish","Vegetarian","Muslim"
+      ]
 
       const theme = createTheme({
             typography: {
@@ -46,10 +59,10 @@ const TravelForm=()=>{
               },
             },
           })
-      // GLOBAL VARIABLES ========================================================================>
-      
-      const accessToken = localStorage.getItem("Admin-Token")
+
       const navigate = useNavigate()
+
+      
       // USESTATES ========================================================================>
 
       const [EmaployeeName, setEmaployeeName]=useState(null);
@@ -60,19 +73,18 @@ const TravelForm=()=>{
       const [DatesOfTravel, setDatesOfTravel]=useState(null);
       const [NumberOfTravellers, setNumberOfTravellers]=useState(null);
       const [AgesOfTravellers, setAgesOfTravellers]=useState(null);
-      const [LengthToStay, setLengthToStay]=useState(null);
       const [BudgetSelect, setBudgetSelect]=useState(null);
       const [FlightArrivalTime, setFlightArrivalTime]=useState(null);
       const [FlightArrivalNumber, setFlightArrivalNumber]=useState(null);
       const [FlightDepartureTime, setFlightDepartureTime]=useState(null);
       const [FlightDepartureNumber, setFlightDepartureNumber]=useState(null);
-      const [AccommodationSpecific, setAccommodationSpecific]=useState(null);
+      const [SelectedTagsValues, setSelectedTagsValues]=useState([]);
       const [MaltaExperience, setMaltaExperience]=useState(null);
       const [StartTime, setStartTime]=useState(null);
       const [LunchTime, setLunchTime]=useState(null);
       const [DinnerTime, setDinnerTime]=useState(null);
-      const [IssuesNPhobias, setIssuesNPhobias]=useState(null);
-
+      const [IssuesPhobias, setIssuesPhobias]=useState([]);
+      const [OtherDetails, setOtherDetails] = useState(null);
       
       // ERROR USESTATES ========================================================================>
       
@@ -84,19 +96,21 @@ const TravelForm=()=>{
       const [DatesOfTravelError, setDatesOfTravelError]=useState(false);
       const [NumberOfTravellersError, setNumberOfTravellersError]=useState(false);
       const [AgesOfTravellersError, setAgesOfTravellersError]=useState(false);
-      const [LengthToStayError, setLengthToStayError]=useState(false);
       const [BudgetSelectError, setBudgetSelectError]=useState(false);
-      const [AccommodationSpecificError, setAccommodationSpecificError]=useState(false);
+      const [SelectedTagsValuesError, setSelectedTagsValuesError]=useState(false);
       const [MaltaExperienceError, setMaltaExperienceError]=useState(false);
       const [StartTimeError, setStartTimeError]=useState(false);
       const [LunchTimeError, setLunchTimeError]=useState(false);
       const [DinnerTimeError, setDinnerTimeError]=useState(false);
-      const [IssuesNPhobiasError, setIssuesNPhobiasError]=useState(false);
+      const [IssuesPhobiasError, setIssuesPhobiasError]=useState(false);
       const [inSuccessState,setInSuccessState]=useState(false);
       const [inErrorState, setInErrorState]=useState(false);
 
 
       const [ErrorValue,setErrorValue]=useState("");
+
+
+
       //  Start Handle States Functions   ================================================>
 
       // ----------------------------------Name of Employee------------------------------------------------------------------->
@@ -200,17 +214,6 @@ const TravelForm=()=>{
             setAgesOfTravellers(textValue)
       }
 
-      // -----------------------------------------Travel Dates / Length of Stay (in Malta)------------------------------------------------------------>
-
-      const handleLengthToStay=(textValue)=>{
-            if (textValue=="" || textValue==null){
-                  setLengthToStayError(true);
-            }
-            else{
-                  setLengthToStayError(false);
-            }
-            setLengthToStay(textValue)
-      }
 
       // --------------------------------------Select Approximate, Total Budget for your Malta Accommodation--------------------------------------------------------------->
 
@@ -271,31 +274,6 @@ const TravelForm=()=>{
       }
 
 
-      // ---------------------------------------How would you describe the party's activity level?-------------------------------------------------------------->
-
-      const handleIssuesNPhobias=(event)=>{
-            if (event.target.value=="" || event.target.value==null){
-                  setIssuesNPhobiasError(true);
-            }
-            else{
-                  setIssuesNPhobiasError(false);
-            }
-            setIssuesNPhobias(event.target.value)
-      }
-
-      // -------------------------------------------Preferred Accommodation Specifics---------------------------------------------------------->
-
-      const handleAccommodationSpecifics=(event)=>{
-            if (event.target.value=="" || event.target.value==null){
-                  setAccommodationSpecificError(true);
-            }
-            else {
-                  setAccommodationSpecificError(false);
-            }
-            setAccommodationSpecific(event.target.value)
-      }
-
-
 
       // --------------------------------------------Preferred Tour Start Time--------------------------------------------------------->
 
@@ -335,43 +313,43 @@ const TravelForm=()=>{
       }   
 
 
-      // ----------------------------------------------------------------------------------------------------->
-
+      // -----------------------------------------------------------------handleOtherDetails------------------------------------>
+      const handleOtherDetails=(value)=>{
+            setOtherDetails(value)
+      }
       // STOP Handle States Functions ================================================>
-
-
 
       // START FUNCTION CALLS ================================================>
 
       const handleSubmitUSerDetails=()=>{
-            const fieldsArray = [EmaployeeName, TourNumber, ClienFirstName, ClienLastName, Nationalities, DatesOfTravel,  NumberOfTravellers, AgesOfTravellers, LengthToStay, BudgetSelect,  AccommodationSpecific, MaltaExperience, StartTime, LunchTime, DinnerTime, IssuesNPhobias,]
-            const ErrorArray = [setEmaployeeNameError,setTourNumberError,setClienFirstNameError,setClienLastNameError,setNationalitiesError,setDatesOfTravelError,setNumberOfTravellersError,setAgesOfTravellersError,setLengthToStayError,setBudgetSelectError,setAccommodationSpecificError,setMaltaExperienceError,setStartTimeError,setLunchTimeError,setDinnerTimeError,setIssuesNPhobiasError,]
+            const fieldsArray = [EmaployeeName, TourNumber, ClienFirstName, ClienLastName, Nationalities, DatesOfTravel,  NumberOfTravellers, AgesOfTravellers,  BudgetSelect,  SelectedTagsValues, MaltaExperience, StartTime, LunchTime, DinnerTime, IssuesPhobias,]
+            const ErrorArray = [setEmaployeeNameError,setTourNumberError,setClienFirstNameError,setClienLastNameError,setNationalitiesError,setDatesOfTravelError,setNumberOfTravellersError,setAgesOfTravellersError,setBudgetSelectError,setSelectedTagsValuesError,setMaltaExperienceError,setStartTimeError,setLunchTimeError,setDinnerTimeError,setIssuesPhobiasError,] 
             for(let i=0;i<fieldsArray.length;i++) {
                   if(fieldsArray[i]=="" || fieldsArray[i]==null){
                         ErrorArray[i](true)
                   }
             }
             const formData = new FormData();
-                  formData.append("EmaployeeName", EmaployeeName)
-                  formData.append("TourNumber", TourNumber)
-                  formData.append("ClienFirstName", ClienFirstName)
-                  formData.append("ClienLastName", ClienLastName)
-                  formData.append("Nationalities", Nationalities)
-                  formData.append("DatesOfTravel", DatesOfTravel)
-                  formData.append("NumberOfTravellers", NumberOfTravellers)
-                  formData.append("AgesOfTravellers", AgesOfTravellers)
-                  formData.append("LengthToStay", LengthToStay)
-                  formData.append("BudgetSelect", BudgetSelect)
-                  formData.append("FlightArrivalTime", FlightArrivalTime)
-                  formData.append("FlightArrivalNumber", FlightArrivalNumber)
-                  formData.append("FlightDepartureTime", FlightDepartureTime)
-                  formData.append("FlightDepartureNumber", FlightDepartureNumber)
-                  formData.append("AccommodationSpecific", AccommodationSpecific)
-                  formData.append("MaltaExperience", MaltaExperience)
-                  formData.append("StartTime", StartTime)
-                  formData.append("LunchTime", LunchTime)
-                  formData.append("DinnerTime", DinnerTime)
-                  formData.append("IssuesNPhobias", IssuesNPhobias)
+            formData.append("EmaployeeName", EmaployeeName)
+            formData.append("TourNumber", TourNumber)
+            formData.append("ClienFirstName", ClienFirstName)
+            formData.append("ClienLastName", ClienLastName)
+            formData.append("Nationalities", Nationalities)
+            formData.append("DatesOfTravel", DatesOfTravel)
+            formData.append("NumberOfTravellers", NumberOfTravellers)
+            formData.append("AgesOfTravellers", AgesOfTravellers)
+            formData.append("BudgetSelect", BudgetSelect)
+            formData.append("FlightArrivalTime", FlightArrivalTime)
+            formData.append("FlightArrivalNumber", FlightArrivalNumber)
+            formData.append("FlightDepartureTime", FlightDepartureTime)
+            formData.append("FlightDepartureNumber", FlightDepartureNumber)
+            formData.append("AccommodationSpecific", SelectedTagsValues)
+            formData.append("MaltaExperience", MaltaExperience)
+            formData.append("StartTime", StartTime)
+            formData.append("LunchTime", LunchTime)
+            formData.append("DinnerTime", DinnerTime)
+            formData.append("IssuesPhobias", IssuesPhobias)
+            formData.append("OtherDetails", OtherDetails)
                   axios.post(API.BASE_URL+"user-info-form/",formData,{
                         headers: {
                               Authorization: `Bearer ${accessToken}`,
@@ -437,7 +415,7 @@ const TravelForm=()=>{
                                     {/* Nationalities* =================================================================================================>*/}
 
                                     <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
-                                          <TextField id="standard-basic" variant="standard" label="Nationalities*" value={Nationalities} onChange={(e)=>{handleTravelNationalities(e.target.value)}} fullWidth error={NationalitiesError} />
+                                          <TextField id="standard-basic" variant="standard" label="Nationality*" value={Nationalities} onChange={(e)=>{handleTravelNationalities(e.target.value)}} fullWidth error={NationalitiesError} />
                                     </MDBox>
 
                                     {/* Dates of Travel* =================================================================================================>*/}
@@ -469,11 +447,6 @@ const TravelForm=()=>{
                                           <TextField id="standard-basic" variant="standard" label="All ages of travellers*" value={AgesOfTravellers} onChange={(e)=>{handleTravellerAges(e.target.value)}} fullWidth error={AgesOfTravellersError} />
                                     </MDBox>
 
-                                    {/* Travel Dates / Length of Stay (in Malta))* =================================================================================================>*/}
-
-                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
-                                          <TextField id="standard-basic" variant="standard" label="Travel Dates / Length of Stay (in Malta)*" value={LengthToStay} onChange={(e)=>{handleLengthToStay(e.target.value)}} fullWidth error={LengthToStayError} />
-                                    </MDBox>
 
                                     {/* Approximate, Total Budget for your Malta Accommodation* =================================================================================================>*/}
 
@@ -492,7 +465,7 @@ const TravelForm=()=>{
                                     {/* What is the flight arrival time of the clients* =================================================================================================>*/}
 
                                     <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
-                                          <MDTypography id="standard-basic" >What is the flight arrival time of the clients*  </MDTypography>
+                                          <MDTypography id="standard-basic" >What is the flight arrival time of the clients  (if available)  </MDTypography>
                                           <Divider />
                                           <ThemeProvider theme={theme}>
                                           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -510,12 +483,12 @@ const TravelForm=()=>{
                                     {/* What is the flight arrival number* =================================================================================================>*/}
 
                                     <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
-                                          <TextField id="standard-basic" variant="standard" label="What is the flight arrival number*" value={FlightArrivalNumber} onChange={(e)=>{handleFlightArrivalNumber(e.target.value)}} fullWidth  />
+                                          <TextField id="standard-basic" variant="standard" label="What is the flight arrival number (if available)" value={FlightArrivalNumber} onChange={(e)=>{handleFlightArrivalNumber(e.target.value)}} fullWidth  />
                                     </MDBox>
                                     {/* What is the flight departure time of the clients* =================================================================================================>*/}
 
                                     <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
-                                          <MDTypography id="standard-basic"    >What is the flight departure time of the clients*  </MDTypography>
+                                          <MDTypography id="standard-basic"    >What is the flight departure time of the clients (if available)  </MDTypography>
                                           <Divider />
                                           <ThemeProvider theme={theme}>
                                           <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -534,45 +507,54 @@ const TravelForm=()=>{
                                     {/* What is the flight departure number* =================================================================================================>*/}
 
                                     <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
-                                          <TextField id="standard-basic" variant="standard" label="What is the flight departure number*" value={FlightDepartureNumber} onChange={(e)=>{handleFlightDepartureNumber(e.target.value)}} fullWidth  />
+                                          <TextField id="standard-basic" variant="standard" label="What is the flight departure number (if available)" value={FlightDepartureNumber} onChange={(e)=>{handleFlightDepartureNumber(e.target.value)}} fullWidth  />
                                     </MDBox>
 
-                                    {/* OR do we set it up whereby we ask the user to check off by tag?* =================================================================================================>*/}
+                                    {/* Click the important tags for this client’s experience?* =================================================================================================>*/}
 
                                     <MDBox  mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3} >
-                                          <Accordion>
-                                                <AccordionSummary
-                                                      expandIcon={<ExpandMoreIcon/>}
-                                                      aria-controls="panel1a-header"
-                                                      id="panel2a-header"
-                                                >
-                                                      <Typography style={{ color:AccommodationSpecificError?"red" :""}}>
-                                                      OR do we set it up whereby we ask the user to check off by tag?*
-                                                      </Typography>
-                                                </AccordionSummary>
-                                          <AccordionDetails>
-                                                <RadioGroup aria-label="Accommodation Specifics" name="Accommodation Specifics" value={AccommodationSpecific} onChange={handleAccommodationSpecifics}>
-                                                <FormControlLabel value="Knights" control={<Radio />} label="Knights" />
-                                                <FormControlLabel value="Artisans" control={<Radio />} label="Artisans" />
-                                                <FormControlLabel value="Food & Wine" control={<Radio />} label="Food & Wine" />
-                                                <FormControlLabel value="Nobile Malta" control={<Radio />} label="Nobile Malta" />
-                                                <FormControlLabel value="Exclusive/Private/After hours" control={<Radio />} label="Exclusive/Private/After hours" />
-                                                <FormControlLabel value="Shopping" control={<Radio />} label="Shopping" />
-                                                <FormControlLabel value="Catholic" control={<Radio />} label="Catholic" />
-                                                <FormControlLabel value="Heritage or Culture/UNESCO" control={<Radio />} label="Heritage or Culture/UNESCO" />
-                                                <FormControlLabel value="Art" control={<Radio />} label="Art" />
-                                                <FormControlLabel value="Soft Adventure" control={<Radio />} label="Soft Adventure" />
-                                                <FormControlLabel value="Active" control={<Radio />} label="Active" />
-                                                <FormControlLabel value="Water Activity" control={<Radio />} label="Water Activity" />
-                                                <FormControlLabel value="WWII" control={<Radio />} label="WWII" />
-                                                <FormControlLabel value="Family" control={<Radio />} label="Family" />
-                                                <FormControlLabel value="Music" control={<Radio />} label="Music" />
-                                                <FormControlLabel value="Gozo" control={<Radio />} label="Gozo" />
-                                                <FormControlLabel value="Nature/Outdoors" control={<Radio />} label="Nature/Outdoors" />
-                                                <FormControlLabel value="Nightlife" control={<Radio />} label="Nightlife" />
-                                          </RadioGroup>
-                                          </AccordionDetails>
-                                          </Accordion>                                   
+                                                <MDTypography >Click the important tags for this client’s experience?  </MDTypography>
+                                                <FormControl  fullWidth sx={{ m: 1, width: 500 }} >
+                                                      <InputLabel>Select Tags</InputLabel>
+                                                      <Select
+                                                      multiple
+                                                      value={SelectedTagsValues}
+                                                      onChange={(e) => setSelectedTagsValues(e.target.value)}
+                                                      input={<OutlinedInput label="Select Tags" />}
+                                                      sx={{ padding: 2 }}
+                                                      renderValue={(selected) => (
+                                                            <Stack gap={1} direction="row" flexWrap="wrap">
+                                                              {selected.map((value) => (
+                                                                <Chip
+                                                                  key={value}
+                                                                  label={value}
+                                                                  onDelete={() =>
+                                                                        setSelectedTagsValues(
+                                                                      SelectedTagsValues.filter((item) => item !== value)
+                                                                    )
+                                                                  }
+                                                                  deleteIcon={
+                                                                    <CancelIcon
+                                                                      onMouseDown={(event) => event.stopPropagation()}
+                                                                    />
+                                                                  }
+                                                                />
+                                                              ))}
+                                                            </Stack>
+                                                          )}
+                                                      >
+                                                      {TagsValues.map((name) => (
+                                                                <MenuItem
+                                                                key={name}
+                                                                value={name}
+                                                                sx={{ justifyContent: "space-between" }}
+                                                              >
+                                                                {name}
+                                                                {SelectedTagsValues.includes(name) ? <CheckIcon color="info" /> : null}
+                                                              </MenuItem>
+                                                      ))}
+                                                </Select>
+                                                </FormControl>
                                     </MDBox>
                                     {/* Preferred Length of Time on Touring Days* =================================================================================================>*/}
 
@@ -630,31 +612,57 @@ const TravelForm=()=>{
                                     {/* Dietary issues or phobias*. =================================================================================================>*/}
 
                                     <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
-                                          <Accordion>
-                                                <AccordionSummary
-                                                expandIcon={<ExpandMoreIcon/>}
-                                                aria-controls="panel1a-header"
-                                                id="panel2a-header"
-                                                >
-                                                <Typography style={{color:IssuesNPhobiasError?"red":""}}>
-                                                Dietary issues or phobias*
-                                                </Typography>
-                                          </AccordionSummary>
-                                          <AccordionDetails>
-                                          <FormLabel component="legend" >*This helps us maintain your expectations</FormLabel>
-                                                <RadioGroup aria-label="Total Budget for your Malta Experiences" name="Total Budget for your Malta Experiences" value={IssuesNPhobias} onChange={handleIssuesNPhobias}>
-                                                <FormControlLabel value="Claustrophobic" control={<Radio />} label="Claustrophobic" />
-                                                <FormControlLabel value="Vegan" control={<Radio />} label="Vegan" />
-                                                <FormControlLabel value="Does not drink" control={<Radio />} label="Does not drink" />
-                                                <FormControlLabel value="Does not swim/like being on the water" control={<Radio />} label="Does not swim/like being on the water" />
-                                                <FormControlLabel value="No alcohol" control={<Radio />} label="No alcohol" />
-                                                <FormControlLabel value="Jewish" control={<Radio />} label="Jewish" />
-                                                <FormControlLabel value="Vegetarian" control={<Radio />} label="Vegetarian" />
-                                                <FormControlLabel value="Muslim" control={<Radio />} label="Muslim" />
-                                          </RadioGroup>
-                                          </AccordionDetails>
-                                    </Accordion>                  
+                                    <MDTypography >Dietary issues or phobias*  </MDTypography>
+
+                                                <FormControl  fullWidth sx={{ m: 1, width: 500 }} >
+                                                      <InputLabel>Select issues</InputLabel>
+                                                      <Select
+                                                      multiple
+                                                      value={IssuesPhobias}
+                                                      onChange={(e) => setIssuesPhobias(e.target.value)}
+                                                      input={<OutlinedInput label="Select Tags" />}
+                                                      sx={{ padding: 2 }}
+                                                      renderValue={(selected) => (
+                                                            <Stack gap={1} direction="row" flexWrap="wrap">
+                                                              {selected.map((value) => (
+                                                                <Chip
+                                                                  key={value}
+                                                                  label={value}
+                                                                  onDelete={() =>
+                                                                        setIssuesPhobias(
+                                                                      IssuesPhobias.filter((item) => item !== value)
+                                                                    )
+                                                                  }
+                                                                  deleteIcon={
+                                                                    <CancelIcon
+                                                                      onMouseDown={(event) => event.stopPropagation()}
+                                                                    />
+                                                                  }
+                                                                />
+                                                              ))}
+                                                            </Stack>
+                                                          )}
+                                                      >
+                                                      {IssuesanNPhobias.map((name) => (
+                                                                <MenuItem
+                                                                key={name}
+                                                                value={name}
+                                                                sx={{ justifyContent: "space-between" }}
+                                                              >
+                                                                {name}
+                                                                {IssuesPhobias.includes(name) ? <CheckIcon color="info" /> : null}
+                                                              </MenuItem>
+                                                      ))}
+                                                </Select>
+                                                </FormControl>
                                     </MDBox>
+
+                                    {/* Other =================================================================================================>*/}
+
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
+                                          <TextField id="standard-basic" variant="standard" label="Other" value={OtherDetails} onChange={(e)=>{handleOtherDetails(e.target.value)}} fullWidth  />
+                                    </MDBox>
+
 
                                     {/* Submit Button* =================================================================================================>*/}
 
