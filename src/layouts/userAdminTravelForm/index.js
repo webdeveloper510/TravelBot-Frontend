@@ -233,9 +233,8 @@ const TravelForm=()=>{
             const dateObject = new Date(e.$d);
             const hours = dateObject.getHours();
             const minutes = dateObject.getMinutes();
-            const seconds = dateObject.getSeconds();
 
-            const ArrivalTime=`${hours}:${minutes}:${seconds}`
+            const ArrivalTime=`${hours}:${minutes}`
             setFlightArrivalTime(ArrivalTime)
       }      
       // -----------------------------------------What is the flight arrival number------------------------------------------------------------>
@@ -250,9 +249,8 @@ const TravelForm=()=>{
             const dateObject = new Date(e);
             const hours = dateObject.getHours();
             const minutes = dateObject.getMinutes();
-            const seconds = dateObject.getSeconds();
 
-            const DepartureTime=`${hours}:${minutes}:${seconds}`
+            const DepartureTime=`${hours}:${minutes}`
             setFlightDepartureTime(DepartureTime)
       }
 
@@ -397,7 +395,7 @@ const TravelForm=()=>{
                                     {/* Tour Number* =================================================================================================>*/}
 
                                     <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3} >
-                                          <TextField id="standard-basic" variant="standard" label="Tour Number*" value={TourNumber} onChange={(e)=>{handleTourNumber(e.target.value)}} fullWidth error={TourNumberError} />
+                                          <TextField id="standard-basic" variant="standard" label="Tour Number*" value={TourNumber} onChange={(e)=>{handleTourNumber(e.target.value)}} fullWidth error={TourNumberError} type="number" />
                                     </MDBox>
 
                                     {/* Lead Client First Name* =================================================================================================>*/}

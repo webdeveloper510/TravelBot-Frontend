@@ -15,7 +15,8 @@ import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
 import Configurator from "examples/Configurator";
-
+import { useLocation } from "react-router-dom";
+import { Box } from "@mui/material";
 
 
 
@@ -23,7 +24,7 @@ const ChatBot = () => {
 
   let vendorName = localStorage.getItem("vendorName");
 
-
+  const {state} = useLocation()
   const accessToken = localStorage.getItem("Token");
   const [TopicsState, setTopicsState] = useState([])
   const [newAddState , setnewAddState] = useState(false);
@@ -48,7 +49,11 @@ const ChatBot = () => {
   const [StateForIndexCheck , setStateForIndexCheck] = useState(null);
   const navigate = useNavigate();
   const [firstnameLetter , setfirstnameLetter] = useState(null);
-  // const [PopUpState, setPopUpState]=useState(false);
+  const ItineraryState = state ? state.ItineraryState : false;
+
+  const gettedResponse = localStorage.getItem('gettedResponse');
+
+
 // ******************************** USEEFFECTS ********************************
 
 
@@ -63,9 +68,6 @@ const ChatBot = () => {
       console.log(err)
     })
   },[])
-
-
-
 
   useEffect(()=>{
     axios.get(API.BASE_URL+"topics/",{
@@ -89,8 +91,6 @@ const ChatBot = () => {
   },[newAddState , EffectReloadState])
 
 
-
-
   useEffect(()=>{
     if (ChatID===null || ChatID===""){
     }else {
@@ -98,70 +98,72 @@ const ChatBot = () => {
     }
     },[EffectReloadState , ChatID])
     
-    const GetChatDetails=(id)=>{
-      axios.get(API.BASE_URL + "getchat/"+id+"/",{
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },                                              
-      }).then((res)=>{      
-        if (res.data.data){
-          for (let i = 0; i < res.data.data.length; i++) {
-            const inputString = res.data.data[i].answer;
-            const answerstring = inputString.replace(/['",']/g, '');
-            const formattedString = answerstring.replace(/(\d+: .+?:)(\n- -[^:\n]+)/g, '$1\n  $2');
-            const withoutBrackets = formattedString.replace(/^\[|\]$/g, '');  // Remove square brackets at the beginning and end
-            const withoutDoubleHyphen = withoutBrackets.replace(/[--]/g, '   ');  // Replace "--" with two spaces
-            let lines = withoutDoubleHyphen.split("\\n");
-            console.log(lines)
-            res.data.data[i].answer = lines;
-          }
-      }
-        
-      console.log(res.data.data)                                                          
-        setValueChatGet(res.data.data);
-        const chatHistory = res.data.data;
-        const questionArray = chatHistory.map((item) => item.questions);
-        const answerArray = chatHistory.map((item) => item.answer);
-        const answerTIme = chatHistory.map((item) => item.time);
-        const answerID = chatHistory.map((item) => item.id);
-        const TopicName = chatHistory.map((item) => item.topic);
-        axios.get(API.BASE_URL+"topics/",{
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }).then((res)=>{
-          res.data.data.map((data, i)=>{
-            if (data.id === id){
-              if (data.vendor_name=="Undefined"){
-                var vendorNameGet = []
-              }else {
-                vendorNameGet = data.vendor_name
-              }
-              localStorage.setItem("vendorName",  vendorNameGet)
-            }
-          })
-        })
-        for (let i=0; i<TopicName.length; i++){
-          if(TopicName[i]===""){
-            continue
-          }else{
-            UpdateTopicName(TopicName[i], ChatID)
-            break
-          }
-        }
-        setEffectReloadState(false);
-        setQuestions(questionArray);
-        setAnswers(answerArray);
-        setAnswerTime(answerTIme);
-        setAnswerID(answerID);
-      }).catch((error)=>{
-        console.log(error)
-      })
-    }
-
-
 
 // // Functions Management ------------------------------------------------------------------------------------->
+
+
+  const GetChatDetails=(id)=>{
+    axios.get(API.BASE_URL + "getchat/"+id+"/",{
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },                                              
+    }).then((res)=>{      
+      if (res.data.data){
+        for (let i = 0; i < res.data.data.length; i++) {
+          const inputString = res.data.data[i].answer;
+          const answerstring = inputString.replace(/['",']/g, '');
+          const formattedString = answerstring.replace(/(\d+: .+?:)(\n- -[^:\n]+)/g, '$1\n  $2');
+          const withoutBrackets = formattedString.replace(/^\[|\]$/g, '');  // Remove square brackets at the beginning and end
+          const withoutDoubleHyphen = withoutBrackets.replace(/[--]/g, '   ');  // Replace "--" with two spaces
+          let lines = withoutDoubleHyphen.split("\\n");
+          console.log(lines)
+          res.data.data[i].answer = lines;
+        }
+    }
+      
+      setValueChatGet(res.data.data);
+      const chatHistory = res.data.data;
+      const questionArray = chatHistory.map((item) => item.questions);
+      const answerArray = chatHistory.map((item) => item.answer);
+      const answerTIme = chatHistory.map((item) => item.time);
+      const answerID = chatHistory.map((item) => item.id);
+      const TopicName = chatHistory.map((item) => item.topic);
+      axios.get(API.BASE_URL+"topics/",{
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then((res)=>{
+        res.data.data.map((data, i)=>{
+          if (data.id === id){
+            if (data.vendor_name=="Undefined"){
+              var vendorNameGet = []
+            }else {
+              vendorNameGet = data.vendor_name
+            }
+            localStorage.setItem("vendorName",  vendorNameGet)
+          }
+        })
+      })
+      for (let i=0; i<TopicName.length; i++){
+        if(TopicName[i]===""){
+          continue
+        }else{
+          UpdateTopicName(TopicName[i], ChatID)
+          break
+        }
+      }
+      setEffectReloadState(false);
+      setQuestions(questionArray);
+      setAnswers(answerArray);
+      setAnswerTime(answerTIme);
+      setAnswerID(answerID);
+    }).catch((error)=>{
+      console.log(error)
+    })
+  }
+
+
+
 
 
   const handleNewChatClick = () => {
@@ -262,6 +264,7 @@ const handleQuestionSubmit = () => {
 
     });
 }
+
 // Enter Function On Submit Question 
 
 const handleKeyPress = (event) => {
@@ -348,76 +351,48 @@ const setChatDateForItem = (date) => {
   return (
     <div className="main">
       <div className="chat">
+        {!ItineraryState ? (
         <div className="side-contetnt">
             <div className="sidebar">
-      <div className="new-chat-bttn">
-        <div className="bttn-chat">
-          <a className="flex px-3 " href="#chat" onClick={handleNewChatClick}>
-            <svg
-              stroke="currentColor"
-              fill="none"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="icon-sm shrink-0"
-              height="1em"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            <span className="truncate">New Chat</span>
-          </a>
-        </div>
-      </div>
-       {TopicsState.map((index) => (  
-        
-       <div className='new-chat-bttn'onClick={() => {setChatID(index.id) 
-       setChatDateForItem(index.created_at__date)}} style={{ background: index.id === ChatID ? "#fff" : "" }}>
-          <div className="bttn-chat">
-          <a className="flex px-3 active" href="#chat" style={{ color: index.id === ChatID ? "#000" : "" }}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="1em"
-            height="1em"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            className="icon-sm"
-            viewBox="0 0 24 24"
-          >
-            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path>
-          </svg>
-          <span className="truncate">{index.name} </span>
+                  <div className="new-chat-bttn">
+                    <div className="bttn-chat">
+                      <a className="flex px-3 " href="#chat" onClick={handleNewChatClick}>
+                        <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" className="icon-sm shrink-0" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                          <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span className="truncate">New Chat</span>
+                      </a>
+                    </div>
+                  </div>
+                  {TopicsState.map((index) => (  
+                    
+                  <div className='new-chat-bttn'onClick={() => {setChatID(index.id) 
+                  setChatDateForItem(index.created_at__date)}} style={{ background: index.id === ChatID ? "#fff" : "" }}>
+                      <div className="bttn-chat">
+                      <a className="flex px-3 active" href="#chat" style={{ color: index.id === ChatID ? "#000" : "" }}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="icon-sm" viewBox="0 0 24 24">
+                          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path>
+                        </svg>
+                        <span className="truncate">{index.name} </span>
+                      </a>
+                      </div>
+                    </div>
+                  ))}
 
-          </a>
-          </div>
+                  <button className="logout" onClick={handleLogOut}>
+                    Log Out
+                  </button>
+                </div>
         </div>
-      
-       ))}
-      <button className="logout" onClick={handleLogOut}>
-        Log Out
-      </button>
-    </div>
-        </div>
-
-
+      ):<></>}
         {/* ----------------------------------------------------------------CHAT SECTION----------------------------------------------------------------- */}
 
 
         <div className="content">
-        <div className="chat-side px-5">
-      <div className="chat-messages" ref={chatContainerRef}>
-        <div className="loader-">
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-        </div>
+        {!ItineraryState ? (
 
+          <div className="chat-side px-5">
+            <div className="chat-messages" ref={chatContainerRef}>
 
         {/* Main Question Page Start */}
         {ValueChatGet?.length>0?(<>
@@ -429,16 +404,13 @@ const setChatDateForItem = (date) => {
             <p>{ChatDate}</p>
           </div>
             <div className="chat-start">
+
               {/* Applying Map Function */}
+
               {questions.map((question, index) => (
                 <div key={index}>
                   <div className="display-flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 64 64" className="display-flex self-center mr-2">
-                      <circle cx="32" cy="32" r="30" fill="#365788"></circle>
-                      <text x="20" y="42" fill="#fff" fontFamily="Arial, sans-serif" fontSize="36">
-                      {firstnameLetter}
-                      </text>
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 64 64" className="display-flex self-center mr-2"><circle cx="32" cy="32" r="30" fill="#365788"></circle><text x="20" y="42" fill="#fff" fontFamily="Arial, sans-serif" fontSize="36">{firstnameLetter}</text></svg>
                     <div className="question-submit">
                         <h3 className="question">{question}</h3>
                           <div className="text-right">
@@ -448,63 +420,40 @@ const setChatDateForItem = (date) => {
                   {answers.length > 0 && answers[index] !== "" ? (
                     <div key={index} >
                       <div className="display-flex">
-                        <svg
-                          className="display-flex self-center mr-2"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="30"
-                          height="30"
-                          // className="icon-md"
-                          viewBox="0 0 41 41"
-                          style={{padding: "4px 4px",background: "#365788",borderRadius: "15px"}}
-                        >
-                          <text x="-9999" y="-9999">
-                            ChatGPT
-                          </text>
-                          <path
-                            fill="#fff"
-                            d="M37.532 16.87a9.963 9.963 0 00-.856-8.184 10.078 10.078 0 00-10.855-4.835A9.964 9.964 0 0018.306.5a10.079 10.079 0 00-9.614 6.977 9.967 9.967 0 00-6.664 4.834 10.08 10.08 0 001.24 11.817 9.965 9.965 0 00.856 8.185 10.079 10.079 0 0010.855 4.835 9.965 9.965 0 007.516 3.35 10.078 10.078 0 009.617-6.981 9.967 9.967 0 006.663-4.834 10.079 10.079 0 00-1.243-11.813zM22.498 37.886a7.474 7.474 0 01-4.799-1.735c.061-.033.168-.091.237-.134l7.964-4.6a1.294 1.294 0 00.655-1.134V19.054l3.366 1.944a.12.12 0 01.066.092v9.299a7.505 7.505 0 01-7.49 7.496zM6.392 31.006a7.471 7.471 0 01-.894-5.023c.06.036.162.099.237.141l7.964 4.6a1.297 1.297 0 001.308 0l9.724-5.614v3.888a.12.12 0 01-.048.103l-8.051 4.649a7.504 7.504 0 01-10.24-2.744zM4.297 13.62A7.469 7.469 0 018.2 10.333c0 .068-.004.19-.004.274v9.201a1.294 1.294 0 00.654 1.132l9.723 5.614-3.366 1.944a.12.12 0 01-.114.01L7.04 23.856a7.504 7.504 0 01-2.743-10.237zm27.658 6.437l-9.724-5.615 3.367-1.943a.121.121 0 01.113-.01l8.052 4.648a7.498 7.498 0 01-1.158 13.528v-9.476a1.293 1.293 0 00-.65-1.132zm3.35-5.043c-.059-.037-.162-.099-.236-.141l-7.965-4.6a1.298 1.298 0 00-1.308 0l-9.723 5.614v-3.888a.12.12 0 01.048-.103l8.05-4.645a7.497 7.497 0 0111.135 7.763zm-21.063 6.929l-3.367-1.944a.12.12 0 01-.065-.092v-9.299a7.497 7.497 0 0112.293-5.756 6.94 6.94 0 00-.236.134l-7.965 4.6a1.294 1.294 0 00-.654 1.132l-.006 11.225zm1.829-3.943l4.33-2.501 4.332 2.5v5l-4.331 2.5-4.331-2.5V18z"
-                          ></path>
-                        </svg>
+                        <svg className="display-flex self-center mr-2" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 41 41" style={{padding: "4px 4px",background: "#365788",borderRadius: "15px"}}><text x="-9999" y="-9999">  ChatGPT</text><path fill="#fff" d="M37.532 16.87a9.963 9.963 0 00-.856-8.184 10.078 10.078 0 00-10.855-4.835A9.964 9.964 0 0018.306.5a10.079 10.079 0 00-9.614 6.977 9.967 9.967 0 00-6.664 4.834 10.08 10.08 0 001.24 11.817 9.965 9.965 0 00.856 8.185 10.079 10.079 0 0010.855 4.835 9.965 9.965 0 007.516 3.35 10.078 10.078 0 009.617-6.981 9.967 9.967 0 006.663-4.834 10.079 10.079 0 00-1.243-11.813zM22.498 37.886a7.474 7.474 0 01-4.799-1.735c.061-.033.168-.091.237-.134l7.964-4.6a1.294 1.294 0 00.655-1.134V19.054l3.366 1.944a.12.12 0 01.066.092v9.299a7.505 7.505 0 01-7.49 7.496zM6.392 31.006a7.471 7.471 0 01-.894-5.023c.06.036.162.099.237.141l7.964 4.6a1.297 1.297 0 001.308 0l9.724-5.614v3.888a.12.12 0 01-.048.103l-8.051 4.649a7.504 7.504 0 01-10.24-2.744zM4.297 13.62A7.469 7.469 0 018.2 10.333c0 .068-.004.19-.004.274v9.201a1.294 1.294 0 00.654 1.132l9.723 5.614-3.366 1.944a.12.12 0 01-.114.01L7.04 23.856a7.504 7.504 0 01-2.743-10.237zm27.658 6.437l-9.724-5.615 3.367-1.943a.121.121 0 01.113-.01l8.052 4.648a7.498 7.498 0 01-1.158 13.528v-9.476a1.293 1.293 0 00-.65-1.132zm3.35-5.043c-.059-.037-.162-.099-.236-.141l-7.965-4.6a1.298 1.298 0 00-1.308 0l-9.723 5.614v-3.888a.12.12 0 01.048-.103l8.05-4.645a7.497 7.497 0 0111.135 7.763zm-21.063 6.929l-3.367-1.944a.12.12 0 01-.065-.092v-9.299a7.497 7.497 0 0112.293-5.756 6.94 6.94 0 00-.236.134l-7.965 4.6a1.294 1.294 0 00-.654 1.132l-.006 11.225zm1.829-3.943l4.33-2.501 4.332 2.5v5l-4.331 2.5-4.331-2.5V18z"></path></svg>
                           <div className="user-response">   
                           <h3 className="answer">
                             {answers[index] ? (
                               typeof answers[index] === "string" ? (
                                 answers[index]
-                              ) : (
-                                answers[index].map((answer, i) => (
-                                  <li key={i} style={{listStyle:'none', whiteSpace: "pre-wrap"}} dangerouslySetInnerHTML={{ __html: answer }}></li>
-                                ))
-                              )
+                              ) : (answers[index].map((answer, i) => (
+                                  <li key={i} style={{listStyle:'none', whiteSpace: "pre-wrap"}} dangerouslySetInnerHTML={{ __html: answer }}></li>))
+                                )
                             ) : (
                               <ReactTyped strings={["Typing....."]} typeSpeed={100} loop />
                             )}
                           </h3>
-
                             <div className="text-right">
                                 <small>{AnswerTime[index] ? AnswerTime[index].split(':').slice(0, 2).join(':') : ""}</small>
                             </div>
                           </div>
                       </div>
-                {latestAnswerIndex === index ? (
-                <div className="thumbs-check">
-                  <ThumbUpIcon color="info" style={{ cursor: "pointer" }} onClick={handleSaveAnswer}/>
-                  <ThumbDownIcon color="warning" style={{ cursor: "pointer" }} onClick={(e)=> handleEditAnswer(AnswerID[index])}/>
+                      {latestAnswerIndex === index ? (
+                        <div className="thumbs-check">
+                          <ThumbUpIcon color="info" style={{ cursor: "pointer" }} onClick={handleSaveAnswer}/>
+                          <ThumbDownIcon color="warning" style={{ cursor: "pointer" }} onClick={(e)=> handleEditAnswer(AnswerID[index])}/>
+                        </div>
+                            ) : ("")}
+                    </div> ) : (<></>)}
                 </div>
-              ) : (
-                ""
-              )}</div>
-                  ) : (<></>
-                  )}
-                </div>
-              ))}
-            </div>
-          </>
-        ) : (
-
-          <><div className="logo-ct">
-          <img src={logo} alt="chat image"/>
-          </div></>
-        )}
+                        ))}
+              </div>
+                    </>
+                  ) : (
+                  <><div className="logo-ct">
+                  <img src={logo} alt="chat image"/>
+                  </div></>
+                )}
         </>):<>
         
         <div className="logo-ct">
@@ -514,9 +463,6 @@ const setChatDateForItem = (date) => {
 
       <div className="input-group-container">
         <div className="input-padd">
-        {/* <Icon className="add-icon"></Icon> */}
-        {/* <AddCircleOutline style={{ fontSize: "large" }} onClick={handleStatePopUpOpen}/> */}
-        {/* <textarea id="another-textarea" tabindex="0" data-id="request-:r11:-10" rows="1" placeholder="Message ChatGPT…" class="m-0 w-full resize-none border-0 bg-transparent py-[10px] pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:py-4 md:pr-12 gizmo:md:py-3.5 gizmo:placeholder-black/50 gizmo:dark:placeholder-white/50 pl-3 md:pl-4" style={{maxHeight: "200px", height: "52px", overflowY: "hidden"}} /> */}
           <textarea
           id="another-textarea"
             type="text"
@@ -587,6 +533,20 @@ const setChatDateForItem = (date) => {
             bgWhite
           />
     </div>
+        ):
+        (
+        gettedResponse?(
+        <Box component="section" sx={{ px: 10, py:5, border: '1px dashed grey' }} >
+          <div dangerouslySetInnerHTML={{ __html: gettedResponse }} />
+        </Box>
+
+        ):(
+        <div className="logo-ct">
+        <img src={logo} alt="chat image"/>
+        </div>
+        )
+        )
+        }
         </div>
         {/* ----------------------------------------------------------------Configurator SECTION----------------------------------------------------------------- */}
 

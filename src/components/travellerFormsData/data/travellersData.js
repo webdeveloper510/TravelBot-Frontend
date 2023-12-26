@@ -22,7 +22,7 @@ import MDBadge from "components/MDBadge";
 import team2 from "assets/images/team-2.jpg";
 import team3 from "assets/images/team-3.jpg";
 import team4 from "assets/images/team-4.jpg";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { API } from "config/Api";
 import Icon from "@mui/material/Icon";
@@ -31,11 +31,23 @@ import MenuItem from "@mui/material/MenuItem";
 import ReactSwitch from "react-switch";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
-import { Switch } from "@mui/material";
+import { Card, CircularProgress, Switch } from "@mui/material";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import CustomizedTimeline from "./TravelPesonsDetails";
+import ProfileInfoCard from "examples/Cards/InfoCards/ProfileInfoCard";
+import ChatBot from "components/ChatBot/ChatBot";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
 export default function data() {
 
   //  States Management ========================================================================>
-
+  const navigate = useNavigate()
   const adminAccessToken = localStorage.getItem("Token");
   const [UserList, SetUserList] = useState([]);
   const [checkState , SetCheckState] = useState(false);
@@ -44,6 +56,12 @@ export default function data() {
   const [menu, setMenu] = useState(null);
   const [travllerID, settravllerID] = useState(null);
   const [UserDetail, setUserDetail] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [scroll, setScroll] = useState('paper');
+  const [TravellerDetails, setTravellerDetails] = useState(null);
+  const [ItineraryState, setItineraryState]=useState(false);
+
+  const [loaderState, setLoaderState] = useState(false);
 
   //  UseEffects Management ========================================================================>
 
@@ -65,7 +83,21 @@ export default function data() {
   //  Function Calling ========================================================================>
 
   const handlePrepareItinerary=(travllerID)=>{
-    console.log(travllerID, "===");
+    setLoaderState(true);
+    setItineraryState(true);
+    const decoded = jwtDecode(adminAccessToken);
+    axios.post(API.BASE_URL + "itinerary-frame/",{'form_id':travllerID, 'user_id':decoded.user_id}, {
+      headers: {
+        Authorization: `Bearer ${adminAccessToken}`,
+      },
+    }).then((res)=>{
+      localStorage.setItem("gettedResponse", res.data.data)
+      setLoaderState(false);
+      navigate("/chat",  { state: { ItineraryState: true } }) 
+    }).catch((err)=>{
+      setLoaderState(false)
+      console.log(err)
+    })
   }
   
   const openMenu = ({ currentTarget }, id) =>{
@@ -79,6 +111,31 @@ export default function data() {
     setSuccessDelete(false)
   };
 
+  const getDetails = (id)=>{
+    axios.get(API.BASE_URL+"get-traveller-details/"+id+"/").then((res)=>{
+      setTravellerDetails(res.data.data)
+      console.log(res.data.data)
+    })
+  }
+
+  const handleClickOpen =(scrollType , travllerID)=>{
+    setOpen(true);
+    setScroll(scrollType);
+    settravllerID(travllerID)
+    getDetails(travllerID)
+  }
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const descriptionElementRef = useRef(null);
+  useEffect(() => {
+    if (open) {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [open]);
   // Super Global Variables ----------============================================>
 
 
@@ -94,19 +151,14 @@ export default function data() {
     </MDBox>
   );
 
-  const Job = ({ title, description }) => (
-    <MDBox lineHeight={1} textAlign="left">
-      <MDTypography display="block" variant="caption" color="text" fontWeight="medium">
-        {title}
-      </MDTypography>
-    </MDBox>
-  );
+
 
 
 
  
   // USer Management =================================================================>
   return {
+    
     columns: [
       { Header: "Name", accessor: "user", width: "45%", align: "left" },
       { Header: "Nationality", accessor: "function", align: "left" },
@@ -114,16 +166,17 @@ export default function data() {
       { Header: "Budget", accessor: "budget", align: "center" },
       { Header: "action", accessor: "action", align: "center" },
     ],
-    rows: UserList.map((user) => ({
+    
+    rows:  UserList.map((user) => ({
       user: (
         <Author
           image={team4}
           email={user.client_firstName + " " + user.client_lastName}
           key={user.id}
         />
+        
       ),
       function: <MDTypography variant="caption" component="h1" color="text" fontWeight="medium" fontSize="0.90rem"  key={user.id} >{user.nationality}</MDTypography>,
-
       budget: (
             <MDTypography
             component="h1"
@@ -178,8 +231,8 @@ export default function data() {
             open={Boolean(menu)}
             onClose={closeMenu}
           >
-            <MenuItem>Edit</MenuItem>
-            <MenuItem style={{color:"blue"}} onClick={handlePrepareItinerary(travllerID)}> Prepare Itinerary </MenuItem>
+            <MenuItem onClick={() => handleClickOpen('paper', travllerID)}>View Details</MenuItem>
+            <MenuItem style={{color:"blue"}} onClick={() => handlePrepareItinerary(travllerID)}> Prepare Itinerary </MenuItem>
           </Menu>
 
           {/*  Snack BARS===========================================================================================> */}
@@ -207,8 +260,12 @@ export default function data() {
           />
         {/* SNACK BARS Closed =---------------------------------------------------------- */}
 
+
+        {/* Dialog Box OPEN ------------------------------------------------------------- */}
+
         </MDTypography>
       ),
     })),
+    status : loaderState
   };
 }
