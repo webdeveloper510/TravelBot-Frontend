@@ -42,7 +42,7 @@ import CustomizedTimeline from "./TravelPesonsDetails";
 import ProfileInfoCard from "examples/Cards/InfoCards/ProfileInfoCard";
 import ChatBot from "components/ChatBot/ChatBot";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+
 
 export default function data() {
 
@@ -85,8 +85,7 @@ export default function data() {
   const handlePrepareItinerary=(travllerID)=>{
     setLoaderState(true);
     setItineraryState(true);
-    const decoded = jwtDecode(adminAccessToken);
-    axios.post(API.BASE_URL + "itinerary-frame/",{'form_id':travllerID, 'user_id':decoded.user_id}, {
+    axios.post(API.BASE_URL + "itinerary-frame/",{'form_id':travllerID,}, {
       headers: {
         Authorization: `Bearer ${adminAccessToken}`,
       },

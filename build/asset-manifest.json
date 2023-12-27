@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.0a0873a9.css",
-    "main.js": "/static/js/main.a7a44440.js",
+    "main.js": "/static/js/main.62b0a3b2.js",
     "static/media/pattern-tree.svg": "/static/media/pattern-tree.156bb943ac7fd244f10c115d085e085e.svg",
     "static/media/bg-sign-in-basic.jpeg": "/static/media/bg-sign-in-basic.f327db1d0e4b00ba3c81.jpeg",
     "static/media/bg-profile.jpeg": "/static/media/bg-profile.af1219a742e09fc7b612.jpeg",
@@ -28,6 +28,6 @@
   },
   "entrypoints": [
     "static/css/main.0a0873a9.css",
-    "static/js/main.a7a44440.js"
+    "static/js/main.62b0a3b2.js"
   ]
 }
