@@ -278,25 +278,25 @@ export default function data() {
                 Traveller's All Details
               </DialogContentText>
               <Divider />
-              <Stack  spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
-              <div >
+              <div style={{width:'100%', display:'flex'}}>
+                <div style={{width:'50%'}}>
                   <MDTypography label="employee_name"  > Emaployee Name</MDTypography> 
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values employee_name" >{TravellerDetails?.employee_name}</MDTypography>
                 </div>
 
-                <div>
+                <div style={{width:'50%'}}>
                   <MDTypography label="numberOfTour" > Number Of Tour</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values numberOfTour" >
                     {TravellerDetails?.numberOfTour}
                   
                   </MDTypography>
                 </div>
-              </Stack>
+              </div>
                
                 <hr />
 
-                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
-                <div>
+                <div style={{width:'100%', display:'flex'}}>
+                <div style={{width:'50%'}}>
                   <MDTypography label="client_firstName" > Client First Name</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values client_firstName" >
                     {TravellerDetails?.client_firstName}
@@ -304,62 +304,60 @@ export default function data() {
                   </MDTypography>
                   </div>
 
-                <div>
+                <div style={{width:'50%'}}>
                   <MDTypography label="client_lastName" > Client Last Name</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values client_lastName" >
                     {TravellerDetails?.client_lastName}
                   
                   </MDTypography>
                   </div>
-                </Stack>
+                </div>
                 <hr />
 
-                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
-                  <div>
+                 <div style={{width:'100%', display:'flex'}}>
+                 <div style={{width:'50%'}}>
                   <MDTypography label="nationality" > Nationality</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values nationality" >
                     {TravellerDetails?.nationality}
                   </MDTypography>
                   </div>
 
-                  <div>
+                    <div style={{width:'50%'}}>
                   <MDTypography label="datesOfTravel" > Dates Of Travel</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values datesOfTravel" >
                     {TravellerDetails?.datesOfTravel}
                   </MDTypography>
                   </div>
-                </Stack>
+                </div>
                 <hr />
 
-
-
-                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
-                  <div>
+                <div style={{width:'100%', display:'flex'}}>
+                  <div style={{width:'50%'}}>
                   <MDTypography label="numberOfTravellers" > Number Of Travellers</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values numberOfTravellers" >
                     {TravellerDetails?.numberOfTravellers}
                   
                   </MDTypography>
                   </div>
-                  <div>
+                    <div style={{width:'50%'}}>
                   <MDTypography label="agesOfTravellers" > Ages Of Travellers</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values agesOfTravellers" >
                     {TravellerDetails?.agesOfTravellers}
                   
                   </MDTypography>
                   </div>
-                </Stack>
+                </div>
                 <hr />
 
-                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
-                <div>
+                <div style={{width:'100%', display:'flex'}}>
+                  <div style={{width:'50%'}}>
                 <MDTypography label="flightArrivalTime" > Flight Arrival Time</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values flightArrivalTime" >
                     {TravellerDetails?.flightArrivalTime}
                   
                   </MDTypography>
                   </div>
-                  <div>
+                    <div style={{width:'50%'}}>
                   <MDTypography label="flightArrivalNumber" > Flight Arrival Number</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values flightArrivalNumber" >
                     {TravellerDetails?.flightArrivalNumber}
@@ -367,36 +365,36 @@ export default function data() {
                   </MDTypography>
 
                   </div>
-                </Stack>
+                </div>
                 <hr />
 
-                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
-                <div>
+                <div style={{width:'100%', display:'flex'}}>
+                  <div style={{width:'50%'}}>
                 <MDTypography label="flightDepartureTime" > Flight Departure Time</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values flightDepartureTime" >
                     {TravellerDetails?.flightDepartureTime}
                   
                   </MDTypography>
                   </div>
-                  <div>
+                    <div style={{width:'50%'}}>
                   <MDTypography label="flightDepartureNumber" > Flight Departure Number</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values flightDepartureNumber" >
                     {TravellerDetails?.flightDepartureNumber}
                   </MDTypography>
 
                   </div>
-                </Stack>
+                </div>
                 <hr />
 
-                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
-                <div>
+                <div style={{width:'100%', display:'flex'}}>
+                  <div style={{width:'50%'}}>
                 <MDTypography label="select_budget" > Budget </MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values select_budget" >
                     {TravellerDetails?.select_budget}
                   
                   </MDTypography>
                   </div>
-                  <div>
+                    <div style={{width:'50%'}}>
                   <MDTypography label="accommodation_specific" > Accommodation Specific</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values accommodation_specific" >
                     {TravellerDetails?.accommodation_specific}
@@ -404,60 +402,60 @@ export default function data() {
                   </MDTypography>
                   </div>
 
-                </Stack>
+                </div>
                 <hr />
 
-                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
-                <div>
+                <div style={{width:'100%', display:'flex'}}>
+                <div style={{width:'50%'}}>
                   <MDTypography label="malta_experience" > Malta Experience</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values malta_experience" >
                     {TravellerDetails?.malta_experience}
                   
                   </MDTypography>
                 </div>
-                  <div>
+                <div style={{width:'50%'}}>
                   <MDTypography label="start_time" > Start Time</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values start_time" >
                     {TravellerDetails?.start_time}
                   
                   </MDTypography>
                 </div>
-                </Stack>
+                </div>
                 <Divider />
 
-                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
-                <div>
+                <div style={{width:'100%', display:'flex'}}>
+                <div style={{width:'50%'}}>
                   <MDTypography label="lunch_time" > Lunch Time</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values lunch_time" >
                     {TravellerDetails?.lunch_time}
                   
                   </MDTypography>
                   </div>
-                  <div>
+                  <div style={{width:'50%'}}>
                   <MDTypography label="dinner_time" > Dinner Time</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values dinner_time" >
                     {TravellerDetails?.dinner_time}
                   
                   </MDTypography>
                   </div>
-                </Stack>
+                </div>
               <hr/>
-                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
-                <div>
+                <div style={{width:'100%', display:'flex'}}>
+                <div style={{width:'50%'}}>
                   <MDTypography label="issues_n_phobias" > Issues and Phobias</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values issues_n_phobias" >
                     {TravellerDetails?.issues_n_phobias}
                   
                   </MDTypography>
                   </div>
-                  <div>
+                  <div style={{width:'50%'}}>
                   <MDTypography label="other_details" > Other Details</MDTypography>
                   <MDTypography style={{fontWeight:100, fontSize:15}} label="values other_details" >
                   {TravellerDetails?.other_details}
                   
                   </MDTypography>
                   </div>
-                </Stack>
+                </div>
 
 
               </DialogContent>

@@ -535,16 +535,15 @@ const setChatDateForItem = (date) => {
     </div>
         ):
         (
-        gettedResponse?(
-        <Box component="section" sx={{ px: 10, py:5, border: '1px dashed grey' }} >
-          <div dangerouslySetInnerHTML={{ __html: gettedResponse }} />
-        </Box>
-
-        ):(
-        <div className="logo-ct">
-        <img src={logo} alt="chat image"/>
-        </div>
-        )
+          gettedResponse?(
+            <Box component="section" sx={{ px: 10, py:5, border: '1px dashed grey' }} >
+              <div dangerouslySetInnerHTML={{ __html: gettedResponse }} />
+            </Box>
+          ):(
+            <div className="logo-ct">
+            <img src={logo} alt="chat image"/>
+            </div>
+          )
         )
         }
         </div>
