@@ -31,7 +31,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ReactSwitch from "react-switch";
 import MDButton from "components/MDButton";
 import MDSnackbar from "components/MDSnackbar";
-import { Card, CircularProgress, Switch } from "@mui/material";
+import { Box, Card, CircularProgress, Switch } from "@mui/material";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -42,6 +42,7 @@ import CustomizedTimeline from "./TravelPesonsDetails";
 import ProfileInfoCard from "examples/Cards/InfoCards/ProfileInfoCard";
 import ChatBot from "components/ChatBot/ChatBot";
 import { useNavigate } from "react-router-dom";
+import { Divider, Stack } from "rsuite";
 
 
 export default function data() {
@@ -111,10 +112,12 @@ export default function data() {
   };
 
   const getDetails = (id)=>{
-    axios.get(API.BASE_URL+"get-traveller-details/"+id+"/").then((res)=>{
+    axios.post(API.BASE_URL+"getformdetails/", {"form_id":id}).then((res)=>{
       setTravellerDetails(res.data.data)
       console.log(res.data.data)
-    })
+    }).catch((err)=>{
+      console.log(err)
+    });
   }
 
   const handleClickOpen =(scrollType , travllerID)=>{
@@ -262,9 +265,211 @@ export default function data() {
 
         {/* Dialog Box OPEN ------------------------------------------------------------- */}
 
+        <Dialog
+          fullWidth
+          maxWidth={'md'}
+          open={open}
+          onClose={handleClose}
+          sx={{background: 'white', opacity:1}}
+        >
+          <DialogTitle>Customer Detail</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Traveller's All Details
+              </DialogContentText>
+              <Divider />
+              <Stack  spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
+              <div >
+                  <MDTypography label="employee_name"  > Emaployee Name</MDTypography> 
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values employee_name" >{TravellerDetails?.employee_name}</MDTypography>
+                </div>
+
+                <div>
+                  <MDTypography label="numberOfTour" > Number Of Tour</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values numberOfTour" >
+                    {TravellerDetails?.numberOfTour}
+                  
+                  </MDTypography>
+                </div>
+              </Stack>
+               
+                <hr />
+
+                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
+                <div>
+                  <MDTypography label="client_firstName" > Client First Name</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values client_firstName" >
+                    {TravellerDetails?.client_firstName}
+                  
+                  </MDTypography>
+                  </div>
+
+                <div>
+                  <MDTypography label="client_lastName" > Client Last Name</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values client_lastName" >
+                    {TravellerDetails?.client_lastName}
+                  
+                  </MDTypography>
+                  </div>
+                </Stack>
+                <hr />
+
+                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
+                  <div>
+                  <MDTypography label="nationality" > Nationality</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values nationality" >
+                    {TravellerDetails?.nationality}
+                  </MDTypography>
+                  </div>
+
+                  <div>
+                  <MDTypography label="datesOfTravel" > Dates Of Travel</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values datesOfTravel" >
+                    {TravellerDetails?.datesOfTravel}
+                  </MDTypography>
+                  </div>
+                </Stack>
+                <hr />
+
+
+
+                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
+                  <div>
+                  <MDTypography label="numberOfTravellers" > Number Of Travellers</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values numberOfTravellers" >
+                    {TravellerDetails?.numberOfTravellers}
+                  
+                  </MDTypography>
+                  </div>
+                  <div>
+                  <MDTypography label="agesOfTravellers" > Ages Of Travellers</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values agesOfTravellers" >
+                    {TravellerDetails?.agesOfTravellers}
+                  
+                  </MDTypography>
+                  </div>
+                </Stack>
+                <hr />
+
+                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
+                <div>
+                <MDTypography label="flightArrivalTime" > Flight Arrival Time</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values flightArrivalTime" >
+                    {TravellerDetails?.flightArrivalTime}
+                  
+                  </MDTypography>
+                  </div>
+                  <div>
+                  <MDTypography label="flightArrivalNumber" > Flight Arrival Number</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values flightArrivalNumber" >
+                    {TravellerDetails?.flightArrivalNumber}
+                  
+                  </MDTypography>
+
+                  </div>
+                </Stack>
+                <hr />
+
+                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
+                <div>
+                <MDTypography label="flightDepartureTime" > Flight Departure Time</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values flightDepartureTime" >
+                    {TravellerDetails?.flightDepartureTime}
+                  
+                  </MDTypography>
+                  </div>
+                  <div>
+                  <MDTypography label="flightDepartureNumber" > Flight Departure Number</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values flightDepartureNumber" >
+                    {TravellerDetails?.flightDepartureNumber}
+                  </MDTypography>
+
+                  </div>
+                </Stack>
+                <hr />
+
+                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
+                <div>
+                <MDTypography label="select_budget" > Budget </MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values select_budget" >
+                    {TravellerDetails?.select_budget}
+                  
+                  </MDTypography>
+                  </div>
+                  <div>
+                  <MDTypography label="accommodation_specific" > Accommodation Specific</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values accommodation_specific" >
+                    {TravellerDetails?.accommodation_specific}
+                  
+                  </MDTypography>
+                  </div>
+
+                </Stack>
+                <hr />
+
+                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
+                <div>
+                  <MDTypography label="malta_experience" > Malta Experience</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values malta_experience" >
+                    {TravellerDetails?.malta_experience}
+                  
+                  </MDTypography>
+                </div>
+                  <div>
+                  <MDTypography label="start_time" > Start Time</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values start_time" >
+                    {TravellerDetails?.start_time}
+                  
+                  </MDTypography>
+                </div>
+                </Stack>
+                <Divider />
+
+                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
+                <div>
+                  <MDTypography label="lunch_time" > Lunch Time</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values lunch_time" >
+                    {TravellerDetails?.lunch_time}
+                  
+                  </MDTypography>
+                  </div>
+                  <div>
+                  <MDTypography label="dinner_time" > Dinner Time</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values dinner_time" >
+                    {TravellerDetails?.dinner_time}
+                  
+                  </MDTypography>
+                  </div>
+                </Stack>
+              <hr/>
+                <Stack spacing={"40%"} direction="row" useFlexGap flexWrap="wrap">
+                <div>
+                  <MDTypography label="issues_n_phobias" > Issues and Phobias</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values issues_n_phobias" >
+                    {TravellerDetails?.issues_n_phobias}
+                  
+                  </MDTypography>
+                  </div>
+                  <div>
+                  <MDTypography label="other_details" > Other Details</MDTypography>
+                  <MDTypography style={{fontWeight:100, fontSize:15}} label="values other_details" >
+                  {TravellerDetails?.other_details}
+                  
+                  </MDTypography>
+                  </div>
+                </Stack>
+
+
+              </DialogContent>
+        </Dialog>
+
+
         </MDTypography>
+
       ),
+      
     })),
     status : loaderState
   };
+  
 }

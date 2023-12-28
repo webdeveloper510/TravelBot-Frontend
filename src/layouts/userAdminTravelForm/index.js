@@ -74,6 +74,7 @@ const TravelForm=()=>{
       const [NumberOfTravellers, setNumberOfTravellers]=useState(null);
       const [AgesOfTravellers, setAgesOfTravellers]=useState(null);
       const [BudgetSelect, setBudgetSelect]=useState(null);
+      const [OtherBudgetSelect, setOtherBudgetSelect]=useState(null);
       const [FlightArrivalTime, setFlightArrivalTime]=useState(null);
       const [FlightArrivalNumber, setFlightArrivalNumber]=useState(null);
       const [FlightDepartureTime, setFlightDepartureTime]=useState(null);
@@ -81,8 +82,11 @@ const TravelForm=()=>{
       const [SelectedTagsValues, setSelectedTagsValues]=useState([]);
       const [MaltaExperience, setMaltaExperience]=useState(null);
       const [StartTime, setStartTime]=useState(null);
+      const [OtherStartTime, setOtherStartTime]=useState(null);
       const [LunchTime, setLunchTime]=useState(null);
+      const [OtherLunchTime, setOtherLunchTime]=useState(null);
       const [DinnerTime, setDinnerTime]=useState(null);
+      const [OtherDinnerTime, setOtherDinnerTime]=useState(null);
       const [IssuesPhobias, setIssuesPhobias]=useState([]);
       const [OtherDetails, setOtherDetails] = useState(null);
       
@@ -97,6 +101,10 @@ const TravelForm=()=>{
       const [NumberOfTravellersError, setNumberOfTravellersError]=useState(false);
       const [AgesOfTravellersError, setAgesOfTravellersError]=useState(false);
       const [BudgetSelectError, setBudgetSelectError]=useState(false);
+      const [FlightArrivalTimeError, setFlightArrivalTimeError]=useState(false);
+      const [FlightArrivalNumberError, setFlightArrivalNumberError]=useState(false);
+      const [FlightDepartureTimeError, setFlightDepartureTimeError]=useState(false);      
+      const [FlightDepartureNumberError, setFlightDepartureNumberError]=useState(false);
       const [SelectedTagsValuesError, setSelectedTagsValuesError]=useState(false);
       const [MaltaExperienceError, setMaltaExperienceError]=useState(false);
       const [StartTimeError, setStartTimeError]=useState(false);
@@ -218,34 +226,56 @@ const TravelForm=()=>{
       // --------------------------------------Select Approximate, Total Budget for your Malta Accommodation--------------------------------------------------------------->
 
       const handleBudgetSelectAndChange=(event)=>{
-            if (event.target.value=="" || event.target.value==null){
+            const {
+                  target: { value },
+                } = event;
+
+            if (value=="" || value==null || !value){
                   setBudgetSelectError(true);
             }
             else{
                   setBudgetSelectError(false);
             }
-            setBudgetSelect(event.target.value)
+            setBudgetSelect(value)
       }
 
       // -----------------------------------------What is the flight arrival Time------------------------------------------------------------>
 
       const handleFlightArrivalTime=(e)=>{
+            if (e==="" || e==null){
+                  setFlightArrivalTimeError(true)
+            }
+            else{
+                  setFlightArrivalTimeError(false)
+            }
             const dateObject = new Date(e.$d);
             const hours = dateObject.getHours();
             const minutes = dateObject.getMinutes();
 
             const ArrivalTime=`${hours}:${minutes}`
             setFlightArrivalTime(ArrivalTime)
-      }      
+      }    
       // -----------------------------------------What is the flight arrival number------------------------------------------------------------>
 
       const handleFlightArrivalNumber=(textValue)=>{
+            if (textValue==="" || textValue==null){
+                  setFlightArrivalNumberError(true)
+            }
+            else{
+                  setFlightArrivalNumberError(false)
+            }
             setFlightArrivalNumber(textValue)
       }
       
       // -----------------------------------------What is the flight Departure Time------------------------------------------------------------>
 
       const handleFlightDepartureTime=(e)=>{
+            if (e==="" || e==null){
+                  setFlightDepartureTimeError(true)
+            }
+            else{
+                  setFlightDepartureTimeError(false)
+            }
             const dateObject = new Date(e);
             const hours = dateObject.getHours();
             const minutes = dateObject.getMinutes();
@@ -257,6 +287,12 @@ const TravelForm=()=>{
       // -----------------------------------------What is the flight arrival number------------------------------------------------------------>
 
       const handleFlightDepartureNumber=(textValue)=>{
+            if (textValue==="" || textValue==null){
+                  setFlightDepartureNumberError(true)
+            }
+            else{
+                  setFlightDepartureNumberError(false)
+            }
             setFlightDepartureNumber(textValue)
       }
       // ------------------------------------Would you be willing to experience more than one hotel while in Malta?----------------------------------------------------------------->
@@ -276,39 +312,57 @@ const TravelForm=()=>{
       // --------------------------------------------Preferred Tour Start Time--------------------------------------------------------->
 
       const handleTimeStart=(event)=>{
-            if (event.target.value=="" || event.target.value==null){
+
+            const {
+                  target: { value },
+                } = event;
+
+
+            if (value=="" || value==null || !value){
                   setStartTimeError(true);
             }
             else {
                   setStartTimeError(false);
             }
-            setStartTime(event.target.value)
-      }   
+            setStartTime(value)
+      } 
 
       // -------------------------------------------Preferred Lunch Time---------------------------------------------------------->
 
       const handleLunchTime=(event)=>{
-            if (event.target.value=="" || event.target.value==null){
+
+            const {
+                  target: { value },
+                } = event;
+
+            if (value=="" || value==null || !value){
                   setLunchTimeError(true);
             }
             else {
                   setLunchTimeError(false);
             }
-            setLunchTime(event.target.value)
-      }   
+            setLunchTime(value)
+      }    
 
 
       // ----------------------------------------Preferred Dinner Time------------------------------------------------------------->
 
       const handleDinnerTime=(event)=>{
-            if (event.target.value=="" || event.target.value==null){
+
+            const {
+                  target: { value },
+                } = event;
+
+
+            if (value=="" || value==null || !value){
                   setDinnerTimeError(true);
             }
             else {
                   setDinnerTimeError(false);
             }
-            setDinnerTime(event.target.value)
+            setDinnerTime(value)
       }   
+   
 
 
       // -----------------------------------------------------------------handleOtherDetails------------------------------------>
@@ -320,34 +374,65 @@ const TravelForm=()=>{
       // START FUNCTION CALLS ================================================>
 
       const handleSubmitUSerDetails=()=>{
-            const fieldsArray = [EmaployeeName, TourNumber, ClienFirstName, ClienLastName, Nationalities, DatesOfTravel,  NumberOfTravellers, AgesOfTravellers,  BudgetSelect,  SelectedTagsValues, MaltaExperience, StartTime, LunchTime, DinnerTime, IssuesPhobias,]
-            const ErrorArray = [setEmaployeeNameError,setTourNumberError,setClienFirstNameError,setClienLastNameError,setNationalitiesError,setDatesOfTravelError,setNumberOfTravellersError,setAgesOfTravellersError,setBudgetSelectError,setSelectedTagsValuesError,setMaltaExperienceError,setStartTimeError,setLunchTimeError,setDinnerTimeError,setIssuesPhobiasError,] 
+            const fieldsArray = [EmaployeeName, TourNumber, ClienFirstName, ClienLastName, Nationalities, DatesOfTravel,  NumberOfTravellers, AgesOfTravellers,  BudgetSelect, FlightArrivalTime, FlightArrivalNumber, FlightDepartureTime, FlightDepartureNumber, SelectedTagsValues, MaltaExperience, StartTime, LunchTime, DinnerTime, IssuesPhobias,]
+            const ErrorArray = [setEmaployeeNameError,setTourNumberError,setClienFirstNameError,setClienLastNameError,setNationalitiesError,setDatesOfTravelError,setNumberOfTravellersError,setAgesOfTravellersError,setBudgetSelectError,setFlightArrivalTimeError,setFlightArrivalNumberError, setFlightDepartureTimeError , setFlightDepartureNumberError, setSelectedTagsValuesError,setMaltaExperienceError,setStartTimeError,setLunchTimeError,setDinnerTimeError,setIssuesPhobiasError,]
             for(let i=0;i<fieldsArray.length;i++) {
-                  if(fieldsArray[i]=="" || fieldsArray[i]==null){
+                  if(fieldsArray[i]=="" || fieldsArray[i]==null || !fieldsArray[i]) {
                         ErrorArray[i](true)
                   }
             }
+
+            const finalBudget = BudgetSelect ? BudgetSelect : OtherBudgetSelect
+            const finalStartTime = StartTime ? StartTime : OtherStartTime
+            const finalLunchTime = LunchTime ? LunchTime : OtherLunchTime
+            const finalDinnerTime = DinnerTime ? DinnerTime : OtherDinnerTime
+
+
+            if (finalBudget === "" || finalBudget === null) {
+                  setBudgetSelectError(true)
+            }else{
+                  setBudgetSelectError(false)
+            }
+
+            if (finalStartTime === "" || finalStartTime === null) {
+                  setStartTimeError(true)
+            }else{
+                  setStartTimeError(false)
+            }
+
+            if (finalLunchTime === "" || finalLunchTime === null) {
+                  setLunchTimeError(true)
+            }else{
+                  setLunchTimeError(false)
+            }
+
+            if (finalDinnerTime == "" || finalDinnerTime == null) {
+                  setDinnerTimeError(true)
+            }else{
+                  setDinnerTimeError(false)
+            }
+         
             const formData = new FormData();
-            formData.append("EmaployeeName", EmaployeeName)
-            formData.append("TourNumber", TourNumber)
-            formData.append("ClienFirstName", ClienFirstName)
-            formData.append("ClienLastName", ClienLastName)
-            formData.append("Nationalities", Nationalities)
-            formData.append("DatesOfTravel", DatesOfTravel)
-            formData.append("NumberOfTravellers", NumberOfTravellers)
-            formData.append("AgesOfTravellers", AgesOfTravellers)
-            formData.append("BudgetSelect", BudgetSelect)
-            formData.append("FlightArrivalTime", FlightArrivalTime)
-            formData.append("FlightArrivalNumber", FlightArrivalNumber)
-            formData.append("FlightDepartureTime", FlightDepartureTime)
-            formData.append("FlightDepartureNumber", FlightDepartureNumber)
-            formData.append("AccommodationSpecific", SelectedTagsValues)
-            formData.append("MaltaExperience", MaltaExperience)
-            formData.append("StartTime", StartTime)
-            formData.append("LunchTime", LunchTime)
-            formData.append("DinnerTime", DinnerTime)
-            formData.append("IssuesPhobias", IssuesPhobias)
-            formData.append("OtherDetails", OtherDetails)
+                  formData.append("EmaployeeName", EmaployeeName)
+                  formData.append("TourNumber", TourNumber)
+                  formData.append("ClienFirstName", ClienFirstName)
+                  formData.append("ClienLastName", ClienLastName)
+                  formData.append("Nationalities", Nationalities)
+                  formData.append("DatesOfTravel", DatesOfTravel)
+                  formData.append("NumberOfTravellers", NumberOfTravellers)
+                  formData.append("AgesOfTravellers", AgesOfTravellers)
+                  formData.append("BudgetSelect", finalBudget)
+                  formData.append("FlightArrivalTime", FlightArrivalTime)
+                  formData.append("FlightArrivalNumber", FlightArrivalNumber)
+                  formData.append("FlightDepartureTime", FlightDepartureTime)
+                  formData.append("FlightDepartureNumber", FlightDepartureNumber)
+                  formData.append("AccommodationSpecific", SelectedTagsValues)
+                  formData.append("MaltaExperience", MaltaExperience)
+                  formData.append("StartTime", finalStartTime)
+                  formData.append("LunchTime", finalLunchTime)
+                  formData.append("DinnerTime", finalDinnerTime)
+                  formData.append("IssuesPhobias", IssuesPhobias)
+                  formData.append("OtherDetails", OtherDetails)
                   axios.post(API.BASE_URL+"user-info-form/",formData,{
                         headers: {
                               Authorization: `Bearer ${accessToken}`,
@@ -355,6 +440,9 @@ const TravelForm=()=>{
 
                   }).then((response)=>{
                         setInSuccessState(true)
+                        setTimeout(()=>{
+                              navigate("/traveller-data")
+                        }, 1000)
                   }).catch((error)=>{
                         if (error.response.data.error.message=="This Tour Number is already exist"){
                               setErrorValue(error.response.data.error.message)
@@ -366,7 +454,6 @@ const TravelForm=()=>{
 
                   })
       }
-
       // Handle POPUPs ================================================>
 
 
@@ -418,7 +505,7 @@ const TravelForm=()=>{
 
                                     {/* Dates of Travel* =================================================================================================>*/}
 
-                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
+                                    <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3} >
                                           <MDTypography id="standard-basic" style={DatesOfTravelError?{color:"red"}:{}}  > Dates of Travel*  </MDTypography>
                                            <Divider />
                                           <DateRangePicker
@@ -456,14 +543,14 @@ const TravelForm=()=>{
                                                 <FormControlLabel value="Between €10,000 - €15,000" control={<Radio />} label="Between €10,000 - €15,000" />
                                                 <FormControlLabel value="Between €15,000 - €20,000" control={<Radio />} label="Between €15,000 - €20,000" />
                                                 <FormControlLabel value="€20,000 and over" control={<Radio />} label="€20,000 and over" />
-                                                <FormControlLabel value={BudgetSelect} label="Other" control={<TextField id="standard-basic" variant="standard" label="Other..." onChange={(e)=>{setBudgetSelect(e.target.value)}} />} />
+                                                <FormControlLabel value={OtherBudgetSelect} label="Other" control={<TextField id="standard-basic" variant="standard" label="Other..." onChange={(e)=>{setOtherBudgetSelect(e.target.value)}} />} />
                                           </RadioGroup>
                                     </MDBox>
 
                                     {/* What is the flight arrival time of the clients* =================================================================================================>*/}
 
                                     <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
-                                          <MDTypography id="standard-basic" >What is the flight arrival time of the clients  (if available)  </MDTypography>
+                                          <MDTypography id="standard-basic"style={FlightArrivalTimeError?{color:"red"}:{}} >What is the flight arrival time of the clients   </MDTypography>
                                           <Divider />
                                           <ThemeProvider theme={theme}>
                                           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -481,12 +568,12 @@ const TravelForm=()=>{
                                     {/* What is the flight arrival number* =================================================================================================>*/}
 
                                     <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
-                                          <TextField id="standard-basic" variant="standard" label="What is the flight arrival number (if available)" value={FlightArrivalNumber} onChange={(e)=>{handleFlightArrivalNumber(e.target.value)}} fullWidth  />
+                                          <TextField id="standard-basic" variant="standard" label="What is the flight arrival number (if available)" value={FlightArrivalNumber} onChange={(e)=>{handleFlightArrivalNumber(e.target.value)}} fullWidth error={FlightArrivalNumberError} />
                                     </MDBox>
                                     {/* What is the flight departure time of the clients* =================================================================================================>*/}
 
                                     <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
-                                          <MDTypography id="standard-basic"    >What is the flight departure time of the clients (if available)  </MDTypography>
+                                          <MDTypography id="standard-basic"  style={FlightDepartureTimeError?{color:"red"}:{}}  >What is the flight departure time of the clients  </MDTypography>
                                           <Divider />
                                           <ThemeProvider theme={theme}>
                                           <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -505,7 +592,7 @@ const TravelForm=()=>{
                                     {/* What is the flight departure number* =================================================================================================>*/}
 
                                     <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
-                                          <TextField id="standard-basic" variant="standard" label="What is the flight departure number (if available)" value={FlightDepartureNumber} onChange={(e)=>{handleFlightDepartureNumber(e.target.value)}} fullWidth  />
+                                          <TextField id="standard-basic" variant="standard" label="What is the flight departure number (if available)" value={FlightDepartureNumber} onChange={(e)=>{handleFlightDepartureNumber(e.target.value)}} fullWidth  error={FlightDepartureNumberError} />
                                     </MDBox>
 
                                     {/* Click the important tags for this client’s experience?* =================================================================================================>*/}
@@ -540,6 +627,7 @@ const TravelForm=()=>{
                                                               ))}
                                                             </Stack>
                                                           )}
+                                                      error={SelectedTagsValuesError}
                                                       >
                                                       {TagsValues.map((name) => (
                                                                 <MenuItem
@@ -575,7 +663,7 @@ const TravelForm=()=>{
                                                 <FormControlLabel value="09:00" control={<Radio />} label="09:00" />
                                                 <FormControlLabel value="09:30" control={<Radio />} label="09:30" />
                                                 <FormControlLabel value="10:00" control={<Radio />} label="10:00" />
-                                                <FormControlLabel value={StartTime} label="Other" control={<TextField id="standard-basic" variant="standard" label="Other..." onChange={(e)=>{setStartTime(e.target.value)}} />} />
+                                                <FormControlLabel value={OtherStartTime} label="Other" control={<TextField id="standard-basic" variant="standard" label="Other..." onChange={(e)=>{setOtherStartTime(e.target.value)}} />} />
                                           </RadioGroup>
                                     </MDBox>
 
@@ -588,7 +676,7 @@ const TravelForm=()=>{
                                                 <FormControlLabel value="12:30" control={<Radio />} label="12:30" />
                                                 <FormControlLabel value="13:00" control={<Radio />} label="13:00" />
                                                 <FormControlLabel value="13:30" control={<Radio />} label="13:30" />
-                                                <FormControlLabel value={LunchTime} label="Other" control={<TextField id="standard-basic" variant="standard" label="Other..." onChange={(e)=>setLunchTime(e.target.value)} />} />
+                                                <FormControlLabel value={OtherLunchTime} label="Other" control={<TextField id="standard-basic" variant="standard" label="Other..." onChange={(e)=>setOtherLunchTime(e.target.value)} />} />
                                           </RadioGroup>
                                     </MDBox>
 
@@ -602,7 +690,7 @@ const TravelForm=()=>{
                                                 <FormControlLabel value="19:30" control={<Radio />} label="19:30" />
                                                 <FormControlLabel value="20:00" control={<Radio />} label="20:00" />
                                                 <FormControlLabel value="20:30" control={<Radio />} label="20:30" />
-                                                <FormControlLabel value={DinnerTime} label="Other" control={<TextField id="standard-basic" variant="standard" label="Other..." onChange={(e)=>{setDinnerTime(e.target.value)}} />} />
+                                                <FormControlLabel value={OtherDinnerTime} label="Other" control={<TextField id="standard-basic" variant="standard" label="Other..." onChange={(e)=>{setOtherDinnerTime(e.target.value)}} />} />
                                           </RadioGroup>
                                     </MDBox>
 
@@ -611,7 +699,6 @@ const TravelForm=()=>{
 
                                     <MDBox mb={2} mt={2} sx={{border:"1px solid #007cf8", borderRadius:3}} p={3}>
                                     <MDTypography >Dietary issues or phobias*  </MDTypography>
-
                                                 <FormControl  fullWidth sx={{ m: 1, width: 500 }} >
                                                       <InputLabel>Select issues</InputLabel>
                                                       <Select
@@ -640,6 +727,7 @@ const TravelForm=()=>{
                                                               ))}
                                                             </Stack>
                                                           )}
+                                                      error={IssuesPhobiasError}
                                                       >
                                                       {IssuesanNPhobias.map((name) => (
                                                                 <MenuItem
