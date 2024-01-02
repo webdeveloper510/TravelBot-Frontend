@@ -38,12 +38,18 @@ function Configurator() {
   const PathName = location.pathname
   const handleSendTravelerForm = () => {
     navigate("/travel-form2");
+    localStorage.removeItem("gettedResponse");
+
   };
   const handleSendTravelerData = () => {
     navigate("/traveller-data");
+    localStorage.removeItem("gettedResponse");
+
   };
   const handleGoBack=()=>{
     navigate("/chat");
+    localStorage.removeItem("gettedResponse");
+
   }
   return (
     <ConfiguratorRoot variant="permanent">

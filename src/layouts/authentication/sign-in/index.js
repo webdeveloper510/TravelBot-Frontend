@@ -98,8 +98,11 @@ function Basic() {
           setErrorLogIn(true);
       });
   };
-  const handleEnterKey = () => {
-    handleLogin()
+  const handleEnterKey = (e) => {
+    console.log(e.code)
+    if (e.code === "Enter" || e.code==="NumpadEnter"){
+      handleLogin()
+    }
   }
   const closeWarningSB = () => {
     setSuccessLogIn(false);
@@ -152,7 +155,7 @@ function Basic() {
               <MDInput type="email" label="Email" onChange={handleEmailInput} fullWidth error={EmailNull} />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" onChange={handlePassword} fullWidth error={PasseordNull} />
+              <MDInput type="password" label="Password" onChange={handlePassword} fullWidth error={PasseordNull} onKeyPress={(e)=> {handleEnterKey(e)}} />
             </MDBox>
             {/* <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />

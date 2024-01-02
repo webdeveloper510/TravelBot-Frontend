@@ -340,6 +340,7 @@ const setChatDateForItem = (date) => {
   const handleLogOut = () => {
     localStorage.removeItem("Token");
     localStorage.removeItem("vendorName");
+    localStorage.removeItem("gettedResponse");
     navigate("/");
     window.location.reload();
   };
@@ -389,13 +390,13 @@ const setChatDateForItem = (date) => {
 
 
         <div className="content">
-        {!ItineraryState ? (
+        {/* {!ItineraryState ? (
 
           <div className="chat-side px-5">
-            <div className="chat-messages" ref={chatContainerRef}>
+            <div className="chat-messages" ref={chatContainerRef}> */}
 
         {/* Main Question Page Start */}
-        {ValueChatGet?.length>0?(<>
+        {/* {ValueChatGet?.length>0?(<>
         
 
         {questions.length > 0 ? (
@@ -403,11 +404,11 @@ const setChatDateForItem = (date) => {
           <div className="text-center date">
             <p>{ChatDate}</p>
           </div>
-            <div className="chat-start">
+            <div className="chat-start"> */}
 
               {/* Applying Map Function */}
 
-              {questions.map((question, index) => (
+              {/* {questions.map((question, index) => (
                 <div key={index}>
                   <div className="display-flex">
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 64 64" className="display-flex self-center mr-2"><circle cx="32" cy="32" r="30" fill="#365788"></circle><text x="20" y="42" fill="#fff" fontFamily="Arial, sans-serif" fontSize="36">{firstnameLetter}</text></svg>
@@ -517,11 +518,11 @@ const setChatDateForItem = (date) => {
                           </Grid>
                           </div> 
                       </div>
-                    ):<></>}
+                    ):<></>} */}
           {/*  Snack BARS===========================================================================================> */}
 
           {/*  Snack BARS===========================================================================================> */}
-          <MDSnackbar
+          {/* <MDSnackbar
             color="success"
             icon="check"
             title="Answer Updated"
@@ -545,7 +546,16 @@ const setChatDateForItem = (date) => {
             </div>
           )
         )
-        }
+        } */}
+        {gettedResponse?(
+            <Box component="section" sx={{ px: 10, py:5, border: '1px dashed grey' }} >
+              <div dangerouslySetInnerHTML={{ __html: gettedResponse }} />
+            </Box>
+           ):( 
+            <div className="logo-ct">
+            <img src={logo} alt="chat image"/>
+            </div>
+          )}
         </div>
         {/* ----------------------------------------------------------------Configurator SECTION----------------------------------------------------------------- */}
 
