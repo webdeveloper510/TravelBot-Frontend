@@ -53,6 +53,9 @@ const ChatBot = () => {
 
   const gettedResponse = localStorage.getItem('gettedResponse');
 
+          
+ 
+  
 
 // ******************************** USEEFFECTS ********************************
 
@@ -548,14 +551,15 @@ const setChatDateForItem = (date) => {
         )
         } */}
         {gettedResponse?(
-            <Box component="section" sx={{ px: 10, py:5, border: '1px dashed grey' }} >
+            <Box component={'div'} sx={{ px: 10, py:5, background: "#fff" }} >
               <div dangerouslySetInnerHTML={{ __html: gettedResponse }} />
+
             </Box>
-           ):( 
+            ):( 
             <div className="logo-ct">
             <img src={logo} alt="chat image"/>
-            </div>
-          )}
+            </div> 
+           )} 
         </div>
         {/* ----------------------------------------------------------------Configurator SECTION----------------------------------------------------------------- */}
 

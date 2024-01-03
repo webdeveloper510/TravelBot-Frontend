@@ -145,7 +145,7 @@ export default function data() {
     <MDBox display="flex" alignItems="center" lineHeight={1}>
       <MDAvatar src={image} name={name} size="sm" />
       <MDBox ml={2} lineHeight={1}>
-        <MDTypography display="block" variant="button" fontWeight="medium">
+        <MDTypography display="block" fontWeight="medium"  >
           {name}
         </MDTypography>
         <MDTypography variant="caption">{email}</MDTypography>
@@ -162,11 +162,11 @@ export default function data() {
   return {
     
     columns: [
-      { Header: "Name", accessor: "user", width: "45%", align: "left" },
-      { Header: "Nationality", accessor: "function", align: "left" },
-      { Header: "Travel and Stay", accessor: "dates", align: "center" },
-      { Header: "Budget", accessor: "budget", align: "center" },
-      { Header: "action", accessor: "action", align: "center" },
+      { Header: "Name", accessor: "user", width: "20%", align: "left" },
+      { Header: "Nationality", accessor: "function", align: "left", width: "10%" },
+      { Header: "Travel and Stay", accessor: "dates", align: "center", width: "40%" },
+      { Header: "Budget", accessor: "budget", align: "center", width: "20%" },
+      { Header: "action", accessor: "action", align: "center", width: "10%" },
     ],
     
     rows:  UserList.map((user) => ({
@@ -175,6 +175,7 @@ export default function data() {
           image={team4}
           email={user.client_firstName + " " + user.client_lastName}
           key={user.id}
+
         />
         
       ),

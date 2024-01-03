@@ -461,12 +461,17 @@ const TravelForm=()=>{
 
       // STOP FUNCTION CALLS ================================================>
       return(
-            <div className="main">
-                  <Container>
+            // <div className="main">
+            <>
+           
 
-                  <Grid item xs={12} mt={8}>
-                  <Grid item xs={8}>
-                  <MDTypography mb={4}>Customer Form</MDTypography>
+<div className="row">
+                              <div className="col-md-8" >
+                            
+
+
+                 
+                  <MDTypography mb={4} fullWidth>Customer Form</MDTypography>
                   <Card>
                         <MDBox variant="gradient" bgColor="info" borderRadius="lg" coloredShadow="info" mx={2} mt={-3} p={2} mb={1} textAlign="center" >
                               <MDTypography  variant="h4" fontWeight="medium" color="white" mt={2}>Malta Experience Info Gathering</MDTypography>
@@ -762,12 +767,14 @@ const TravelForm=()=>{
                         </MDBox>
                   </Card>
 
-                  </Grid>
-                  <Grid item xs={4}>
+            
+                  </div>
+                                            {/* ----------------------------------------------------------------Configurator SECTION----------------------------------------------------------------- */}
+                  <div className="col-md-4">
                         <Configurator relative />
-                  </Grid>
-                  </Grid>
-                  </Container>
+                              
+                              </div>
+                        </div>
                   {/* <DashboardNavbar/> */}
 {/* POPUPS */}
             <MDSnackbar
@@ -792,7 +799,7 @@ const TravelForm=()=>{
                   close={closeWarningSB}
                   bgWhite
           />
-            </div>
+             </>
       )
 }
 export default TravelForm;

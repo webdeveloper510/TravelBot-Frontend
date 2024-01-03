@@ -17,9 +17,8 @@ const TravellerFormData=()=>{
       return (
 
             <div>
-                  <Container>
-                        <Grid item xs={6} mt={8}>
-                              <Grid item xs={8}>
+                        <div className="row">
+                              <div className="col-md-8" >
                                     <MDTypography mb={4}>Customer Data</MDTypography>
                                     <Card mt={8}>
                                           <MDBox
@@ -37,6 +36,7 @@ const TravellerFormData=()=>{
                                           </MDBox>
                                           <MDBox pt={3}>
                                                 <DataTable
+                                                width="100%"
                                                 table={{ columns, rows }}
                                                 isSorted={false}
                                                 entriesPerPage={false}
@@ -46,12 +46,17 @@ const TravellerFormData=()=>{
                                           </MDBox>
                                     </Card>
                                             {/* ----------------------------------------------------------------Configurator SECTION----------------------------------------------------------------- */}
-                              </Grid>
-                                            <Grid item xs={4}>
+                            
+                              </div>
+                              <div className="col-md-4">
                                   <Configurator relative />
-                                  </Grid>
-                        </Grid>
-                  </Container>
+                               
+                              </div>
+                        </div>
+                        
+                            
+                                           
+                 
                   {status &&
                         <div style={{ position: "fixed", top:"0px", height: "100vh", width: "100vw", background: "#eee", zIndex: '999999'}}>
                        <div style={{
